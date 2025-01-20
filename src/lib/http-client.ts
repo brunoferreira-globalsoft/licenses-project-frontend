@@ -16,34 +16,48 @@ export class HttpClient {
   private idFuncionalidade?: string;
   private readonly apiUrl: string = import.meta.env.VITE_URL;
   private readonly apiKey: string = import.meta.env.VITE_API_KEY;
+  private tokenCheckInProgress = false;
+  private lastTokenCheck = 0;
+  private readonly TOKEN_CHECK_INTERVAL = 30000; // 30 seconds
 
   constructor(idFuncionalidade?: string) {
     this.idFuncionalidade = idFuncionalidade;
   }
 
   private async renewToken() {
-    const { token, setToken } = useAuthStore.getState();
-    const currentDate = new Date();
-    const decodedToken: GSResponseToken = jwtDecode(token);
+    const currentTime = Date.now();
 
-    if (decodedToken.exp * 1000 < currentDate.getTime()) {
-      console.log('Token expired');
-      const response = await axios.post(
-        `${this.apiUrl}/api/auth/refresh`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'X-API-Key': this.apiKey,
-            'X-Funcionalidade-Id': this.idFuncionalidade
-          }
-        }
-      );
+    // Skip if another check is in progress or if we checked recently
+    if (
+      this.tokenCheckInProgress ||
+      currentTime - this.lastTokenCheck < this.TOKEN_CHECK_INTERVAL
+    ) {
+      return;
+    }
 
-      if (response.status === 200) {
-        setToken(response.data.token);
-        console.log('Token renewed');
+    try {
+      this.tokenCheckInProgress = true;
+      const { token } = useAuthStore.getState();
+
+      if (!token) {
+        return;
       }
+
+      const decodedToken: GSResponseToken = jwtDecode(token);
+      const tokenExpiryTime = decodedToken.exp * 1000;
+
+      if (tokenExpiryTime < currentTime) {
+        const TokensClient = (await import('@/lib/methods/auth/tokens'))
+          .default;
+        const success = await TokensClient.getRefresh();
+
+        if (!success) {
+          console.error('Failed to renew token');
+        }
+      }
+    } finally {
+      this.lastTokenCheck = currentTime;
+      this.tokenCheckInProgress = false;
     }
   }
 

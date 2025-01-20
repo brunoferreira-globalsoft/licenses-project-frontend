@@ -10,18 +10,26 @@ import UserNav from '@/components/shared/user-nav';
 import { useHeaderNav } from '@/contexts/header-nav-context';
 import { useHeaderMenu } from '@/hooks/use-header-menu';
 import { cn } from '@/lib/utils';
+import { Logo } from '@/assets/logo-letters';
+import { useSidebar } from '@/hooks/use-sidebar';
+
+interface MenuItem {
+  href: string;
+  label: string;
+}
 
 export function HeaderNav() {
   const { currentMenu } = useHeaderNav();
   const location = useLocation();
-  const currentMenuItems = useHeaderMenu(currentMenu);
+  const currentMenuItems = useHeaderMenu(currentMenu) as MenuItem[];
+  const { isMinimized, toggle } = useSidebar();
 
   return (
     <div className="border-b bg-background">
       <div className="flex h-16 items-center px-4">
-        <Link to="/" className="mr-6 flex items-center space-x-2">
-          <span className="text-xl font-bold">Logo</span>
-        </Link>
+        <div className="mr-6 flex items-center space-x-2">
+          <Logo width={95} className="text-foreground" disableLink />
+        </div>
         <NavigationMenu>
           <NavigationMenuList>
             {currentMenuItems.map((item, index) => (
@@ -42,6 +50,17 @@ export function HeaderNav() {
           </NavigationMenuList>
         </NavigationMenu>
         <div className="ml-auto flex items-center space-x-4">
+          {/* {isMinimized && (
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={toggle}
+              className="mr-2"
+            >
+              <ChevronsLeft className="h-[1.2rem] w-[1.2rem] rotate-180" />
+              <span className="sr-only">Toggle sidebar</span>
+            </Button>
+          )} */}
           <ModeToggle />
           <UserNav />
         </div>
