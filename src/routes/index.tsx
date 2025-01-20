@@ -52,10 +52,6 @@ export default function AppRouter() {
           element: <DashboardPage />
         },
         {
-          path: 'support',
-          element: <div>Support Page</div>
-        },
-        {
           path: 'student',
           element: <StudentPage />
         },

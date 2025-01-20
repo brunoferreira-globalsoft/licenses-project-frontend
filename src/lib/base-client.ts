@@ -18,7 +18,7 @@ export abstract class BaseApiClient {
   protected httpClient: HttpClient;
   protected cache: Map<string, { data: unknown; timestamp: number }>;
   protected readonly CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
-  protected readonly MAX_RETRIES = 3;
+  protected readonly MAX_RETRIES = 0;
 
   constructor(idFuncionalidade: string) {
     this.httpClient = createHttpClient(idFuncionalidade);

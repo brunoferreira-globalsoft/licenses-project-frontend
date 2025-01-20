@@ -81,7 +81,7 @@ export class HttpClient {
 
   public getRequest = async <T>(url: string): Promise<ResponseApi<T>> => {
     try {
-      await this.renewToken();
+      // await this.renewToken();
 
       const headers: Record<string, string> = this.getHeaders();
 
@@ -112,7 +112,7 @@ export class HttpClient {
     data: T
   ): Promise<ResponseApi<U>> => {
     try {
-      await this.renewToken();
+      // await this.renewToken();
 
       const response: AxiosResponse<U> = await axios.post(
         `${apiUrl}${url}`,
@@ -139,7 +139,7 @@ export class HttpClient {
     data: T
   ): Promise<ResponseApi<U>> => {
     try {
-      await this.renewToken();
+      // await this.renewToken();
 
       const response: AxiosResponse<U> = await axios.put(
         `${apiUrl}${url}`,
@@ -162,7 +162,7 @@ export class HttpClient {
 
   public deleteRequest = async <T>(url: string): Promise<ResponseApi<T>> => {
     try {
-      await this.renewToken();
+      // await this.renewToken();
 
       const response: AxiosResponse<T> = await axios.delete(`${apiUrl}${url}`, {
         headers: this.getHeaders()
@@ -183,7 +183,7 @@ export class HttpClient {
     url: string
   ): Promise<ResponseApi<T>> => {
     try {
-      await this.renewToken();
+      // await this.renewToken();
 
       const response: AxiosResponse<T> = await axios.post(
         `${apiUrl}${url}`,
@@ -208,7 +208,7 @@ export class HttpClient {
     url: string
   ): Promise<ResponseApi<T>> => {
     try {
-      await this.renewToken();
+      // await this.renewToken();
 
       const response: AxiosResponse<T> = await axios.put(
         `${apiUrl}${url}`,

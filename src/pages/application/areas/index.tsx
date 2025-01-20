@@ -32,13 +32,13 @@ export default function AreasPage() {
 
   return (
     <div className="p-4 md:p-8">
-      <PageHead title="Area Management | App" />
-      <Breadcrumbs
-        items={[
-          { title: 'Dashboard', link: '/' },
-          { title: 'Areas', link: '/areas' }
-        ]}
-      />
+      <PageHead title="Áreas | App" />
+      {/* <Breadcrumbs
+          items={[
+            { title: 'Dashboard', link: '/' },
+            { title: 'Areas', link: '/areas' }
+          ]}
+        /> */}
       <AreasTable
         areas={areas}
         page={page}

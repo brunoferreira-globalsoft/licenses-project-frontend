@@ -2,7 +2,10 @@ import { Link, useLocation } from 'react-router-dom';
 import {
   NavigationMenu,
   NavigationMenuItem,
-  NavigationMenuList
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  NavigationMenuContent,
+  NavigationMenuLink
 } from '@/components/ui/navigation-menu';
 import { Button } from '@/components/ui/button';
 import { ModeToggle } from '@/components/shared/theme-toggle';
@@ -16,6 +19,7 @@ import { useSidebar } from '@/hooks/use-sidebar';
 interface MenuItem {
   href: string;
   label: string;
+  items?: MenuItem[];
 }
 
 export function HeaderNav() {
@@ -34,17 +38,45 @@ export function HeaderNav() {
           <NavigationMenuList>
             {currentMenuItems.map((item, index) => (
               <NavigationMenuItem key={index}>
-                <Link to={item.href}>
-                  <Button
-                    variant="ghost"
-                    className={cn(
-                      location.pathname === item.href &&
-                        'bg-accent text-accent-foreground'
-                    )}
-                  >
-                    {item.label}
-                  </Button>
-                </Link>
+                {item.items ? (
+                  <>
+                    <NavigationMenuTrigger>{item.label}</NavigationMenuTrigger>
+                    <NavigationMenuContent>
+                      <ul className="grid w-[200px] gap-3 p-4">
+                        {item.items.map((subItem, subIndex) => (
+                          <li key={subIndex}>
+                            <NavigationMenuLink asChild>
+                              <Link
+                                to={subItem.href}
+                                className={cn(
+                                  'block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground',
+                                  location.pathname === subItem.href &&
+                                    'bg-accent text-accent-foreground'
+                                )}
+                              >
+                                <div className="text-sm font-medium leading-none">
+                                  {subItem.label}
+                                </div>
+                              </Link>
+                            </NavigationMenuLink>
+                          </li>
+                        ))}
+                      </ul>
+                    </NavigationMenuContent>
+                  </>
+                ) : (
+                  <Link to={item.href}>
+                    <Button
+                      variant="ghost"
+                      className={cn(
+                        location.pathname === item.href &&
+                          'bg-accent text-accent-foreground'
+                      )}
+                    >
+                      {item.label}
+                    </Button>
+                  </Link>
+                )}
               </NavigationMenuItem>
             ))}
           </NavigationMenuList>

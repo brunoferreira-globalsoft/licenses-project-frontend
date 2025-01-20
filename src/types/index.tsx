@@ -30,3 +30,19 @@ export interface FooterItem {
 export type MainNavItem = NavItemWithOptionalChildren;
 
 export type SidebarNavItem = NavItemWithChildren;
+
+export interface MenuItem {
+  label: string;
+  href: string;
+  items?: MenuItem[];
+}
+
+export interface HeaderMenu {
+  [key: string]: MenuItem[];
+}
+
+export interface RoleHeaderMenus {
+  [role: string]: {
+    [menu: string]: MenuItem[];
+  };
+}

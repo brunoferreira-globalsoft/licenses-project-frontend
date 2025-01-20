@@ -38,6 +38,19 @@ interface DataTableProps<TData, TValue> {
   pageCount: number;
 }
 
+// Add these translations
+const ptPTTranslations = {
+  rowsPerPage: 'Linhas por página',
+  of: 'de',
+  page: 'Página',
+  noResults: 'Sem resultados.',
+  rowsSelected: 'linha(s) selecionada(s).',
+  goToFirstPage: 'Ir para primeira página',
+  goToPreviousPage: 'Ir para página anterior',
+  goToNextPage: 'Ir para próxima página',
+  goToLastPage: 'Ir para última página'
+};
+
 export default function DataTable<TData, TValue>({
   columns,
   data,
@@ -130,7 +143,7 @@ export default function DataTable<TData, TValue>({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  {ptPTTranslations.noResults}
                 </TableCell>
               </TableRow>
             )}
@@ -142,13 +155,14 @@ export default function DataTable<TData, TValue>({
       <div className="flex flex-col items-center justify-end gap-2 space-x-2 py-4 sm:flex-row">
         <div className="flex w-full items-center justify-between">
           <div className="flex-1 text-sm text-muted-foreground">
-            {table.getFilteredSelectedRowModel().rows.length} of{' '}
-            {table.getFilteredRowModel().rows.length} row(s) selected.
+            {table.getFilteredSelectedRowModel().rows.length}{' '}
+            {ptPTTranslations.of} {table.getFilteredRowModel().rows.length}{' '}
+            {ptPTTranslations.rowsSelected}
           </div>
           <div className="flex flex-col items-center gap-4 sm:flex-row sm:gap-6 lg:gap-8">
             <div className="flex items-center space-x-2">
               <p className="whitespace-nowrap text-sm font-medium">
-                Rows per page
+                {ptPTTranslations.rowsPerPage}
               </p>
               <Select
                 value={`${table.getState().pagination.pageSize}`}
@@ -174,12 +188,12 @@ export default function DataTable<TData, TValue>({
         </div>
         <div className="flex w-full items-center justify-between gap-2 sm:justify-end">
           <div className="flex w-[100px] items-center justify-center text-sm font-medium">
-            Page {table.getState().pagination.pageIndex + 1} of{' '}
-            {table.getPageCount()}
+            {ptPTTranslations.page} {table.getState().pagination.pageIndex + 1}{' '}
+            {ptPTTranslations.of} {table.getPageCount()}
           </div>
           <div className="flex items-center space-x-2">
             <Button
-              aria-label="Go to first page"
+              aria-label={ptPTTranslations.goToFirstPage}
               variant="outline"
               className="hidden h-8 w-8 p-0 lg:flex"
               onClick={() => table.setPageIndex(0)}
@@ -188,7 +202,7 @@ export default function DataTable<TData, TValue>({
               <DoubleArrowLeftIcon className="h-4 w-4" aria-hidden="true" />
             </Button>
             <Button
-              aria-label="Go to previous page"
+              aria-label={ptPTTranslations.goToPreviousPage}
               variant="outline"
               className="h-8 w-8 p-0"
               onClick={() => table.previousPage()}
@@ -197,7 +211,7 @@ export default function DataTable<TData, TValue>({
               <ChevronLeftIcon className="h-4 w-4" aria-hidden="true" />
             </Button>
             <Button
-              aria-label="Go to next page"
+              aria-label={ptPTTranslations.goToNextPage}
               variant="outline"
               className="h-8 w-8 p-0"
               onClick={() => table.nextPage()}
@@ -206,7 +220,7 @@ export default function DataTable<TData, TValue>({
               <ChevronRightIcon className="h-4 w-4" aria-hidden="true" />
             </Button>
             <Button
-              aria-label="Go to last page"
+              aria-label={ptPTTranslations.goToLastPage}
               variant="outline"
               className="hidden h-8 w-8 p-0 lg:flex"
               onClick={() => table.setPageIndex(table.getPageCount() - 1)}

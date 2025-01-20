@@ -10,14 +10,14 @@ export const columns: ColumnDef<Area>[] = [
       <Checkbox
         checked={table.getIsAllPageRowsSelected()}
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
+        aria-label="Selecionar todos"
       />
     ),
     cell: ({ row }) => (
       <Checkbox
         checked={row.getIsSelected()}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
+        aria-label="Selecionar linha"
       />
     ),
     enableSorting: false,
@@ -29,6 +29,7 @@ export const columns: ColumnDef<Area>[] = [
   },
   {
     id: 'actions',
+    header: 'Ações',
     cell: ({ row }) => <CellAction data={row.original} />
   }
 ];

@@ -1,7 +1,7 @@
 import { User } from '../models';
 
 export interface Area {
-  id: string;
+  id?: string;
   nome: string;
 }
 
