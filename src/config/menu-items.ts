@@ -3,16 +3,16 @@ import { Icons } from '@/components/ui/icons';
 export const roleMenuItems = {
   administrator: [
     {
-      title: 'Dashboard',
+      title: 'dashboard',
       href: '/',
       icon: 'dashboard' as keyof typeof Icons,
       label: 'Dashboard'
     },
     {
-      title: 'Areas',
-      href: '/areas',
+      title: 'administracao',
+      href: '/administracao',
       icon: 'user' as keyof typeof Icons,
-      label: 'areas'
+      label: 'Administração'
     }
   ],
   admin: [],
@@ -22,7 +22,7 @@ export const roleMenuItems = {
 export const roleHeaderMenus = {
   administrator: {
     dashboard: [{ label: 'About Us', href: '/about' }],
-    areas: [{ label: 'Team', href: '/team' }]
+    administracao: [{ label: 'Áreas', href: '/areas' }]
   },
   user: {},
   guest: {}

@@ -33,7 +33,7 @@ export default function DashboardNav({
 
   const menuItems = {
     dashboard: ['/about'],
-    areas: ['/team']
+    administracao: ['/areas', '/aplicacoes']
   };
 
   const handleMenuClick = (title: string) => {
@@ -89,7 +89,7 @@ export default function DashboardNav({
                     <Icon className={`ml-2.5 size-5`} />
 
                     {isMobileNav || (!isMinimized && !isMobileNav) ? (
-                      <span className="mr-2 truncate">{item.title}</span>
+                      <span className="mr-2 truncate">{item.label || item.title}</span>
                     ) : (
                       ''
                     )}
@@ -101,7 +101,7 @@ export default function DashboardNav({
                   sideOffset={8}
                   className={!isMinimized ? 'hidden' : 'inline-block'}
                 >
-                  {item.title}
+                  {item.label || item.title}
                 </TooltipContent>
               </Tooltip>
             )
