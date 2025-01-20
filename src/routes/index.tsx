@@ -36,6 +36,30 @@ export default function AppRouter() {
           index: true
         },
         {
+          path: 'menu1',
+          element: <DashboardPage />
+        },
+        {
+          path: 'menu2',
+          element: <DashboardPage />
+        },
+        {
+          path: 'about',
+          element: <div>About Page</div>
+        },
+        {
+          path: 'team',
+          element: <div>Team Page</div>
+        },
+        {
+          path: 'contact',
+          element: <div>Contact Page</div>
+        },
+        {
+          path: 'support',
+          element: <div>Support Page</div>
+        },
+        {
           path: 'student',
           element: <StudentPage />
         },

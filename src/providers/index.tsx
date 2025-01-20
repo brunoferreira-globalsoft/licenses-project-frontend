@@ -9,6 +9,7 @@ import { BrowserRouter } from 'react-router-dom';
 import ThemeProvider from './theme-provider';
 import { SidebarProvider } from '@/hooks/use-sidebar';
 import { Toaster } from '@/components/ui/toaster';
+import { HeaderNavProvider } from '@/contexts/header-nav-context';
 
 export const queryClient = new QueryClient();
 
@@ -46,8 +47,10 @@ export default function AppProvider({
               <ReactQueryDevtools />
               <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
                 <SidebarProvider>
-                  {children}
-                  <Toaster />
+                  <HeaderNavProvider>
+                    {children}
+                    <Toaster />
+                  </HeaderNavProvider>
                 </SidebarProvider>
               </ThemeProvider>
             </QueryClientProvider>
