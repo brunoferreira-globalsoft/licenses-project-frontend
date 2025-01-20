@@ -1,3 +1,4 @@
+import AreasPage from '@/pages/application/areas';
 import FormPage from '@/pages/form';
 import NotFound from '@/pages/not-found';
 import { Suspense, lazy } from 'react';
@@ -42,6 +43,10 @@ export default function AppRouter() {
         {
           path: 'form',
           element: <FormPage />
+        },
+        {
+          path: 'areas',
+          element: <AreasPage />
         }
       ]
     }

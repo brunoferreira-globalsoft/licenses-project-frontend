@@ -8,6 +8,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import { BrowserRouter } from 'react-router-dom';
 import ThemeProvider from './theme-provider';
 import { SidebarProvider } from '@/hooks/use-sidebar';
+import { Toaster } from '@/components/ui/toaster';
 
 export const queryClient = new QueryClient();
 
@@ -44,7 +45,10 @@ export default function AppProvider({
             <QueryClientProvider client={queryClient}>
               <ReactQueryDevtools />
               <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-                <SidebarProvider>{children}</SidebarProvider>
+                <SidebarProvider>
+                  {children}
+                  <Toaster />
+                </SidebarProvider>
               </ThemeProvider>
             </QueryClientProvider>
           </ErrorBoundary>

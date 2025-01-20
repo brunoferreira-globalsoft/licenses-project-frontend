@@ -14,6 +14,12 @@ export const navItems: NavItem[] = [
     label: 'Student'
   },
   {
+    title: 'Áreas',
+    href: '/areas',
+    icon: 'user',
+    label: 'Área'
+  },
+  {
     title: 'Login',
     href: '/login',
     icon: 'login',

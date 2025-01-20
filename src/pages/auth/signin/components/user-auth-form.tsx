@@ -13,27 +13,59 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
+import TokensClient from '@/lib/methods/auth/tokens';
+import { useToast } from '@/components/ui/use-toast';
 
 const formSchema = z.object({
-  email: z.string().email({ message: 'Enter a valid email address' })
+  email: z.string().email({ message: 'Enter a valid email address' }),
+  password: z.string().min(1, { message: 'Password is required' })
 });
 
 type UserFormValue = z.infer<typeof formSchema>;
 
 export default function UserAuthForm() {
   const router = useRouter();
-  const [loading] = useState(false);
+  const { toast } = useToast();
+  const [loading, setLoading] = useState(false);
+
   const defaultValues = {
-    email: 'demo@gmail.com'
+    email: '',
+    password: ''
   };
+
   const form = useForm<UserFormValue>({
     resolver: zodResolver(formSchema),
     defaultValues
   });
 
   const onSubmit = async (data: UserFormValue) => {
-    console.log('data', data);
-    router.push('/');
+    try {
+      setLoading(true);
+      const success = await TokensClient.login(data.email, data.password);
+
+      if (success) {
+        toast({
+          title: 'Success',
+          description: 'Logged in successfully',
+          variant: 'default'
+        });
+        router.push('/');
+      } else {
+        toast({
+          title: 'Error',
+          description: 'Invalid credentials',
+          variant: 'destructive'
+        });
+      }
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'Something went wrong',
+        variant: 'destructive'
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -62,8 +94,27 @@ export default function UserAuthForm() {
             )}
           />
 
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <Input
+                    type="password"
+                    placeholder="Enter your password..."
+                    disabled={loading}
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
           <Button disabled={loading} className="ml-auto w-full" type="submit">
-            Continue With Email
+            {loading ? 'Signing in...' : 'Sign in with Email'}
           </Button>
         </form>
       </Form>
