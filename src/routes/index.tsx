@@ -1,3 +1,4 @@
+import ProtectedRoute from '@/components/auth/protected-route';
 import AreasPage from '@/pages/application/areas';
 import FormPage from '@/pages/form';
 import NotFound from '@/pages/not-found';
@@ -21,11 +22,13 @@ export default function AppRouter() {
     {
       path: '/',
       element: (
-        <DashboardLayout>
-          <Suspense>
-            <Outlet />
-          </Suspense>
-        </DashboardLayout>
+        <ProtectedRoute>
+          <DashboardLayout>
+            <Suspense>
+              <Outlet />
+            </Suspense>
+          </DashboardLayout>
+        </ProtectedRoute>
       ),
       children: [
         {
