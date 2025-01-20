@@ -6,7 +6,7 @@ type HeaderNavContextType = {
 };
 
 const HeaderNavContext = createContext<HeaderNavContextType>({
-  currentMenu: 'dashboard1',
+  currentMenu: 'dashboard',
   setCurrentMenu: () => {}
 });
 
@@ -15,7 +15,7 @@ export const useHeaderNav = () => useContext(HeaderNavContext);
 export const HeaderNavProvider: React.FC<{ children: React.ReactNode }> = ({
   children
 }) => {
-  const [currentMenu, setCurrentMenu] = useState('dashboard1');
+  const [currentMenu, setCurrentMenu] = useState('dashboard');
 
   return (
     <HeaderNavContext.Provider value={{ currentMenu, setCurrentMenu }}>

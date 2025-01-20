@@ -1,7 +1,7 @@
 'use client';
 import DashboardNav from '@/components/shared/dashboard-nav';
-import { navItems } from '@/constants/data';
 import { useSidebar } from '@/hooks/use-sidebar';
+import { useMenuItems } from '@/hooks/use-menu-items';
 import { cn } from '@/lib/utils';
 import { ChevronsLeft } from 'lucide-react';
 import { useState } from 'react';
@@ -13,16 +13,18 @@ type SidebarProps = {
 export default function Sidebar({ className }: SidebarProps) {
   const { isMinimized, toggle } = useSidebar();
   const [status, setStatus] = useState(false);
+  const menuItems = useMenuItems();
 
   const handleToggle = () => {
     setStatus(true);
     toggle();
     setTimeout(() => setStatus(false), 500);
   };
+
   return (
     <nav
       className={cn(
-        `relative z-10 hidden h-screen flex-none  px-3 md:block`,
+        `relative z-10 hidden h-screen flex-none px-3 md:block`,
         status && 'duration-500',
         !isMinimized ? 'w-72' : 'w-[80px]',
         className
@@ -31,7 +33,7 @@ export default function Sidebar({ className }: SidebarProps) {
       <div
         className={cn(
           'flex items-center px-0 py-5 md:px-2',
-          isMinimized ? 'justify-center ' : 'justify-between'
+          isMinimized ? 'justify-center' : 'justify-between'
         )}
       >
         {!isMinimized && <h1 className="text-2xl font-bold">Logo</h1>}
@@ -46,7 +48,7 @@ export default function Sidebar({ className }: SidebarProps) {
       <div className="space-y-4 py-4">
         <div className="px-2 py-2">
           <div className="mt-3 space-y-1">
-            <DashboardNav items={navItems} />
+            <DashboardNav items={menuItems} />
           </div>
         </div>
       </div>

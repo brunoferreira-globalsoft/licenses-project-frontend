@@ -1,38 +1,3 @@
-import { NavItem } from '@/types';
-
-export const navItems: NavItem[] = [
-  {
-    title: 'Dashboard1',
-    href: '/menu1',
-    icon: 'dashboard',
-    label: 'Dashboard1'
-  },
-  {
-    title: 'Dashboard2',
-    href: '/menu2',
-    icon: 'dashboard',
-    label: 'Dashboard2'
-  }
-  // {
-  //   title: 'Students',
-  //   href: '/student',
-  //   icon: 'user',
-  //   label: 'Student'
-  // },
-  // {
-  //   title: 'Áreas',
-  //   href: '/areas',
-  //   icon: 'user',
-  //   label: 'Área'
-  // },
-  // {
-  //   title: 'Login',
-  //   href: '/login',
-  //   icon: 'login',
-  //   label: 'Login'
-  // }
-];
-
 export const users = [
   {
     id: 1,

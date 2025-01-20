@@ -8,25 +8,13 @@ import { Button } from '@/components/ui/button';
 import { ModeToggle } from '@/components/shared/theme-toggle';
 import UserNav from '@/components/shared/user-nav';
 import { useHeaderNav } from '@/contexts/header-nav-context';
+import { useHeaderMenu } from '@/hooks/use-header-menu';
 import { cn } from '@/lib/utils';
 
 export function HeaderNav() {
   const { currentMenu } = useHeaderNav();
   const location = useLocation();
-
-  const menuItems = {
-    dashboard1: [
-      { label: 'About Us', href: '/about' },
-      { label: 'Team', href: '/team' }
-    ],
-    dashboard2: [
-      { label: 'Contact', href: '/contact' },
-      { label: 'Support', href: '/support' }
-    ]
-  };
-
-  const currentMenuItems =
-    menuItems[currentMenu as keyof typeof menuItems] || [];
+  const currentMenuItems = useHeaderMenu(currentMenu);
 
   return (
     <div className="border-b bg-background">

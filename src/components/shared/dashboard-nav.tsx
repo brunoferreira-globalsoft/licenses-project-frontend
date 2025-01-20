@@ -32,8 +32,8 @@ export default function DashboardNav({
   const location = useLocation();
 
   const menuItems = {
-    dashboard1: ['/about', '/team'],
-    dashboard2: ['/contact', '/support']
+    dashboard: ['/about'],
+    areas: ['/team']
   };
 
   const handleMenuClick = (title: string) => {
@@ -42,11 +42,20 @@ export default function DashboardNav({
   };
 
   const isItemActive = (itemTitle: string, itemHref: string) => {
+    // Get the menu paths for this item
     const currentPaths =
       menuItems[itemTitle.toLowerCase() as keyof typeof menuItems] || [];
-    return (
-      location.pathname === itemHref || currentPaths.includes(location.pathname)
-    );
+
+    // Check if current path exactly matches the item's href
+    const isExactMatch = location.pathname === itemHref;
+
+    // Check if current path starts with item's href (for nested routes)
+    const isNestedMatch = location.pathname.startsWith(itemHref + '/');
+
+    // Check if current path is in the menu paths for this item
+    const isInMenuPaths = currentPaths.includes(location.pathname);
+
+    return isExactMatch || isNestedMatch || isInMenuPaths;
   };
 
   if (!items?.length) {

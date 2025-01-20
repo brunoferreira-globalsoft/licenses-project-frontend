@@ -1,4 +1,4 @@
-import { navItems } from '@/constants/data';
+import { useMenuItems } from '@/hooks/use-menu-items';
 import { usePathname } from '@/routes/hooks';
 import Heading from './heading';
 import UserNav from './user-nav';
@@ -6,9 +6,10 @@ import { ModeToggle } from './theme-toggle';
 
 // Custom hook to find the matched path
 const useMatchedPath = (pathname: string) => {
+  const menuItems = useMenuItems();
   const matchedPath =
-    navItems.find((item) => item.href === pathname) ||
-    navItems.find(
+    menuItems.find((item) => item.href === pathname) ||
+    menuItems.find(
       (item) => pathname.startsWith(item.href + '/') && item.href !== '/'
     );
   return matchedPath?.title || '';
