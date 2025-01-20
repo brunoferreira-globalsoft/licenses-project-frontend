@@ -2,34 +2,14 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import {
   NavigationMenu,
-  NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger
+  NavigationMenuList
 } from '@/components/ui/navigation-menu';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ModeToggle } from '@/components/shared/theme-toggle';
 import UserNav from '@/components/shared/user-nav';
-
-const components: { title: string; href: string; description: string }[] = [
-  {
-    title: 'Areas',
-    href: '/areas',
-    description: 'Manage and view all areas in the system.'
-  },
-  {
-    title: 'Students',
-    href: '/student',
-    description: 'View and manage student information.'
-  },
-  {
-    title: 'Dashboard',
-    href: '/',
-    description: 'View analytics and system overview.'
-  }
-];
 
 export function HeaderNav() {
   return (
@@ -40,22 +20,6 @@ export function HeaderNav() {
         </Link>
         <NavigationMenu>
           <NavigationMenuList>
-            {/* <NavigationMenuItem>
-              <NavigationMenuTrigger>Menu</NavigationMenuTrigger>
-              <NavigationMenuContent>
-                <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-                  {components.map((component) => (
-                    <ListItem
-                      key={component.title}
-                      title={component.title}
-                      href={component.href}
-                    >
-                      {component.description}
-                    </ListItem>
-                  ))}
-                </ul>
-              </NavigationMenuContent>
-            </NavigationMenuItem> */}
             <NavigationMenuItem>
               <Link to="/areas">
                 <Button variant="ghost">Areas</Button>

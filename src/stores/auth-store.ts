@@ -45,7 +45,7 @@ export const useAuthStore = create<AuthState & AuthActions>()(
       ...initialState,
 
       setToken: (token: string) => {
-        set({ token, isAuthenticated: !!token });
+        set({ token, isAuthenticated: !!token, isLoaded: true });
         get().decodeToken();
       },
 
@@ -79,18 +79,14 @@ export const useAuthStore = create<AuthState & AuthActions>()(
       },
 
       clearAuth: () => {
-        set(initialState);
+        set({ ...initialState, isLoaded: true });
       }
     }),
     {
       name: 'auth-storage',
-      partialize: (state) => ({
-        token: state.token,
-        refreshToken: state.refreshToken,
-        email: state.email,
-        clientId: state.clientId,
-        permissions: state.permissions
-      })
+      onRehydrateStorage: () => (state) => {
+        state?.setToken(state.token);
+      }
     }
   )
 );
