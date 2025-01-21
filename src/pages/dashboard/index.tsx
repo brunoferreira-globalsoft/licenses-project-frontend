@@ -21,14 +21,14 @@ export default function DashboardPage() {
       <div className="max-h-screen flex-1 space-y-4 overflow-y-auto p-4 pt-6 md:p-8">
         <div className="flex items-center justify-between space-y-2">
           <h2 className="text-3xl font-bold tracking-tight">
-            Hi, Welcome back 👋
+            Olá, Bem-vindo de volta 👋
           </h2>
         </div>
         <Tabs defaultValue="overview" className="space-y-4">
           <TabsList>
-            <TabsTrigger value="overview">Overview</TabsTrigger>
+            <TabsTrigger value="overview">Resumo</TabsTrigger>
             <TabsTrigger value="analytics" disabled>
-              Analytics
+              Analítico
             </TabsTrigger>
           </TabsList>
           <TabsContent value="overview" className="space-y-4">

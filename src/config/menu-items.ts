@@ -37,10 +37,6 @@ export const roleHeaderMenus = {
             description: 'Faça a gestão das aplicações da sua empresa'
           }
         ]
-      },
-      {
-        label: 'Student',
-        href: '/student'
       }
     ]
   },

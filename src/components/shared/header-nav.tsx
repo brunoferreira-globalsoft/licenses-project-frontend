@@ -27,7 +27,16 @@ export function HeaderNav() {
   const { currentMenu } = useHeaderNav();
   const menuItems = useHeaderMenu(currentMenu) as MenuItem[];
 
-  const isItemActive = (href: string) => {
+  const isItemActive = (href: string, items?: MenuItem[]) => {
+    // For menu items with subitems (like Plataforma)
+    if (items) {
+      return items.some(
+        (subItem) =>
+          location.pathname === subItem.href ||
+          location.pathname.startsWith(subItem.href + '/')
+      );
+    }
+
     // Check for exact match
     if (location.pathname === href) return true;
 
@@ -59,9 +68,8 @@ export function HeaderNav() {
                     <NavigationMenuTrigger
                       triggerMode="click"
                       className={cn(
-                        item.items.some((subItem) =>
-                          isItemActive(subItem.href)
-                        ) && 'bg-accent text-accent-foreground'
+                        isItemActive(item.href, item.items) &&
+                          'bg-accent text-accent-foreground'
                       )}
                     >
                       {item.label}
@@ -70,12 +78,19 @@ export function HeaderNav() {
                       <div className="grid gap-3 p-4 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
                         {item.items.map((subItem, subIndex) => (
                           <Link key={subIndex} to={subItem.href}>
-                            <div className="group block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                            <div
+                              className={cn(
+                                'group block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground',
+                                isItemActive(subItem.href) &&
+                                  'bg-accent text-accent-foreground'
+                                // 'bg-primary/10 text-primary hover:bg-primary/10 hover:text-primary'
+                              )}
+                            >
                               <div className="text-sm font-medium leading-none">
                                 {subItem.label}
                               </div>
                               {subItem.description && (
-                                <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                                <p className="mt-2 line-clamp-2 text-[10px] leading-snug text-muted-foreground">
                                   {subItem.description}
                                 </p>
                               )}
@@ -90,7 +105,7 @@ export function HeaderNav() {
                     <Button
                       variant="ghost"
                       className={cn(
-                        isItemActive(item.href) &&
+                        isItemActive(item.href, item.items) &&
                           'bg-accent text-accent-foreground'
                       )}
                     >
