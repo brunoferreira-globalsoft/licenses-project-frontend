@@ -1,16 +1,16 @@
 import PopupModal from '@/components/shared/popup-modal';
 import TableSearchInput from '@/components/shared/table-search-input';
-import AreaCreateForm from '@/pages/application/areas/components/area-forms/area-create-form';
+// import AplicacaoCreateForm from '@/pages/application/aplicacoes/components/aplicacao-forms/aplicacao-create-form';
 import { Button } from '@/components/ui/button';
 
-export default function AreaTableActions() {
+export default function AplicacaoTableActions() {
   return (
     <div className="flex items-center justify-between py-5">
       <div className="flex flex-1 gap-4">
-        <TableSearchInput placeholder="Procurar Áreas..." />
+        <TableSearchInput placeholder="Procurar Aplicações..." />
       </div>
       <div className="flex gap-3">
-        <PopupModal
+        {/* <PopupModal
           footer={(onClose) => (
             <>
               <Button type="button" variant="secondary" onClick={onClose}>
@@ -22,8 +22,8 @@ export default function AreaTableActions() {
             </>
           )}
         >
-          {(onClose) => <AreaCreateForm modalClose={onClose} />}
-        </PopupModal>
+          {(onClose) => <AplicacaoCreateForm modalClose={onClose} />}
+        </PopupModal> */}
       </div>
     </div>
   );

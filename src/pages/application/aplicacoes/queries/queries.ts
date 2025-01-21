@@ -1,7 +1,7 @@
-import Areas from '@/lib/methods/application/areas';
+import Aplicacoes from '@/lib/methods/application/aplicacoes';
 import { useQuery } from '@tanstack/react-query';
 
-export const useGetAreas = (
+export const useGetAplicacoes = (
   pageNumber: number,
   pageLimit: number,
   search: string | null,
@@ -10,7 +10,7 @@ export const useGetAreas = (
   return useQuery({
     queryKey: ['areas', pageNumber, pageLimit, search, sorting],
     queryFn: () =>
-      Areas('areas').getAreasPaginated({
+      Aplicacoes('aplicacoes').getAplicacoesPaginated({
         pageNumber: pageNumber,
         pageSize: pageLimit,
         keyword: search ?? undefined,

@@ -21,12 +21,6 @@ export const roleMenuItems = {
 
 export const roleHeaderMenus = {
   administrator: {
-    dashboard: [
-      {
-        label: 'About Us',
-        href: '/about'
-      }
-    ],
     administracao: [
       {
         label: 'Plataforma',
@@ -34,11 +28,13 @@ export const roleHeaderMenus = {
         items: [
           {
             label: 'Áreas',
-            href: '/areas'
+            href: '/areas',
+            description: 'Faca a gestão das áreas da sua empresa'
           },
           {
             label: 'Aplicações',
-            href: '/aplicacaoes'
+            href: '/aplicacoes',
+            description: 'Faça a gestão das aplicações da sua empresa'
           }
         ]
       },

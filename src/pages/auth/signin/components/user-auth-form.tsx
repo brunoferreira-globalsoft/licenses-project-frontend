@@ -29,8 +29,8 @@ export default function UserAuthForm() {
   const [loading, setLoading] = useState(false);
 
   const defaultValues = {
-    email: '',
-    password: ''
+    email: 'administrator@globalsoft.pt',
+    password: 'Password123!'
   };
 
   const form = useForm<UserFormValue>({
@@ -46,21 +46,21 @@ export default function UserAuthForm() {
       if (success) {
         toast({
           title: 'Success',
-          description: 'Logged in successfully',
+          description: 'Login realizado com sucesso',
           variant: 'default'
         });
         router.push('/');
       } else {
         toast({
           title: 'Error',
-          description: 'Invalid credentials',
+          description: 'Credenciais inválidas',
           variant: 'destructive'
         });
       }
     } catch (error) {
       toast({
         title: 'Error',
-        description: 'Something went wrong',
+        description: 'Algo correu mal',
         variant: 'destructive'
       });
     } finally {
@@ -84,7 +84,7 @@ export default function UserAuthForm() {
                 <FormControl>
                   <Input
                     type="email"
-                    placeholder="Enter your email..."
+                    placeholder="Introduza o seu email..."
                     disabled={loading}
                     {...field}
                   />
@@ -103,7 +103,7 @@ export default function UserAuthForm() {
                 <FormControl>
                   <Input
                     type="password"
-                    placeholder="Enter your password..."
+                    placeholder="Introduza a sua senha..."
                     disabled={loading}
                     {...field}
                   />
@@ -114,7 +114,7 @@ export default function UserAuthForm() {
           />
 
           <Button disabled={loading} className="ml-auto w-full" type="submit">
-            {loading ? 'Signing in...' : 'Sign in with Email'}
+            {loading ? 'A entrar...' : 'Entrar com o email'}
           </Button>
         </form>
       </Form>

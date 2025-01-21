@@ -25,33 +25,45 @@ const areaFormSchema = z.object({
 
 type AreaFormSchemaType = z.infer<typeof areaFormSchema>;
 
-const AreaCreateForm = ({ modalClose }: { modalClose: () => void }) => {
+interface AreaUpdateFormProps {
+  modalClose: () => void;
+  areaId: string;
+  initialData: {
+    nome: string;
+  };
+}
+
+const AreaUpdateForm = ({
+  modalClose,
+  areaId,
+  initialData
+}: AreaUpdateFormProps) => {
   const [loading, setLoading] = useState(false);
   const queryClient = useQueryClient();
 
   const form = useForm<AreaFormSchemaType>({
     resolver: zodResolver(areaFormSchema),
     defaultValues: {
-      nome: ''
+      nome: initialData.nome
     }
   });
 
   const onSubmit = async (values: AreaFormSchemaType) => {
     try {
       setLoading(true);
-      const response = await Areas('areas').createArea({
+      const response = await Areas('').updateArea(areaId, {
         nome: values.nome
       });
 
       if (response.info.succeeded) {
-        toast.success('Área criada com sucesso');
+        toast.success('Área atualizada com sucesso');
         await queryClient.invalidateQueries({ queryKey: ['areas'] });
         modalClose();
       } else {
-        toast.error(getErrorMessage(response, 'Erro ao criar área'));
+        toast.error(getErrorMessage(response, 'Erro ao atualizar área'));
       }
     } catch (error) {
-      toast.error(handleApiError(error, 'Erro ao criar área'));
+      toast.error(handleApiError(error, 'Erro ao atualizar área'));
     } finally {
       setLoading(false);
     }
@@ -59,18 +71,13 @@ const AreaCreateForm = ({ modalClose }: { modalClose: () => void }) => {
 
   return (
     <div className="px-2">
-      {/* <div className="flex items-center justify-center text-2xl font-bold">
-        {'<Logo/>'}
-      </div> */}
-
       <Heading
-        title={'Criar Nova Área'}
-        description={'Crie uma nova área para atribuir nas aplicações'}
+        title={'Atualizar Área'}
+        description={'Atualize os dados da área'}
         className="space-y-2 py-4 text-center"
       />
       <Form {...form}>
         <form
-          id="areaCreateForm"
           onSubmit={form.handleSubmit(onSubmit)}
           className="space-y-4"
           autoComplete="off"
@@ -85,7 +92,7 @@ const AreaCreateForm = ({ modalClose }: { modalClose: () => void }) => {
                     <Input
                       placeholder="Introduza o nome"
                       {...field}
-                      className=" px-4 py-6 shadow-inner drop-shadow-xl"
+                      className="px-4 py-6 shadow-inner drop-shadow-xl"
                     />
                   </FormControl>
                   <FormMessage />
@@ -93,10 +100,19 @@ const AreaCreateForm = ({ modalClose }: { modalClose: () => void }) => {
               )}
             />
           </div>
+
+          <div className="flex items-center justify-center gap-4">
+            <Button type="button" variant="secondary" onClick={modalClose}>
+              Cancelar
+            </Button>
+            <Button type="submit" disabled={loading}>
+              {loading ? 'Atualizando...' : 'Atualizar'}
+            </Button>
+          </div>
         </form>
       </Form>
     </div>
   );
 };
 
-export default AreaCreateForm;
+export default AreaUpdateForm;

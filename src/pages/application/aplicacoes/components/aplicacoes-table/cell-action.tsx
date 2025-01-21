@@ -1,42 +1,44 @@
 import { Modal } from '@/components/ui/modal';
 import { AlertModal } from '@/components/shared/alert-modal';
 import { Button } from '@/components/ui/button';
-import { Area } from '@/types/entities';
+import { Aplicacao } from '@/types/entities';
 import { Edit, Trash } from 'lucide-react';
 import { useState } from 'react';
-import AreaUpdateForm from '@/pages/application/areas/components/area-forms/area-update-form';
+// import AplicacaoUpdateForm from '@/pages/application/aplicacoes/components/aplicacao-forms/aplicacao-update-form';
 
 interface CellActionProps {
-  data: Area;
+  data: Aplicacao;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const [loading] = useState(false);
   const [open, setOpen] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
-  const [selectedArea, setSelectedArea] = useState<Area | null>(null);
+  const [selectedAplicacao, setSelectedAplicacao] = useState<Aplicacao | null>(
+    null
+  );
 
   const onConfirm = async () => {};
 
-  const handleUpdateClick = (area: Area) => {
-    setSelectedArea(area);
+  const handleUpdateClick = (area: Aplicacao) => {
+    setSelectedAplicacao(area);
     setIsUpdateModalOpen(true);
   };
 
   return (
     <>
-      <Modal
+      {/* <Modal
         isOpen={isUpdateModalOpen}
         onClose={() => setIsUpdateModalOpen(false)}
       >
-        {selectedArea && (
+        {selectedAplicacao && (
           <AreaUpdateForm
             modalClose={() => setIsUpdateModalOpen(false)}
-            areaId={selectedArea.id || ''}
-            initialData={{ nome: selectedArea.nome }}
+            aplicacaoId={selectedAplicacao.id || ''}
+            initialData={{ nome: selectedAplicacao.nome }}
           />
         )}
-      </Modal>
+      </Modal> */}
 
       <AlertModal
         isOpen={open}

@@ -28,7 +28,7 @@ export default function DashboardNav({
 }: DashboardNavProps) {
   const path = usePathname();
   const { isMinimized } = useSidebar();
-  const { setCurrentMenu } = useHeaderNav();
+  const { setCurrentMenu, currentMenu } = useHeaderNav();
   const location = useLocation();
 
   const menuItems = {
@@ -37,7 +37,10 @@ export default function DashboardNav({
   };
 
   const handleMenuClick = (title: string) => {
-    setCurrentMenu(title.toLowerCase());
+    // Only update the current menu if it's different
+    if (title.toLowerCase() !== currentMenu) {
+      setCurrentMenu(title.toLowerCase());
+    }
     if (setOpen) setOpen(false);
   };
 
@@ -89,7 +92,9 @@ export default function DashboardNav({
                     <Icon className={`ml-2.5 size-5`} />
 
                     {isMobileNav || (!isMinimized && !isMobileNav) ? (
-                      <span className="mr-2 truncate">{item.label || item.title}</span>
+                      <span className="mr-2 truncate">
+                        {item.label || item.title}
+                      </span>
                     ) : (
                       ''
                     )}

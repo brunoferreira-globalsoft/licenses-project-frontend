@@ -1,9 +1,10 @@
 import { Checkbox } from '@/components/ui/checkbox';
-import { Area } from '@/types/entities';
+import { Aplicacao } from '@/types/entities';
 import { ColumnDef } from '@tanstack/react-table';
 import { CellAction } from '@/pages/application/areas/components/areas-table/cell-action';
+import { CheckIcon, CrossCircledIcon as XIcon } from '@radix-ui/react-icons';
 
-export const columns: ColumnDef<Area>[] = [
+export const columns: ColumnDef<Aplicacao>[] = [
   {
     id: 'select',
     header: ({ table }) => (
@@ -20,12 +21,29 @@ export const columns: ColumnDef<Area>[] = [
         aria-label="Selecionar linha"
       />
     ),
-    enableSorting: false,
+    enableSorting: true,
     enableHiding: false
   },
   {
     accessorKey: 'nome',
     header: 'Nome'
+  },
+  {
+    accessorKey: 'descricao',
+    header: 'Descrição'
+  },
+  {
+    accessorKey: 'ativo',
+    header: () => <div className="text-center">Ativo</div>,
+    cell: ({ row }) => (
+      <div className="flex items-center justify-center">
+        {row.original.ativo ? (
+          <CheckIcon className="h-4 w-4 text-primary" />
+        ) : (
+          <XIcon className="h-4 w-4 text-destructive" />
+        )}
+      </div>
+    )
   },
   {
     id: 'actions',

@@ -1,19 +1,16 @@
 import ProtectedRoute from '@/components/auth/protected-route';
+import AplicacoesPage from '@/pages/application/aplicacoes';
 import AreasPage from '@/pages/application/areas';
-import FormPage from '@/pages/form';
 import NotFound from '@/pages/not-found';
 import { Suspense, lazy } from 'react';
 import { Navigate, Outlet, useRoutes } from 'react-router-dom';
+import { HeaderNavProvider } from '@/contexts/header-nav-context';
 
 const DashboardLayout = lazy(
   () => import('@/components/layout/dashboard-layout')
 );
 const SignInPage = lazy(() => import('@/pages/auth/signin'));
 const DashboardPage = lazy(() => import('@/pages/dashboard'));
-const StudentPage = lazy(() => import('@/pages/students'));
-const StudentDetailPage = lazy(
-  () => import('@/pages/students/StudentDetailPage')
-);
 
 // ----------------------------------------------------------------------
 
@@ -23,11 +20,13 @@ export default function AppRouter() {
       path: '/',
       element: (
         <ProtectedRoute>
-          <DashboardLayout>
-            <Suspense>
-              <Outlet />
-            </Suspense>
-          </DashboardLayout>
+          <HeaderNavProvider>
+            <DashboardLayout>
+              <Suspense>
+                <Outlet />
+              </Suspense>
+            </DashboardLayout>
+          </HeaderNavProvider>
         </ProtectedRoute>
       ),
       children: [
@@ -36,36 +35,17 @@ export default function AppRouter() {
           index: true
         },
         {
-          path: 'about',
-          element: <div>About Page</div>
-        },
-        {
-          path: 'team',
-          element: <div>Team Page</div>
-        },
-        {
-          path: 'contact',
-          element: <div>Contact Page</div>
-        },
-        {
           path: 'administracao',
-          element: <DashboardPage />
+          element: <div>Administracao</div>
         },
-        {
-          path: 'student',
-          element: <StudentPage />
-        },
-        {
-          path: 'student/details',
-          element: <StudentDetailPage />
-        },
-        {
-          path: 'form',
-          element: <FormPage />
-        },
+
         {
           path: 'areas',
           element: <AreasPage />
+        },
+        {
+          path: 'aplicacoes',
+          element: <AplicacoesPage />
         }
       ]
     }

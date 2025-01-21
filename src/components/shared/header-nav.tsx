@@ -14,54 +14,75 @@ import { useHeaderNav } from '@/contexts/header-nav-context';
 import { useHeaderMenu } from '@/hooks/use-header-menu';
 import { cn } from '@/lib/utils';
 import { Logo } from '@/assets/logo-letters';
-import { useSidebar } from '@/hooks/use-sidebar';
 
 interface MenuItem {
   href: string;
   label: string;
+  description?: string;
   items?: MenuItem[];
 }
 
 export function HeaderNav() {
-  const { currentMenu } = useHeaderNav();
   const location = useLocation();
-  const currentMenuItems = useHeaderMenu(currentMenu) as MenuItem[];
-  const { isMinimized, toggle } = useSidebar();
+  const { currentMenu } = useHeaderNav();
+  const menuItems = useHeaderMenu(currentMenu) as MenuItem[];
+
+  const isItemActive = (href: string) => {
+    // Check for exact match
+    if (location.pathname === href) return true;
+
+    // Check for nested routes
+    if (href !== '/' && location.pathname.startsWith(href + '/')) return true;
+
+    // For administration menu, check if current path is in its submenu paths
+    if (href === '/administracao') {
+      return ['/areas', '/aplicacoes'].some((path) =>
+        location.pathname.startsWith(path)
+      );
+    }
+
+    return false;
+  };
 
   return (
     <div className="border-b bg-background">
       <div className="flex h-16 items-center px-4">
         <div className="mr-6 flex items-center space-x-2">
-          <Logo width={95} className="text-foreground" disableLink />
+          <Logo width={95} className="text-primary" disableLink />
         </div>
         <NavigationMenu>
           <NavigationMenuList>
-            {currentMenuItems.map((item, index) => (
+            {menuItems.map((item, index) => (
               <NavigationMenuItem key={index}>
                 {item.items ? (
                   <>
-                    <NavigationMenuTrigger>{item.label}</NavigationMenuTrigger>
+                    <NavigationMenuTrigger
+                      triggerMode="click"
+                      className={cn(
+                        item.items.some((subItem) =>
+                          isItemActive(subItem.href)
+                        ) && 'bg-accent text-accent-foreground'
+                      )}
+                    >
+                      {item.label}
+                    </NavigationMenuTrigger>
                     <NavigationMenuContent>
-                      <ul className="grid w-[200px] gap-3 p-4">
+                      <div className="grid gap-3 p-4 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
                         {item.items.map((subItem, subIndex) => (
-                          <li key={subIndex}>
-                            <NavigationMenuLink asChild>
-                              <Link
-                                to={subItem.href}
-                                className={cn(
-                                  'block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground',
-                                  location.pathname === subItem.href &&
-                                    'bg-accent text-accent-foreground'
-                                )}
-                              >
-                                <div className="text-sm font-medium leading-none">
-                                  {subItem.label}
-                                </div>
-                              </Link>
-                            </NavigationMenuLink>
-                          </li>
+                          <Link key={subIndex} to={subItem.href}>
+                            <div className="group block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                              <div className="text-sm font-medium leading-none">
+                                {subItem.label}
+                              </div>
+                              {subItem.description && (
+                                <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                                  {subItem.description}
+                                </p>
+                              )}
+                            </div>
+                          </Link>
                         ))}
-                      </ul>
+                      </div>
                     </NavigationMenuContent>
                   </>
                 ) : (
@@ -69,7 +90,7 @@ export function HeaderNav() {
                     <Button
                       variant="ghost"
                       className={cn(
-                        location.pathname === item.href &&
+                        isItemActive(item.href) &&
                           'bg-accent text-accent-foreground'
                       )}
                     >

@@ -1,9 +1,11 @@
 import {
   GSGenericResponse,
   GSResponse,
-  PaginatedRequest
+  PaginatedRequest,
+  PaginatedResponse
 } from '@/types/common';
 import { Aplicacao } from '@/types/entities';
+import { ResponseApi } from '@/types/responses';
 import { BaseApiClient, BaseApiError } from '@/lib/base-client';
 
 export class AplicacaoError extends BaseApiError {
@@ -13,7 +15,7 @@ export class AplicacaoError extends BaseApiError {
 class AplicacoesClient extends BaseApiClient {
   public async getAplicacoesPaginated(
     params: PaginatedRequest
-  ): Promise<GSResponse<Aplicacao[]>> {
+  ): Promise<ResponseApi<PaginatedResponse<Aplicacao>>> {
     const cacheKey = this.getCacheKey(
       'POST',
       '/api/aplicacoes/aplicacoes-paginated',
@@ -24,10 +26,11 @@ class AplicacoesClient extends BaseApiClient {
         try {
           const response = await this.httpClient.postRequest<
             PaginatedRequest,
-            GSResponse<Aplicacao[]>
+            PaginatedResponse<Aplicacao>
           >('/api/aplicacoes/aplicacoes-paginated', params);
 
-          if (!this.validateResponse<Aplicacao[]>(response)) {
+          if (!response.info || !response.info.data) {
+            console.error('Invalid response format:', response);
             throw new AplicacaoError('Invalid response format');
           }
 
@@ -69,17 +72,15 @@ class AplicacoesClient extends BaseApiClient {
     );
   }
 
-  public async createAplicacao(data: Aplicacao): Promise<GSResponse<string>> {
+  public async createAplicacao(
+    data: Aplicacao
+  ): Promise<ResponseApi<GSResponse<string>>> {
     return this.withRetry(async () => {
       try {
         const response = await this.httpClient.postRequest<
           Aplicacao,
           GSResponse<string>
         >('/api/aplicacoes', data);
-
-        if (!this.validateResponse<string>(response)) {
-          throw new AplicacaoError('Invalid response format');
-        }
 
         return response;
       } catch (error) {
@@ -95,17 +96,13 @@ class AplicacoesClient extends BaseApiClient {
   public async updateAplicacao(
     id: string,
     data: Aplicacao
-  ): Promise<GSGenericResponse> {
+  ): Promise<ResponseApi<GSResponse<string>>> {
     return this.withRetry(async () => {
       try {
         const response = await this.httpClient.putRequest<
           Aplicacao,
           GSResponse<GSGenericResponse>
         >(`/api/aplicacoes/${id}`, data);
-
-        if (!this.validateResponse<GSGenericResponse>(response)) {
-          throw new AplicacaoError('Invalid response format');
-        }
 
         return response.data;
       } catch (error) {

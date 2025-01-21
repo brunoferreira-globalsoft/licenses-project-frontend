@@ -16,14 +16,18 @@ class AreasClient extends BaseApiClient {
   public async getAreasPaginated(
     params: PaginatedRequest
   ): Promise<ResponseApi<PaginatedResponse<Area>>> {
-    const cacheKey = this.getCacheKey('GET', '/api/areas', params);
+    const cacheKey = this.getCacheKey(
+      'POST',
+      '/api/areas/areas-paginated',
+      params
+    );
     return this.withCache(cacheKey, () =>
       this.withRetry(async () => {
         try {
-          const response =
-            await this.httpClient.getRequest<PaginatedResponse<Area>>(
-              '/api/areas'
-            );
+          const response = await this.httpClient.postRequest<
+            PaginatedRequest,
+            PaginatedResponse<Area>
+          >('/api/areas/areas-paginated', params);
 
           console.log('Areas API Response:', response);
 
@@ -34,14 +38,20 @@ class AreasClient extends BaseApiClient {
 
           return response;
         } catch (error) {
-          console.error('Error fetching areas:', error);
-          throw new AreaError('Error fetching areas', undefined, error);
+          console.error('Failed to fetch paginated areas:', error);
+          throw new AreaError(
+            'Failed to fetch paginated areas',
+            undefined,
+            error
+          );
         }
       })
     );
   }
 
-  public async createArea(data: Area): Promise<GSResponse<string>> {
+  public async createArea(
+    data: Area
+  ): Promise<ResponseApi<GSResponse<string>>> {
     return this.withRetry(async () => {
       try {
         const response = await this.httpClient.postRequest<
@@ -49,9 +59,7 @@ class AreasClient extends BaseApiClient {
           GSResponse<string>
         >('/api/areas', data);
 
-        if (!this.validateResponse<string>(response)) {
-          throw new AreaError('Invalid response format');
-        }
+        console.log(response);
 
         return response;
       } catch (error) {
@@ -60,17 +68,16 @@ class AreasClient extends BaseApiClient {
     });
   }
 
-  public async updateArea(id: string, data: Area): Promise<GSResponse<string>> {
+  public async updateArea(
+    id: string,
+    data: Area
+  ): Promise<ResponseApi<GSResponse<string>>> {
     return this.withRetry(async () => {
       try {
         const response = await this.httpClient.putRequest<
           Area,
           GSResponse<string>
         >(`/api/areas/${id}`, data);
-
-        if (!this.validateResponse<string>(response)) {
-          throw new AreaError('Invalid response format');
-        }
 
         return response;
       } catch (error) {

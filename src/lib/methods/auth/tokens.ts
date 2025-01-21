@@ -65,15 +65,37 @@ class TokensClient {
     const { setToken, setRefreshToken } = useAuthStore.getState();
     const refreshToken = useAuthStore.getState().refreshToken;
 
-    try {
-      const response = await this.httpClient.getRequest<
-        GSResponse<ResponseLogin>
-      >(`/api/tokens/${refreshToken}`);
+    if (!refreshToken) {
+      console.error('No refresh token available');
+      return false;
+    }
 
-      const refreshResponse = response.info.data;
-      setToken(refreshResponse.token);
-      setRefreshToken(refreshResponse.refreshToken);
-      return true;
+    console.log('getRefresh', refreshToken);
+
+    const options: AxiosRequestConfig = {
+      method: 'GET',
+      url: `${import.meta.env.VITE_URL}/api/tokens/${refreshToken}`,
+      headers: {
+        tenant: 'root',
+        'Accept-Language': 'en-US',
+        'Content-Type': 'application/json',
+        'X-API-Key': import.meta.env.VITE_API_KEY
+      }
+    };
+
+    try {
+      const response = await axios.request(options);
+
+      console.log('getRefresh response', response);
+
+      if (response.status === 200 && response.data?.data) {
+        const refreshResponse: ResponseLogin = response.data.data;
+        setToken(refreshResponse.token);
+        setRefreshToken(refreshResponse.refreshToken);
+        return true;
+      }
+
+      return false;
     } catch (err) {
       console.error('Refresh error', err);
       return false;

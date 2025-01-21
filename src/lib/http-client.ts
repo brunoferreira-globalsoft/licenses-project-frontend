@@ -24,7 +24,7 @@ export class HttpClient {
     this.idFuncionalidade = idFuncionalidade;
   }
 
-  private async renewToken() {
+  private async renewToken(): Promise<boolean> {
     const currentTime = Date.now();
 
     // Skip if another check is in progress or if we checked recently
@@ -32,7 +32,7 @@ export class HttpClient {
       this.tokenCheckInProgress ||
       currentTime - this.lastTokenCheck < this.TOKEN_CHECK_INTERVAL
     ) {
-      return;
+      return true;
     }
 
     try {
@@ -40,7 +40,7 @@ export class HttpClient {
       const { token } = useAuthStore.getState();
 
       if (!token) {
-        return;
+        return false;
       }
 
       const decodedToken: GSResponseToken = jwtDecode(token);
@@ -51,14 +51,36 @@ export class HttpClient {
           .default;
         const success = await TokensClient.getRefresh();
 
-        if (!success) {
-          console.error('Failed to renew token');
+        if (success) {
+          // Update localStorage state
+          const state = (await import('@/states/state')).default;
+          const { token: newToken, refreshToken } = useAuthStore.getState();
+
+          state.Token = newToken;
+          state.Refresh_Token = refreshToken;
+          state.save(); // This will update localStorage
         }
+
+        return success;
       }
+
+      return true;
     } finally {
       this.lastTokenCheck = currentTime;
       this.tokenCheckInProgress = false;
     }
+  }
+
+  private async withTokenRenewal<T>(
+    requestFn: () => Promise<AxiosResponse<T>>
+  ): Promise<AxiosResponse<T>> {
+    const tokenValid = await this.renewToken();
+
+    if (!tokenValid) {
+      throw new Error('Unable to renew token');
+    }
+
+    return requestFn();
   }
 
   protected getHeaders() {
@@ -81,13 +103,11 @@ export class HttpClient {
 
   public getRequest = async <T>(url: string): Promise<ResponseApi<T>> => {
     try {
-      // await this.renewToken();
-
-      const headers: Record<string, string> = this.getHeaders();
-
-      const response: AxiosResponse<T> = await axios.get(`${apiUrl}${url}`, {
-        headers
-      });
+      const response = await this.withTokenRenewal(() =>
+        axios.get(`${apiUrl}${url}`, {
+          headers: this.getHeaders()
+        })
+      );
 
       return {
         info: response.data,
@@ -112,14 +132,12 @@ export class HttpClient {
     data: T
   ): Promise<ResponseApi<U>> => {
     try {
-      // await this.renewToken();
+      //
 
-      const response: AxiosResponse<U> = await axios.post(
-        `${apiUrl}${url}`,
-        data,
-        {
+      const response = await this.withTokenRenewal(() =>
+        axios.post(`${apiUrl}${url}`, data, {
           headers: this.getHeaders()
-        }
+        })
       );
 
       return {
@@ -139,14 +157,10 @@ export class HttpClient {
     data: T
   ): Promise<ResponseApi<U>> => {
     try {
-      // await this.renewToken();
-
-      const response: AxiosResponse<U> = await axios.put(
-        `${apiUrl}${url}`,
-        data,
-        {
+      const response = await this.withTokenRenewal(() =>
+        axios.put(`${apiUrl}${url}`, data, {
           headers: this.getHeaders()
-        }
+        })
       );
 
       return {
@@ -162,11 +176,11 @@ export class HttpClient {
 
   public deleteRequest = async <T>(url: string): Promise<ResponseApi<T>> => {
     try {
-      // await this.renewToken();
-
-      const response: AxiosResponse<T> = await axios.delete(`${apiUrl}${url}`, {
-        headers: this.getHeaders()
-      });
+      const response = await this.withTokenRenewal(() =>
+        axios.delete(`${apiUrl}${url}`, {
+          headers: this.getHeaders()
+        })
+      );
 
       return {
         info: response.data,
@@ -183,14 +197,14 @@ export class HttpClient {
     url: string
   ): Promise<ResponseApi<T>> => {
     try {
-      // await this.renewToken();
-
-      const response: AxiosResponse<T> = await axios.post(
-        `${apiUrl}${url}`,
-        {},
-        {
-          headers: this.getHeaders()
-        }
+      const response = await this.withTokenRenewal(() =>
+        axios.post(
+          `${apiUrl}${url}`,
+          {},
+          {
+            headers: this.getHeaders()
+          }
+        )
       );
 
       return {
@@ -208,14 +222,14 @@ export class HttpClient {
     url: string
   ): Promise<ResponseApi<T>> => {
     try {
-      // await this.renewToken();
-
-      const response: AxiosResponse<T> = await axios.put(
-        `${apiUrl}${url}`,
-        {},
-        {
-          headers: this.getHeaders()
-        }
+      const response = await this.withTokenRenewal(() =>
+        axios.put(
+          `${apiUrl}${url}`,
+          {},
+          {
+            headers: this.getHeaders()
+          }
+        )
       );
 
       return {

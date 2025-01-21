@@ -1,18 +1,18 @@
 import PageHead from '@/components/shared/page-head';
-import { useGetAreas } from '@/pages/application/areas/queries/queries';
-import AreasTable from '@/pages/application/areas/components/areas-table';
 import { useSearchParams } from 'react-router-dom';
+import AplicacoesTable from '@/pages/application/aplicacoes/components/aplicacoes-table';
 import { DataTableSkeleton } from '@/components/shared/data-table-skeleton';
+import { useGetAplicacoes } from './queries/queries';
 
-export default function AreasPage() {
+export default function AplicacoesPage() {
   const [searchParams] = useSearchParams();
   const page = Number(searchParams.get('page') || 1);
   const pageLimit = Number(searchParams.get('limit') || 10);
   const search = searchParams.get('search') || null;
-  const { data, isLoading } = useGetAreas(page, pageLimit, search, null);
+  const { data, isLoading } = useGetAplicacoes(page, pageLimit, search, null);
 
-  // Get the areas from the transformed response
-  const areas = data?.info?.data || [];
+  // Get the aplicacoes from the transformed response
+  const aplicacoes = data?.info?.data || [];
   const totalAreas = data?.info?.totalCount || 0;
   const pageCount = data?.info?.totalPages || 0;
 
@@ -30,10 +30,10 @@ export default function AreasPage() {
 
   return (
     <div className="p-4 md:p-8">
-      <PageHead title="Áreas | App" />
+      <PageHead title="Aplicações | GSLP" />
 
-      <AreasTable
-        areas={areas}
+      <AplicacoesTable
+        aplicacoes={aplicacoes}
         page={page}
         totalAreas={totalAreas}
         pageCount={pageCount}
