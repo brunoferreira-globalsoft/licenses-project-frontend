@@ -3,6 +3,7 @@ import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { Link } from 'react-router-dom';
 import { Logo } from '@/assets/logo';
+import { Logo as LogoLetters } from '@/assets/logo-letters';
 
 export default function () {
   return (
@@ -22,14 +23,17 @@ export default function () {
           <Logo width={95} height={95} className="text-white" disableLink />
         </div>
         <div className="relative z-20 mt-auto">
-          <blockquote className="space-y-2">
+          <div className="mb-4 flex justify-center">
+            <LogoLetters width={200} className="text-white" disableLink />
+          </div>
+          {/* <blockquote className="space-y-2">
             <p className="text-lg">
               &ldquo;This library has saved me countless hours of work and
               helped me deliver stunning designs to my clients faster than ever
               before.&rdquo;
             </p>
             <footer className="text-sm">Sofia Davis</footer>
-          </blockquote>
+          </blockquote> */}
         </div>
       </div>
       <div className="flex h-full items-center p-4 lg:p-8">

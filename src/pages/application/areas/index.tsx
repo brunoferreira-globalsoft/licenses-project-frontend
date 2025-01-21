@@ -3,6 +3,7 @@ import { useGetAreas } from '@/pages/application/areas/queries/queries';
 import AreasTable from '@/pages/application/areas/components/areas-table';
 import { useSearchParams } from 'react-router-dom';
 import { DataTableSkeleton } from '@/components/shared/data-table-skeleton';
+import { Breadcrumbs } from '@/components/shared/breadcrumbs';
 
 export default function AreasPage() {
   const [searchParams] = useSearchParams();
@@ -30,8 +31,13 @@ export default function AreasPage() {
 
   return (
     <div className="p-4 md:p-8">
-      <PageHead title="Áreas | App" />
-
+      <PageHead title="Áreas | GSLP" />
+      <Breadcrumbs
+        items={[
+          { title: 'Administração', link: '/administracao' },
+          { title: 'Áreas', link: '/areas' }
+        ]}
+      />
       <AreasTable
         areas={areas}
         page={page}

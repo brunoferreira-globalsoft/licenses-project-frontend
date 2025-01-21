@@ -36,7 +36,7 @@ export default function AppRouter() {
         },
         {
           path: 'administracao',
-          element: <div>Administracao</div>
+          element: <div></div>
         },
 
         {

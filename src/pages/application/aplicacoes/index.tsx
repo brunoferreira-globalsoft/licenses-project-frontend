@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import AplicacoesTable from '@/pages/application/aplicacoes/components/aplicacoes-table';
 import { DataTableSkeleton } from '@/components/shared/data-table-skeleton';
 import { useGetAplicacoes } from './queries/queries';
+import { Breadcrumbs } from '@/components/shared/breadcrumbs';
 
 export default function AplicacoesPage() {
   const [searchParams] = useSearchParams();
@@ -31,7 +32,12 @@ export default function AplicacoesPage() {
   return (
     <div className="p-4 md:p-8">
       <PageHead title="Aplicações | GSLP" />
-
+      <Breadcrumbs
+        items={[
+          { title: 'Administração', link: '/administracao' },
+          { title: 'Aplicações', link: '/aplicacoes' }
+        ]}
+      />
       <AplicacoesTable
         aplicacoes={aplicacoes}
         page={page}
