@@ -31,7 +31,6 @@ import {
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { DataTableFilterControls } from './data-table-filter-controls';
 import { DataTableFilterField } from './data-table-types';
 import { DataTableFilterModal } from './data-table-filter-modal';
 import { Badge } from '@/components/ui/badge';
@@ -43,6 +42,7 @@ type DataTableProps<TData, TValue> = {
   filterFields?: DataTableFilterField<TData>[];
   defaultColumnFilters?: { id: string; value: string | null }[];
   pageSizeOptions?: number[];
+  onPaginationChange?: (page: number, pageSize: number) => void;
 };
 
 // Add these translations
@@ -67,7 +67,8 @@ export default function DataTable<TData, TValue>({
   pageCount,
   filterFields = [],
   defaultColumnFilters = [],
-  pageSizeOptions = [10, 20, 30, 40, 50]
+  pageSizeOptions = [10, 20, 30, 40, 50],
+  onPaginationChange
 }: DataTableProps<TData, TValue>) {
   const [searchParams, setSearchParams] = useSearchParams();
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
@@ -150,7 +151,22 @@ export default function DataTable<TData, TValue>({
       pagination: { pageIndex, pageSize },
       columnFilters: pendingColumnFilters
     },
-    onPaginationChange: setPagination,
+    onPaginationChange: (updater) => {
+      if (typeof updater === 'function') {
+        const newState = updater({
+          pageIndex,
+          pageSize
+        });
+
+        // Update URL params with new pagination state
+        const newParams = new URLSearchParams(searchParams);
+        newParams.set('page', (newState.pageIndex + 1).toString());
+        newParams.set('limit', newState.pageSize.toString());
+        setSearchParams(newParams);
+
+        setPagination(newState);
+      }
+    },
     onColumnFiltersChange: setPendingColumnFilters,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -158,6 +174,19 @@ export default function DataTable<TData, TValue>({
     manualPagination: true,
     manualFiltering: true
   });
+
+  // Add this effect after the table initialization
+  useEffect(() => {
+    const page = searchParams?.get('page');
+    const limit = searchParams?.get('limit');
+
+    if (page !== null || limit !== null) {
+      setPagination({
+        pageIndex: page ? Number(page) - 1 : 0,
+        pageSize: limit ? Number(limit) : 10
+      });
+    }
+  }, [searchParams]);
 
   const getActiveFiltersCount = () => {
     return columnFilters.filter((filter) => filter.value).length;
@@ -180,6 +209,12 @@ export default function DataTable<TData, TValue>({
     setSearchParams(newParams);
     setIsFilterModalOpen(false);
   };
+
+  useEffect(() => {
+    if (onPaginationChange) {
+      onPaginationChange(pageIndex + 1, pageSize);
+    }
+  }, [pageIndex, pageSize, onPaginationChange]);
 
   return (
     <div className="flex flex-col space-y-4">

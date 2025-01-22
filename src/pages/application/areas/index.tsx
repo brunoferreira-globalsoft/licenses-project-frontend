@@ -4,13 +4,52 @@ import AreasTable from '@/pages/application/areas/components/areas-table';
 import { useSearchParams } from 'react-router-dom';
 import { DataTableSkeleton } from '@/components/shared/data-table-skeleton';
 import { Breadcrumbs } from '@/components/shared/breadcrumbs';
+import { useQueryClient } from '@tanstack/react-query';
+import { useEffect } from 'react';
+import Areas from '@/lib/methods/application/areas';
 
 export default function AreasPage() {
   const [searchParams] = useSearchParams();
+  const queryClient = useQueryClient();
   const page = Number(searchParams.get('page') || 1);
   const pageLimit = Number(searchParams.get('limit') || 10);
-  const search = searchParams.get('search') || null;
-  const { data, isLoading } = useGetAreas(page, pageLimit, search, null);
+
+  // Transform filters to match C# model
+  const filters = Array.from(searchParams.entries())
+    .filter(([key]) => ['nome'].includes(key))
+    .map(([field, value]) => ({
+      id: field,
+      value
+    }));
+
+  const { data, isLoading } = useGetAreas(page, pageLimit, filters, null);
+
+  // Prefetch adjacent pages
+  useEffect(() => {
+    if (page > 1) {
+      queryClient.prefetchQuery({
+        queryKey: ['areas', page - 1, pageLimit, filters, null],
+        queryFn: () =>
+          Areas('areas').getAreasPaginated({
+            pageNumber: page - 1,
+            pageSize: pageLimit,
+            filters:
+              (filters as unknown as Record<string, string>) ?? undefined,
+            sorting: undefined
+          })
+      });
+    }
+    queryClient.prefetchQuery({
+      queryKey: ['areas', page + 1, pageLimit, filters, null],
+      queryFn: () =>
+        Areas('areas').getAreasPaginated({
+          pageNumber: page + 1,
+          pageSize: pageLimit,
+          filters: (filters as unknown as Record<string, string>) ?? undefined,
+          sorting: undefined
+        })
+    });
+  }, [page, pageLimit, filters, queryClient]);
 
   // Get the areas from the transformed response
   const areas = data?.info?.data || [];
@@ -43,6 +82,7 @@ export default function AreasPage() {
         page={page}
         totalAreas={totalAreas}
         pageCount={pageCount}
+        searchParams={Object.fromEntries(searchParams)}
       />
     </div>
   );

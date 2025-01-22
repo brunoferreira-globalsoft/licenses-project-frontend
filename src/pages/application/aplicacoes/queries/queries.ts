@@ -15,6 +15,9 @@ export const useGetAplicacoes = (
         pageSize: pageLimit,
         filters: (filters as unknown as Record<string, string>) ?? undefined,
         sorting: sorting ?? undefined
-      })
+      }),
+    placeholderData: (previousData) => previousData,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 30 * 60 * 1000
   });
 };
