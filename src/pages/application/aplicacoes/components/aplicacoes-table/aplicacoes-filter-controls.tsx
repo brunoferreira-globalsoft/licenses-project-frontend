@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/select';
 import { BaseFilterControlsProps } from '@/components/shared/data-table-filter-controls-base';
 import { Aplicacao } from '@/types/entities';
+import { ColumnDef } from '@tanstack/react-table';
 
 export function AplicacoesFilterControls({
   table,
@@ -19,6 +20,31 @@ export function AplicacoesFilterControls({
 }: BaseFilterControlsProps<Aplicacao>) {
   const [filterValues, setFilterValues] = useState<Record<string, string>>({});
 
+  useEffect(() => {
+    const initialFilterValues: Record<string, string> = {};
+    columns
+      .filter((column) => {
+        const excludedColumns = ['select', 'actions', 'page', 'limit'];
+        return (
+          'accessorKey' in column &&
+          column.accessorKey &&
+          !excludedColumns.includes(column.accessorKey.toString())
+        );
+      })
+      .forEach((column) => {
+        if ('accessorKey' in column && column.accessorKey) {
+          const columnFilterValue = table
+            .getColumn(column.accessorKey)
+            ?.getFilterValue();
+          if (columnFilterValue) {
+            initialFilterValues[column.accessorKey.toString()] =
+              columnFilterValue.toString();
+          }
+        }
+      });
+    setFilterValues(initialFilterValues);
+  }, [table, columns]);
+
   const handleFilterChange = (columnId: string, value: string) => {
     setFilterValues((prev) => ({
       ...prev,
@@ -27,20 +53,25 @@ export function AplicacoesFilterControls({
     table.getColumn(columnId)?.setFilterValue(value);
   };
 
-  const getColumnHeader = (column: any): string => {
+  const getColumnHeader = (column: ColumnDef<Aplicacao, unknown>): string => {
     if (typeof column.header === 'string') return column.header;
-    if (typeof column.header === 'function') return column.accessorKey;
-    return column.accessorKey;
+    if ('accessorKey' in column) return column.accessorKey.toString();
+    return '';
   };
 
-  const renderFilterInput = (column: any) => {
+  const renderFilterInput = (column: ColumnDef<Aplicacao, unknown>) => {
+    if (!('accessorKey' in column) || !column.accessorKey) return null;
+
     if (column.accessorKey === 'ativo') {
       const currentValue = filterValues[column.accessorKey] ?? '';
       return (
         <Select
           value={currentValue === '' ? 'all' : currentValue}
           onValueChange={(value) =>
-            handleFilterChange(column.accessorKey, value === 'all' ? '' : value)
+            handleFilterChange(
+              column.accessorKey!.toString(),
+              value === 'all' ? '' : value
+            )
           }
         >
           <SelectTrigger className="max-w-sm">
@@ -58,9 +89,9 @@ export function AplicacoesFilterControls({
     return (
       <Input
         placeholder={`Filtrar por ${getColumnHeader(column).toLowerCase()}...`}
-        value={filterValues[column.accessorKey] ?? ''}
+        value={filterValues[column.accessorKey.toString()] ?? ''}
         onChange={(event) =>
-          handleFilterChange(column.accessorKey, event.target.value)
+          handleFilterChange(column.accessorKey.toString(), event.target.value)
         }
         className="max-w-sm"
       />
@@ -73,16 +104,23 @@ export function AplicacoesFilterControls({
         .filter((column) => {
           const excludedColumns = ['select', 'actions', 'page', 'limit'];
           return (
+            'accessorKey' in column &&
             column.accessorKey &&
             !excludedColumns.includes(column.accessorKey.toString())
           );
         })
-        .map((column) => (
-          <div key={`${column.id}-${column.accessorKey}`} className="space-y-2">
-            <Label>{getColumnHeader(column)}</Label>
-            {renderFilterInput(column)}
-          </div>
-        ))}
+        .map((column) => {
+          if (!('accessorKey' in column) || !column.accessorKey) return null;
+          return (
+            <div
+              key={`${column.id}-${column.accessorKey}`}
+              className="space-y-2"
+            >
+              <Label>{getColumnHeader(column)}</Label>
+              {renderFilterInput(column)}
+            </div>
+          );
+        })}
     </>
   );
 }
