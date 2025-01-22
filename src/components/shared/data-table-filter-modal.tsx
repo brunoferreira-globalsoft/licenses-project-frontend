@@ -1,6 +1,5 @@
 import { Modal } from '@/components/ui/modal';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { DataTableFilterControls } from './data-table-filter-controls';
 import { Button } from '@/components/ui/button';
 import { CheckIcon, TrashIcon } from '@radix-ui/react-icons';
 
@@ -11,6 +10,12 @@ interface DataTableFilterModalProps<TData> {
   columns: any[];
   onApplyFilters: () => void;
   onClearFilters: () => void;
+  FilterControls: React.ComponentType<{
+    table: any;
+    columns: any[];
+    onApplyFilters: () => void;
+    onClearFilters: () => void;
+  }>;
 }
 
 export function DataTableFilterModal<TData>({
@@ -19,7 +24,8 @@ export function DataTableFilterModal<TData>({
   table,
   columns,
   onApplyFilters,
-  onClearFilters
+  onClearFilters,
+  FilterControls
 }: DataTableFilterModalProps<TData>) {
   const handleApplyFilters = () => {
     onApplyFilters();
@@ -37,7 +43,7 @@ export function DataTableFilterModal<TData>({
         <ScrollArea className="flex-1">
           <div className="px-6">
             <div className="grid grid-cols-1 gap-x-6 gap-y-4 pb-6 sm:grid-cols-2">
-              <DataTableFilterControls
+              <FilterControls
                 table={table}
                 columns={columns}
                 onApplyFilters={handleApplyFilters}

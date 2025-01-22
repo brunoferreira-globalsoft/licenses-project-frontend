@@ -4,7 +4,7 @@ import AplicacoesTableActions from '@/pages/application/aplicacoes/components/ap
 import { Aplicacao } from '@/types/entities';
 import { filterFields } from './constants';
 import { searchParamsCache } from '@/pages/application/aplicacoes/components/aplicacoes-table/search-params';
-import React from 'react';
+import { AplicacoesFilterControls } from './aplicacoes-filter-controls';
 
 type TAplicacoesTableProps = {
   aplicacoes: Aplicacao[];
@@ -30,6 +30,7 @@ export default function AplicacoesTable({
           data={aplicacoes}
           pageCount={pageCount}
           filterFields={filterFields}
+          FilterControls={AplicacoesFilterControls}
           defaultColumnFilters={Object.entries(search)
             .map(([key, value]) => ({
               id: key,

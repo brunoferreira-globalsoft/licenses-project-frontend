@@ -4,6 +4,7 @@ import AreaTableActions from './area-table-action';
 import { Area } from '@/types/entities';
 import { filterFields } from './constants';
 import { searchParamsCache } from './search-params';
+import { AreasFilterControls } from './areas-filter-controls';
 
 type TAreasTableProps = {
   areas: Area[];
@@ -29,6 +30,7 @@ export default function AreasTable({
           data={areas}
           pageCount={pageCount}
           filterFields={filterFields}
+          FilterControls={AreasFilterControls}
           defaultColumnFilters={Object.entries(search)
             .map(([key, value]) => ({
               id: key,
