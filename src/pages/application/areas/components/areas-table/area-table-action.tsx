@@ -7,7 +7,7 @@ export default function AreaTableActions() {
   return (
     <div className="flex items-center justify-between py-5">
       <div className="flex flex-1 gap-4">
-        <TableSearchInput placeholder="Procurar Áreas..." />
+        {/* <TableSearchInput placeholder="Procurar Áreas..." /> */}
       </div>
       <div className="flex gap-3">
         <PopupModal

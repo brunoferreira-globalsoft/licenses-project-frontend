@@ -1,8 +1,7 @@
-import { Checkbox } from '@/components/ui/checkbox';
-import { Aplicacao } from '@/types/entities';
 import { ColumnDef } from '@tanstack/react-table';
-import { CellAction } from '@/pages/application/areas/components/areas-table/cell-action';
-import { CheckIcon, CrossCircledIcon as XIcon } from '@radix-ui/react-icons';
+import { Aplicacao } from '@/types/entities';
+import { CellAction } from './cell-action';
+import { Checkbox } from '@/components/ui/checkbox';
 
 export const columns: ColumnDef<Aplicacao>[] = [
   {
@@ -21,7 +20,7 @@ export const columns: ColumnDef<Aplicacao>[] = [
         aria-label="Selecionar linha"
       />
     ),
-    enableSorting: true,
+    enableSorting: false,
     enableHiding: false
   },
   {
@@ -34,16 +33,7 @@ export const columns: ColumnDef<Aplicacao>[] = [
   },
   {
     accessorKey: 'ativo',
-    header: () => <div className="text-center">Ativo</div>,
-    cell: ({ row }) => (
-      <div className="flex items-center justify-center">
-        {row.original.ativo ? (
-          <CheckIcon className="h-4 w-4 text-primary" />
-        ) : (
-          <XIcon className="h-4 w-4 text-destructive" />
-        )}
-      </div>
-    )
+    header: 'Status'
   },
   {
     id: 'actions',

@@ -4,16 +4,16 @@ import { useQuery } from '@tanstack/react-query';
 export const useGetAplicacoes = (
   pageNumber: number,
   pageLimit: number,
-  search: string | null,
+  filters: Array<{ id: string; value: string }> | null,
   sorting: string[] | null
 ) => {
   return useQuery({
-    queryKey: ['areas', pageNumber, pageLimit, search, sorting],
+    queryKey: ['aplicacoes', pageNumber, pageLimit, filters, sorting],
     queryFn: () =>
       Aplicacoes('aplicacoes').getAplicacoesPaginated({
         pageNumber: pageNumber,
         pageSize: pageLimit,
-        keyword: search ?? undefined,
+        filters: (filters as unknown as Record<string, string>) ?? undefined,
         sorting: sorting ?? undefined
       })
   });

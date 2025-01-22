@@ -25,7 +25,7 @@ export interface GSResponse<T> {
 export interface PaginatedRequest {
   pageNumber: number;
   pageSize: number;
-  keyword?: string;
+  filters?: Record<string, string>;
   sorting?: string[];
 }
 

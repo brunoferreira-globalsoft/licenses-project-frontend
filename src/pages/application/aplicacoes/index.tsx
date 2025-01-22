@@ -9,8 +9,16 @@ export default function AplicacoesPage() {
   const [searchParams] = useSearchParams();
   const page = Number(searchParams.get('page') || 1);
   const pageLimit = Number(searchParams.get('limit') || 10);
-  const search = searchParams.get('search') || null;
-  const { data, isLoading } = useGetAplicacoes(page, pageLimit, search, null);
+
+  // Transform filters to match C# model
+  const filters = Array.from(searchParams.entries())
+    .filter(([key]) => ['nome', 'descricao', 'ativo'].includes(key))
+    .map(([field, value]) => ({
+      id: field,
+      value
+    }));
+
+  const { data, isLoading } = useGetAplicacoes(page, pageLimit, filters, null);
 
   // Get the aplicacoes from the transformed response
   const aplicacoes = data?.info?.data || [];
