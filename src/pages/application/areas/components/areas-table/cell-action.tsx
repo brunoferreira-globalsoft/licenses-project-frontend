@@ -1,4 +1,3 @@
-import { Modal } from '@/components/ui/modal';
 import { AlertModal } from '@/components/shared/alert-modal';
 import { Button } from '@/components/ui/button';
 import { Area } from '@/types/entities';

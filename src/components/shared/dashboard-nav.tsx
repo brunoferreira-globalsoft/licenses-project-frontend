@@ -10,7 +10,6 @@ import {
   TooltipProvider,
   TooltipTrigger
 } from '@/components/ui/tooltip';
-import { usePathname } from '@/routes/hooks';
 import { Link } from 'react-router-dom';
 import { useHeaderNav } from '@/contexts/header-nav-context';
 import { useLocation } from 'react-router-dom';
@@ -26,7 +25,6 @@ export default function DashboardNav({
   setOpen,
   isMobileNav = false
 }: DashboardNavProps) {
-  const path = usePathname();
   const { isMinimized } = useSidebar();
   const { setCurrentMenu, currentMenu } = useHeaderNav();
   const location = useLocation();

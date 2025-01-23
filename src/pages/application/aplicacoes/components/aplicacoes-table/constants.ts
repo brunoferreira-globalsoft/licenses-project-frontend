@@ -1,4 +1,4 @@
-import { DataTableFilterField } from '@/components/data-table/types';
+import { DataTableFilterField } from '@/components/shared/data-table-types';
 import { Aplicacao } from '@/types/entities';
 
 export const filterFields: DataTableFilterField<Aplicacao>[] = [

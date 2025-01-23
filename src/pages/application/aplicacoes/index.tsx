@@ -6,7 +6,7 @@ import { useGetAplicacoes } from './queries/queries';
 import { Breadcrumbs } from '@/components/shared/breadcrumbs';
 import { useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
-import Aplicacoes from '@/lib/methods/application/aplicacoes';
+import AplicacoesService from '@/lib/services/application/aplicacoes';
 
 export default function AplicacoesPage() {
   const [page, setPage] = useState(1);
@@ -36,7 +36,7 @@ export default function AplicacoesPage() {
       queryClient.prefetchQuery({
         queryKey: ['aplicacoes', page - 1, pageSize, filters, null],
         queryFn: () =>
-          Aplicacoes('aplicacoes').getAplicacoesPaginated({
+          AplicacoesService('aplicacoes').getAplicacoesPaginated({
             pageNumber: page - 1,
             pageSize: pageSize,
             filters:
@@ -48,7 +48,7 @@ export default function AplicacoesPage() {
     queryClient.prefetchQuery({
       queryKey: ['aplicacoes', page + 1, pageSize, filters, null],
       queryFn: () =>
-        Aplicacoes('aplicacoes').getAplicacoesPaginated({
+        AplicacoesService('aplicacoes').getAplicacoesPaginated({
           pageNumber: page + 1,
           pageSize: pageSize,
           filters: (filters as unknown as Record<string, string>) ?? undefined,

@@ -11,7 +11,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { toast } from '@/utils/toast-utils';
-import Aplicacoes from '@/lib/methods/application/aplicacoes';
+import AplicacoesService from '@/lib/services/application/aplicacoes';
 import { useState } from 'react';
 import { useQueryClient, useQuery } from '@tanstack/react-query';
 import { getErrorMessage, handleApiError } from '@/utils/error-handlers';
@@ -25,7 +25,7 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import Areas from '@/lib/methods/application/areas';
+import AreasService from '@/lib/services/application/areas';
 
 const aplicacaoFormSchema = z.object({
   nome: z
@@ -47,7 +47,7 @@ const AplicacaoCreateForm = ({ modalClose }: { modalClose: () => void }) => {
   const { data: areasData } = useQuery({
     queryKey: ['areas'],
     queryFn: async () => {
-      const response = await Areas('areas').getAreas();
+      const response = await AreasService('areas').getAreas();
       return response.info.data || [];
     }
   });
@@ -65,7 +65,7 @@ const AplicacaoCreateForm = ({ modalClose }: { modalClose: () => void }) => {
   const onSubmit = async (values: AplicacaoFormSchemaType) => {
     try {
       setLoading(true);
-      const response = await Aplicacoes('aplicacoes').createAplicacao({
+      const response = await AplicacoesService('aplicacoes').createAplicacao({
         id: '', // temporary id to satisfy type
         nome: values.nome,
         descricao: values.descricao || '',

@@ -4,8 +4,7 @@ import {
   NavigationMenuItem,
   NavigationMenuList,
   NavigationMenuTrigger,
-  NavigationMenuContent,
-  NavigationMenuLink
+  NavigationMenuContent
 } from '@/components/ui/navigation-menu';
 import { Button } from '@/components/ui/button';
 import { ModeToggle } from '@/components/shared/theme-toggle';

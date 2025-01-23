@@ -1,4 +1,3 @@
-import PopupModal from '@/components/shared/popup-modal';
 import AreaCreateForm from '@/pages/application/areas/components/area-forms/area-create-form';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';

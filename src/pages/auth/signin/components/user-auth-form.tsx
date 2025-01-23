@@ -13,7 +13,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
-import TokensClient from '@/lib/methods/auth/tokens';
+import TokensClient from '@/lib/services/auth/tokens';
 import { useToast } from '@/components/ui/use-toast';
 
 const formSchema = z.object({

@@ -42,7 +42,8 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
               nome: selectedAplicacao.nome,
               descricao: selectedAplicacao.descricao,
               ativo: selectedAplicacao.ativo,
-              areaId: selectedAplicacao.areaId
+              areaId: selectedAplicacao.areaId,
+              versao: selectedAplicacao.versao || '1'
             }}
           />
         )}

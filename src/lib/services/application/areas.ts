@@ -133,5 +133,6 @@ class AreasClient extends BaseApiClient {
   }
 }
 
-const Areas = (idFuncionalidade: string) => new AreasClient(idFuncionalidade);
-export default Areas;
+const AreasService = (idFuncionalidade: string) =>
+  new AreasClient(idFuncionalidade);
+export default AreasService;

@@ -11,7 +11,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { toast } from '@/utils/toast-utils';
-import Aplicacoes from '@/lib/methods/application/aplicacoes';
+import AplicacoesService from '@/lib/services/application/aplicacoes';
 import { useState } from 'react';
 import { useQueryClient, useQuery } from '@tanstack/react-query';
 import { getErrorMessage, handleApiError } from '@/utils/error-handlers';
@@ -25,7 +25,7 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import Areas from '@/lib/methods/application/areas';
+import AreasService from '@/lib/services/application/areas';
 
 const aplicacaoFormSchema = z.object({
   nome: z
@@ -46,6 +46,7 @@ interface AplicacaoUpdateFormProps {
     descricao?: string;
     ativo: boolean;
     areaId: string;
+    versao: string;
   };
 }
 
@@ -60,7 +61,7 @@ const AplicacaoUpdateForm = ({
   const { data: areasData } = useQuery({
     queryKey: ['areas'],
     queryFn: async () => {
-      const response = await Areas('areas').getAreas();
+      const response = await AreasService('areas').getAreas();
       return response.info.data || [];
     }
   });
@@ -78,12 +79,17 @@ const AplicacaoUpdateForm = ({
   const onSubmit = async (values: AplicacaoFormSchemaType) => {
     try {
       setLoading(true);
-      const response = await Aplicacoes('').updateAplicacao(aplicacaoId, {
-        nome: values.nome,
-        descricao: values.descricao,
-        ativo: values.ativo,
-        areaId: values.areaId
-      });
+      const response = await AplicacoesService('').updateAplicacao(
+        aplicacaoId,
+        {
+          nome: values.nome,
+          descricao: values.descricao || '',
+          ativo: values.ativo,
+          areaId: values.areaId,
+          id: aplicacaoId,
+          versao: initialData.versao
+        }
+      );
 
       if (response.info.succeeded) {
         toast.success('Aplicação atualizada com sucesso');
@@ -158,7 +164,7 @@ const AplicacaoUpdateForm = ({
                     </FormControl>
                     <SelectContent>
                       {areasData?.map((area) => (
-                        <SelectItem key={area.id} value={area.id}>
+                        <SelectItem key={area.id!} value={area.id!}>
                           {area.nome}
                         </SelectItem>
                       ))}

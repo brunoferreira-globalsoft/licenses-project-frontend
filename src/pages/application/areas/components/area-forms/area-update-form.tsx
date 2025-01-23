@@ -1,4 +1,3 @@
-import Heading from '@/components/shared/heading';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -12,7 +11,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { toast } from '@/utils/toast-utils';
-import Areas from '@/lib/methods/application/areas';
+import AreasService from '@/lib/services/application/areas';
 import { useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { getErrorMessage, handleApiError } from '@/utils/error-handlers';
@@ -51,7 +50,7 @@ const AreaUpdateForm = ({
   const onSubmit = async (values: AreaFormSchemaType) => {
     try {
       setLoading(true);
-      const response = await Areas('').updateArea(areaId, {
+      const response = await AreasService('').updateArea(areaId, {
         nome: values.nome
       });
 

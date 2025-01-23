@@ -14,7 +14,7 @@ interface ErrorResponse {
 
 export class HttpClient {
   private idFuncionalidade?: string;
-  private readonly apiUrl: string = import.meta.env.VITE_URL;
+  // private readonly apiUrl: string = import.meta.env.VITE_URL;
   private readonly apiKey: string = import.meta.env.VITE_API_KEY;
   private tokenCheckInProgress = false;
   private lastTokenCheck = 0;
@@ -47,13 +47,12 @@ export class HttpClient {
       const tokenExpiryTime = decodedToken.exp * 1000;
 
       if (tokenExpiryTime < currentTime) {
-        const TokensClient = (await import('@/lib/methods/auth/tokens'))
+        const TokensClient = (await import('@/lib/services/auth/tokens'))
           .default;
         const success = await TokensClient.getRefresh();
 
         if (success) {
           // Update localStorage state
-          const state = (await import('@/states/state')).default;
           const { token: newToken, refreshToken } = useAuthStore.getState();
 
           state.Token = newToken;

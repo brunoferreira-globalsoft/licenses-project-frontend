@@ -152,6 +152,6 @@ class AplicacoesClient extends BaseApiClient {
   }
 }
 
-const Aplicacoes = (idFuncionalidade: string) =>
+const AplicacoesService = (idFuncionalidade: string) =>
   new AplicacoesClient(idFuncionalidade);
-export default Aplicacoes;
+export default AplicacoesService;

@@ -1,9 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
 import {
   Select,
   SelectContent,
@@ -11,7 +8,6 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import { CheckIcon, TrashIcon } from '@radix-ui/react-icons';
 
 interface DataTableFilterControlsProps<TData> {
   table: any;
@@ -26,9 +22,7 @@ export function DataTableFilterControls<TData>({
   onApplyFilters,
   onClearFilters
 }: DataTableFilterControlsProps<TData>) {
-  const [searchParams] = useSearchParams();
   const [filterValues, setFilterValues] = useState<Record<string, string>>({});
-  const navigate = useNavigate();
 
   const filterableColumns = useMemo(() => {
     return columns.filter((column) => {
@@ -70,14 +64,6 @@ export function DataTableFilterControls<TData>({
 
     // Update the table filter
     table.getColumn(columnId)?.setFilterValue(value);
-  };
-
-  const handleClearFilters = () => {
-    setFilterValues({});
-    filterableColumns.forEach((column) => {
-      table.getColumn(column.accessorKey)?.setFilterValue('');
-    });
-    onClearFilters();
   };
 
   const renderFilterInput = (column: any) => {

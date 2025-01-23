@@ -6,7 +6,7 @@ import { DataTableSkeleton } from '@/components/shared/data-table-skeleton';
 import { Breadcrumbs } from '@/components/shared/breadcrumbs';
 import { useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
-import Areas from '@/lib/methods/application/areas';
+import AreasService from '@/lib/services/application/areas';
 
 export default function AreasPage() {
   const [page, setPage] = useState(1);
@@ -36,7 +36,7 @@ export default function AreasPage() {
       queryClient.prefetchQuery({
         queryKey: ['areas', page - 1, pageSize, filters, null],
         queryFn: () =>
-          Areas('areas').getAreasPaginated({
+          AreasService('areas').getAreasPaginated({
             pageNumber: page - 1,
             pageSize: pageSize,
             filters:
@@ -48,7 +48,7 @@ export default function AreasPage() {
     queryClient.prefetchQuery({
       queryKey: ['areas', page + 1, pageSize, filters, null],
       queryFn: () =>
-        Areas('areas').getAreasPaginated({
+        AreasService('areas').getAreasPaginated({
           pageNumber: page + 1,
           pageSize: pageSize,
           filters: (filters as unknown as Record<string, string>) ?? undefined,

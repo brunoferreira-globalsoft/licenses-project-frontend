@@ -1,4 +1,4 @@
-import Areas from '@/lib/methods/application/areas';
+import AreasService from '@/lib/services/application/areas';
 import { useQuery } from '@tanstack/react-query';
 
 export const useGetAreas = (
@@ -10,7 +10,7 @@ export const useGetAreas = (
   return useQuery({
     queryKey: ['areas', pageNumber, pageLimit, filters, sorting],
     queryFn: () =>
-      Areas('areas').getAreasPaginated({
+      AreasService('areas').getAreasPaginated({
         pageNumber: pageNumber,
         pageSize: pageLimit,
         filters: (filters as unknown as Record<string, string>) ?? undefined,

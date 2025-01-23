@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { menuItems } from '@/config/menu-items';
 
 type HeaderNavContextType = {
   currentMenu: string;

@@ -1,4 +1,4 @@
-import Aplicacoes from '@/lib/methods/application/aplicacoes';
+import AplicacoesService from '@/lib/services/application/aplicacoes';
 import { useQuery } from '@tanstack/react-query';
 
 export const useGetAplicacoes = (
@@ -10,7 +10,7 @@ export const useGetAplicacoes = (
   return useQuery({
     queryKey: ['aplicacoes', pageNumber, pageLimit, filters, sorting],
     queryFn: () =>
-      Aplicacoes('aplicacoes').getAplicacoesPaginated({
+      AplicacoesService('aplicacoes').getAplicacoesPaginated({
         pageNumber: pageNumber,
         pageSize: pageLimit,
         filters: (filters as unknown as Record<string, string>) ?? undefined,
