@@ -30,14 +30,14 @@ class AplicacoesClient extends BaseApiClient {
           >('/api/aplicacoes/aplicacoes-paginated', params);
 
           if (!response.info || !response.info.data) {
-            console.error('Invalid response format:', response);
-            throw new AplicacaoError('Invalid response format');
+            console.error('Formato de resposta inválido:', response);
+            throw new AplicacaoError('Formato de resposta inválido');
           }
 
           return response;
         } catch (error) {
           throw new AplicacaoError(
-            'Failed to fetch paginated aplicacoes',
+            'Falha ao obter aplicacoes paginadas',
             undefined,
             error
           );
@@ -46,7 +46,7 @@ class AplicacoesClient extends BaseApiClient {
     );
   }
 
-  public async getAplicacoes(): Promise<GSResponse<Aplicacao[]>> {
+  public async getAplicacoes(): Promise<ResponseApi<GSResponse<Aplicacao[]>>> {
     const cacheKey = this.getCacheKey('GET', '/api/aplicacoes');
     return this.withCache(cacheKey, () =>
       this.withRetry(async () => {
@@ -56,14 +56,15 @@ class AplicacoesClient extends BaseApiClient {
               '/api/aplicacoes'
             );
 
-          if (!this.validateResponse<Aplicacao[]>(response)) {
-            throw new AplicacaoError('Invalid response format');
+          if (!response.info || !response.info.data) {
+            console.error('Formato de resposta inválido:', response);
+            throw new AplicacaoError('Formato de resposta inválido');
           }
 
           return response;
         } catch (error) {
           throw new AplicacaoError(
-            'Failed to fetch aplicacoes',
+            'Falha ao obter aplicacoes',
             undefined,
             error
           );
@@ -82,6 +83,11 @@ class AplicacoesClient extends BaseApiClient {
           GSResponse<string>
         >('/api/aplicacoes', data);
 
+        if (!response.info || !response.info.data) {
+          console.error('Formato de resposta inválido:', response);
+          throw new AplicacaoError('Formato de resposta inválido');
+        }
+
         return response;
       } catch (error) {
         throw new AplicacaoError(
@@ -96,18 +102,23 @@ class AplicacoesClient extends BaseApiClient {
   public async updateAplicacao(
     id: string,
     data: Aplicacao
-  ): Promise<ResponseApi<GSResponse<string>>> {
+  ): Promise<ResponseApi<GSGenericResponse>> {
     return this.withRetry(async () => {
       try {
         const response = await this.httpClient.putRequest<
           Aplicacao,
-          GSResponse<GSGenericResponse>
+          GSGenericResponse
         >(`/api/aplicacoes/${id}`, data);
 
-        return response.data;
+        if (!response.info || !response.info.data) {
+          console.error('Formato de resposta inválido:', response);
+          throw new AplicacaoError('Formato de resposta inválido');
+        }
+
+        return response;
       } catch (error) {
         throw new AplicacaoError(
-          'Failed to update aplicacao',
+          'Falha ao atualizar aplicacao',
           undefined,
           error
         );
@@ -115,21 +126,24 @@ class AplicacoesClient extends BaseApiClient {
     });
   }
 
-  public async deleteAplicacao(id: string): Promise<GSGenericResponse> {
+  public async deleteAplicacao(
+    id: string
+  ): Promise<ResponseApi<GSGenericResponse>> {
     return this.withRetry(async () => {
       try {
-        const response = await this.httpClient.deleteRequest<
-          GSResponse<GSGenericResponse>
-        >(`/api/aplicacoes/${id}`);
+        const response = await this.httpClient.deleteRequest<GSGenericResponse>(
+          `/api/aplicacoes/${id}`
+        );
 
-        if (!this.validateResponse<GSGenericResponse>(response)) {
-          throw new AplicacaoError('Invalid response format');
+        if (!response.info || !response.info.data) {
+          console.error('Formato de resposta inválido:', response);
+          throw new AplicacaoError('Formato de resposta inválido');
         }
 
-        return response.data;
+        return response;
       } catch (error) {
         throw new AplicacaoError(
-          'Failed to delete aplicacao',
+          'Falha ao deletar aplicacao',
           undefined,
           error
         );

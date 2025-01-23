@@ -36,6 +36,10 @@ export const columns: ColumnDef<Aplicacao>[] = [
     header: 'Status'
   },
   {
+    accessorKey: 'areaId',
+    header: 'Area'
+  },
+  {
     id: 'actions',
     header: () => <div className="text-center">Ações</div>,
     cell: ({ row }) => (

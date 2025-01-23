@@ -1,10 +1,10 @@
-import { Modal } from '@/components/ui/modal';
 import { AlertModal } from '@/components/shared/alert-modal';
 import { Button } from '@/components/ui/button';
 import { Aplicacao } from '@/types/entities';
 import { Edit, Trash } from 'lucide-react';
 import { useState } from 'react';
-// import AplicacaoUpdateForm from '@/pages/application/aplicacoes/components/aplicacao-forms/aplicacao-update-form';
+import { EnhancedModal } from '@/components/ui/enhanced-modal';
+import AplicacaoUpdateForm from '../aplicacao-forms/aplicacao-update-form';
 
 interface CellActionProps {
   data: Aplicacao;
@@ -20,25 +20,33 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
 
   const onConfirm = async () => {};
 
-  const handleUpdateClick = (area: Aplicacao) => {
-    setSelectedAplicacao(area);
+  const handleUpdateClick = (aplicacao: Aplicacao) => {
+    setSelectedAplicacao(aplicacao);
     setIsUpdateModalOpen(true);
   };
 
   return (
     <>
-      {/* <Modal
+      <EnhancedModal
+        title="Atualizar Aplicação"
+        description="Atualize os dados da aplicação"
         isOpen={isUpdateModalOpen}
         onClose={() => setIsUpdateModalOpen(false)}
+        size="md"
       >
         {selectedAplicacao && (
-          <AreaUpdateForm
+          <AplicacaoUpdateForm
             modalClose={() => setIsUpdateModalOpen(false)}
             aplicacaoId={selectedAplicacao.id || ''}
-            initialData={{ nome: selectedAplicacao.nome }}
+            initialData={{
+              nome: selectedAplicacao.nome,
+              descricao: selectedAplicacao.descricao,
+              ativo: selectedAplicacao.ativo,
+              areaId: selectedAplicacao.areaId
+            }}
           />
         )}
-      </Modal> */}
+      </EnhancedModal>
 
       <AlertModal
         isOpen={open}

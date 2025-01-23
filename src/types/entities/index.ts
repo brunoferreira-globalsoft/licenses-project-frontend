@@ -14,6 +14,14 @@ export interface Aplicacao {
   areaId: string;
 }
 
+export type CreateAplicacaoRequest = {
+  nome: string;
+  descricao: string;
+  versao: string;
+  ativo: boolean;
+  areaId: string;
+};
+
 export interface BloqueioLicenca {
   motivoBloqueio: string;
 }

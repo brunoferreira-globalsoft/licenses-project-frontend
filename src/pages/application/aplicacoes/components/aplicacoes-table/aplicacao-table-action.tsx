@@ -1,24 +1,31 @@
+import { Button } from '@/components/ui/button';
+import { useState } from 'react';
+import { EnhancedModal } from '@/components/ui/enhanced-modal';
+import { Plus } from 'lucide-react';
+import AplicacaoCreateForm from '../aplicacao-forms/aplicacao-create-form';
+
 export default function AplicacaoTableActions() {
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+
   return (
     <div className="flex items-center justify-between py-5">
       <div className="flex flex-1 gap-4">
         {/* <TableSearchInput placeholder="Procurar Aplicações..." /> */}
       </div>
       <div className="flex gap-3">
-        {/* <PopupModal
-          footer={(onClose) => (
-            <>
-              <Button type="button" variant="secondary" onClick={onClose}>
-                Cancelar
-              </Button>
-              <Button type="submit" form="areaCreateForm">
-                Criar
-              </Button>
-            </>
-          )}
+        <Button variant="outline" onClick={() => setIsCreateModalOpen(true)}>
+          <Plus className="mr-2 h-4 w-4" /> Adicionar
+        </Button>
+
+        <EnhancedModal
+          title="Criar Nova Aplicação"
+          description="Crie uma nova aplicação"
+          isOpen={isCreateModalOpen}
+          onClose={() => setIsCreateModalOpen(false)}
+          size="md"
         >
-          {(onClose) => <AplicacaoCreateForm modalClose={onClose} />}
-        </PopupModal> */}
+          <AplicacaoCreateForm modalClose={() => setIsCreateModalOpen(false)} />
+        </EnhancedModal>
       </div>
     </div>
   );
