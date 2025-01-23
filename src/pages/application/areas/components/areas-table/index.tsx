@@ -4,7 +4,6 @@ import AreaTableActions from './area-table-action';
 import { Area } from '@/types/entities';
 import { filterFields } from './constants';
 import { AreasFilterControls } from './areas-filter-controls';
-import { ColumnFiltersState } from '@tanstack/react-table';
 
 type TAreasTableProps = {
   areas: Area[];

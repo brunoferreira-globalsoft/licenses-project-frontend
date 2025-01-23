@@ -58,16 +58,7 @@ const AreaCreateForm = ({ modalClose }: { modalClose: () => void }) => {
   };
 
   return (
-    <div className="px-2">
-      {/* <div className="flex items-center justify-center text-2xl font-bold">
-        {'<Logo/>'}
-      </div> */}
-
-      <Heading
-        title={'Criar Nova Área'}
-        description={'Crie uma nova área para atribuir nas aplicações'}
-        className="space-y-2 py-4 text-center"
-      />
+    <div className="space-y-4">
       <Form {...form}>
         <form
           id="areaCreateForm"
@@ -85,13 +76,21 @@ const AreaCreateForm = ({ modalClose }: { modalClose: () => void }) => {
                     <Input
                       placeholder="Introduza o nome"
                       {...field}
-                      className=" px-4 py-6 shadow-inner drop-shadow-xl"
+                      className="px-4 py-6 shadow-inner drop-shadow-xl"
                     />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
+          </div>
+          <div className="flex items-center justify-end space-x-2">
+            <Button type="button" variant="outline" onClick={modalClose}>
+              Cancelar
+            </Button>
+            <Button type="submit" disabled={loading}>
+              {loading ? 'Criando...' : 'Criar'}
+            </Button>
           </div>
         </form>
       </Form>

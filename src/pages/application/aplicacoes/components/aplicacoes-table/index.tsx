@@ -4,7 +4,6 @@ import AplicacoesTableActions from './aplicacao-table-action';
 import { Aplicacao } from '@/types/entities';
 import { filterFields } from './constants';
 import { AplicacoesFilterControls } from './aplicacoes-filter-controls';
-import { ColumnFiltersState } from '@tanstack/react-table';
 
 type TAplicacoesTableProps = {
   aplicacoes: Aplicacao[];

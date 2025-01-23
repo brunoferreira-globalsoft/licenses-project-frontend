@@ -71,11 +71,6 @@ const AreaUpdateForm = ({
 
   return (
     <div className="px-2">
-      <Heading
-        title={'Atualizar Área'}
-        description={'Atualize os dados da área'}
-        className="space-y-2 py-4 text-center"
-      />
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}

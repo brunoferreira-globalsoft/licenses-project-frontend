@@ -5,6 +5,7 @@ import { Area } from '@/types/entities';
 import { Edit, Trash } from 'lucide-react';
 import { useState } from 'react';
 import AreaUpdateForm from '@/pages/application/areas/components/area-forms/area-update-form';
+import { EnhancedModal } from '@/components/ui/enhanced-modal';
 
 interface CellActionProps {
   data: Area;
@@ -25,9 +26,12 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
 
   return (
     <>
-      <Modal
+      <EnhancedModal
+        title="Atualizar Área"
+        description="Atualize os dados da área"
         isOpen={isUpdateModalOpen}
         onClose={() => setIsUpdateModalOpen(false)}
+        size="md"
       >
         {selectedArea && (
           <AreaUpdateForm
@@ -36,7 +40,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
             initialData={{ nome: selectedArea.nome }}
           />
         )}
-      </Modal>
+      </EnhancedModal>
 
       <AlertModal
         isOpen={open}

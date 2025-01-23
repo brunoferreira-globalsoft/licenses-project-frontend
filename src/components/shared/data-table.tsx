@@ -63,9 +63,6 @@ const ptPTTranslations = {
   goToLastPage: 'Ir para última página'
 };
 
-// Add this near the top of the file, before the DataTable component
-const FILTER_VISIBILITY_KEY = 'data-table-filter-visibility';
-
 export default function DataTable<TData, TValue>({
   columns,
   data,
