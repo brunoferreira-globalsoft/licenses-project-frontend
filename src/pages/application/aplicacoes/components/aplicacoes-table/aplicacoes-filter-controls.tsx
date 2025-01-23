@@ -11,6 +11,8 @@ import {
 import { BaseFilterControlsProps } from '@/components/shared/data-table-filter-controls-base';
 import { Aplicacao } from '@/types/entities';
 import { ColumnDef } from '@tanstack/react-table';
+import { useQuery } from '@tanstack/react-query';
+import AreasService from '@/lib/services/application/areas-service';
 
 export function AplicacoesFilterControls({
   table,
@@ -19,6 +21,11 @@ export function AplicacoesFilterControls({
   onClearFilters
 }: BaseFilterControlsProps<Aplicacao>) {
   const [filterValues, setFilterValues] = useState<Record<string, string>>({});
+
+  const { data: areasData } = useQuery({
+    queryKey: ['areas'],
+    queryFn: () => AreasService('areas').getAreas()
+  });
 
   useEffect(() => {
     const initialFilterValues: Record<string, string> = {};
@@ -81,6 +88,33 @@ export function AplicacoesFilterControls({
             <SelectItem value="all">Todos</SelectItem>
             <SelectItem value="true">Ativo</SelectItem>
             <SelectItem value="false">Inativo</SelectItem>
+          </SelectContent>
+        </Select>
+      );
+    }
+
+    if (column.accessorKey === 'areaId') {
+      const currentValue = filterValues[column.accessorKey] ?? '';
+      return (
+        <Select
+          value={currentValue === '' ? 'all' : currentValue}
+          onValueChange={(value) =>
+            handleFilterChange(
+              column.accessorKey!.toString(),
+              value === 'all' ? '' : value
+            )
+          }
+        >
+          <SelectTrigger className="max-w-sm">
+            <SelectValue placeholder="Selecione uma área" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Todas</SelectItem>
+            {areasData?.info?.data?.map((area) => (
+              <SelectItem key={area.id} value={area.id || ''}>
+                {area.nome}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
       );

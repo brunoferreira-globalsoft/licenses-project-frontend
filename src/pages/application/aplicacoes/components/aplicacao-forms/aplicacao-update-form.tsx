@@ -59,11 +59,12 @@ const AplicacaoUpdateForm = ({
   const queryClient = useQueryClient();
 
   const { data: areasData } = useQuery({
-    queryKey: ['areas'],
+    queryKey: ['areas-select'],
     queryFn: async () => {
       const response = await AreasService('areas').getAreas();
       return response.info.data || [];
-    }
+    },
+    staleTime: 30000
   });
 
   const form = useForm<AplicacaoFormSchemaType>({
@@ -151,35 +152,25 @@ const AplicacaoUpdateForm = ({
             <FormField
               control={form.control}
               name="areaId"
-              render={({ field }) => {
-                const normalizedFieldValue = field.value?.toLowerCase();
-
-                return (
-                  <FormItem>
-                    <FormControl>
-                      <Select
-                        onValueChange={field.onChange}
-                        value={normalizedFieldValue}
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Selecione uma área" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {areasData?.map((area) => (
-                            <SelectItem
-                              key={area.id || ''}
-                              value={(area.id || '').toLowerCase()}
-                            >
-                              {area.nome}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                );
-              }}
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecione uma área" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {areasData?.map((area) => (
+                          <SelectItem key={area.id} value={area.id}>
+                            {area.nome}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
 
             <FormField

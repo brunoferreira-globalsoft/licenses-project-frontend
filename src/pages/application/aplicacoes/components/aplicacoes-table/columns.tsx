@@ -2,7 +2,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { Aplicacao } from '@/types/entities';
 import { CellAction } from './cell-action';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Check } from 'lucide-react';
+import { Check, X } from 'lucide-react';
 
 export const columns: ColumnDef<Aplicacao>[] = [
   {
@@ -37,7 +37,11 @@ export const columns: ColumnDef<Aplicacao>[] = [
     header: 'Estado',
     cell: ({ row }) => (
       <div className="flex items-center justify-center">
-        {row.original.ativo && <Check className="h-4 w-4 text-green-500" />}
+        {row.original.ativo ? (
+          <Check className="h-4 w-4 text-green-500" />
+        ) : (
+          <X className="h-4 w-4 text-destructive" />
+        )}
       </div>
     )
   },

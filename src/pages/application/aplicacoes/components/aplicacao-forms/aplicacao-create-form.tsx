@@ -45,11 +45,12 @@ const AplicacaoCreateForm = ({ modalClose }: { modalClose: () => void }) => {
   const queryClient = useQueryClient();
 
   const { data: areasData } = useQuery({
-    queryKey: ['areas'],
+    queryKey: ['areas-select'],
     queryFn: async () => {
       const response = await AreasService('areas').getAreas();
       return response.info.data || [];
-    }
+    },
+    staleTime: 30000
   });
 
   const form = useForm<AplicacaoFormSchemaType>({
