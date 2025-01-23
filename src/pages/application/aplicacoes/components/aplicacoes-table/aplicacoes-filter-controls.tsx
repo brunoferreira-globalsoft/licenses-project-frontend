@@ -23,8 +23,12 @@ export function AplicacoesFilterControls({
   const [filterValues, setFilterValues] = useState<Record<string, string>>({});
 
   const { data: areasData } = useQuery({
-    queryKey: ['areas'],
-    queryFn: () => AreasService('areas').getAreas()
+    queryKey: ['areas-select'],
+    queryFn: async () => {
+      const response = await AreasService('areas').getAreas();
+      return response.info.data || [];
+    },
+    staleTime: 30000
   });
 
   useEffect(() => {
@@ -110,7 +114,7 @@ export function AplicacoesFilterControls({
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Todas</SelectItem>
-            {areasData?.info?.data?.map((area) => (
+            {areasData?.map((area) => (
               <SelectItem key={area.id} value={area.id || ''}>
                 {area.nome}
               </SelectItem>

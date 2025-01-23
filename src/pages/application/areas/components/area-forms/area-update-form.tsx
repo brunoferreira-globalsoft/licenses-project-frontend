@@ -56,7 +56,9 @@ const AreaUpdateForm = ({
 
       if (response.info.succeeded) {
         toast.success('Área atualizada com sucesso');
-        await queryClient.invalidateQueries({ queryKey: ['areas'] });
+        await queryClient.invalidateQueries({
+          queryKey: ['areas', 'areas-select']
+        });
         modalClose();
       } else {
         toast.error(getErrorMessage(response, 'Erro ao atualizar área'));
