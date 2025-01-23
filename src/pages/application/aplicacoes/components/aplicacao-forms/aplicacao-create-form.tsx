@@ -11,7 +11,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { toast } from '@/utils/toast-utils';
-import AplicacoesService from '@/lib/services/application/aplicacoes';
+import AplicacoesService from '@/lib/services/application/aplicacoes-service';
 import { useState } from 'react';
 import { useQueryClient, useQuery } from '@tanstack/react-query';
 import { getErrorMessage, handleApiError } from '@/utils/error-handlers';
@@ -25,7 +25,7 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import AreasService from '@/lib/services/application/areas';
+import AreasService from '@/lib/services/application/areas-service';
 
 const aplicacaoFormSchema = z.object({
   nome: z

@@ -1,4 +1,4 @@
-import AplicacoesService from '@/lib/services/application/aplicacoes';
+import AplicacoesService from '@/lib/services/application/aplicacoes-service';
 import { useQuery } from '@tanstack/react-query';
 
 export const useGetAplicacoes = (

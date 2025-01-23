@@ -4,13 +4,10 @@ import { ResponseApi } from '@/types/responses';
 import axios, { type AxiosResponse, type AxiosError } from 'axios';
 import { jwtDecode } from 'jwt-decode';
 import { useAuthStore } from '@/stores/auth-store';
+import { BaseApiError } from '@/lib/base-client';
 
 // Define the base URL for your API
 const apiUrl = state.URL;
-
-interface ErrorResponse {
-  messages: Record<string, string[]>;
-}
 
 export class HttpClient {
   private idFuncionalidade?: string;
@@ -47,7 +44,7 @@ export class HttpClient {
       const tokenExpiryTime = decodedToken.exp * 1000;
 
       if (tokenExpiryTime < currentTime) {
-        const TokensClient = (await import('@/lib/services/auth/tokens'))
+        const TokensClient = (await import('@/lib/services/auth/tokens-client'))
           .default;
         const success = await TokensClient.getRefresh();
 
@@ -247,29 +244,26 @@ export const createHttpClient = (idFuncionalidade: string) =>
   new HttpClient(idFuncionalidade);
 
 // Error handling function for Axios errors
-function handleErrorAxios(error: AxiosError): string {
+function handleErrorAxios(error: AxiosError): never {
   if (axios.isAxiosError(error)) {
     if (
       error.response?.data &&
-      (error.response.data as ErrorResponse).messages
+      typeof error.response.data === 'object' &&
+      'succeeded' in error.response.data &&
+      'messages' in error.response.data
     ) {
-      let messages = '';
-      const arr = Object.entries(
-        (error.response.data as ErrorResponse).messages
+      // For validation errors, preserve the structure
+      throw new BaseApiError(
+        'Validation Error',
+        error.response.status,
+        error.response.data
       );
-
-      arr.forEach((x) => {
-        if (Array.isArray(x))
-          messages += (messages !== '' ? '\n' : '') + (x as string[][])[1][0];
-      });
-
-      return messages;
     }
 
-    return error.message;
+    throw new BaseApiError(error.message, error.response?.status);
   }
 
-  return 'Unknown error';
+  throw new BaseApiError('Unknown error', 500);
 }
 
 // General error handling function

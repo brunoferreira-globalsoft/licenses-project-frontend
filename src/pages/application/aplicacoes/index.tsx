@@ -6,7 +6,7 @@ import { useGetAplicacoes } from './queries/queries';
 import { Breadcrumbs } from '@/components/shared/breadcrumbs';
 import { useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
-import AplicacoesService from '@/lib/services/application/aplicacoes';
+import AplicacoesService from '@/lib/services/application/aplicacoes-service';
 
 export default function AplicacoesPage() {
   const [page, setPage] = useState(1);

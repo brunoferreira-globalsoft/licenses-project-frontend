@@ -1,4 +1,4 @@
-import AreasService from '@/lib/services/application/areas';
+import AreasService from '@/lib/services/application/areas-service';
 import { useQuery } from '@tanstack/react-query';
 
 export const useGetAreas = (

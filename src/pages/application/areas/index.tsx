@@ -6,7 +6,7 @@ import { DataTableSkeleton } from '@/components/shared/data-table-skeleton';
 import { Breadcrumbs } from '@/components/shared/breadcrumbs';
 import { useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
-import AreasService from '@/lib/services/application/areas';
+import AreasService from '@/lib/services/application/areas-service';
 
 export default function AreasPage() {
   const [page, setPage] = useState(1);

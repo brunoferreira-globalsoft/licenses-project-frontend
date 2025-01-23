@@ -83,18 +83,17 @@ class AplicacoesClient extends BaseApiClient {
           GSResponse<string>
         >('/api/aplicacoes', data);
 
-        if (!response.info || !response.info.data) {
-          console.error('Formato de resposta inválido:', response);
-          throw new AplicacaoError('Formato de resposta inválido');
-        }
-
         return response;
       } catch (error) {
-        throw new AplicacaoError(
-          'Failed to create aplicacao',
-          undefined,
-          error
-        );
+        if (error instanceof BaseApiError && error.data) {
+          // If it's a validation error, return it as a response
+          return {
+            info: error.data as GSResponse<string>,
+            status: error.statusCode || 400,
+            statusText: error.message
+          };
+        }
+        throw error;
       }
     });
   }
