@@ -28,8 +28,7 @@ import {
   useReactTable
 } from '@tanstack/react-table';
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
-import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import React, { useState } from 'react';
 import { DataTableFilterField } from './data-table-types';
 import { DataTableFilterModal } from './data-table-filter-modal';
 import { Badge } from '@/components/ui/badge';
@@ -40,9 +39,9 @@ type DataTableProps<TData, TValue> = {
   data: TData[];
   pageCount: number;
   filterFields?: DataTableFilterField<TData>[];
-  defaultColumnFilters?: { id: string; value: string | null }[];
   pageSizeOptions?: number[];
   onPaginationChange?: (page: number, pageSize: number) => void;
+  onFiltersChange?: (filters: Array<{ id: string; value: string }>) => void;
   FilterControls: React.ComponentType<{
     table: any;
     columns: any[];
@@ -72,83 +71,51 @@ export default function DataTable<TData, TValue>({
   data,
   pageCount,
   filterFields = [],
-  defaultColumnFilters = [],
   pageSizeOptions = [10, 20, 30, 40, 50],
   onPaginationChange,
+  onFiltersChange,
   FilterControls
 }: DataTableProps<TData, TValue>) {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [pageIndex, setPageIndex] = useState(0);
+  const [pageSize, setPageSize] = useState(10);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [pendingColumnFilters, setPendingColumnFilters] =
+    useState<ColumnFiltersState>([]);
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
 
-  // Search params initialization
-  const page = searchParams?.get('page') ?? '1';
-  const pageAsNumber = Number(page);
-  const fallbackPage =
-    isNaN(pageAsNumber) || pageAsNumber < 1 ? 1 : pageAsNumber;
-  const per_page = searchParams?.get('limit') ?? '10';
-  const perPageAsNumber = Number(per_page);
-  const fallbackPerPage = isNaN(perPageAsNumber) ? 10 : perPageAsNumber;
+  const handlePaginationChange = (
+    newPageIndex: number,
+    newPageSize: number
+  ) => {
+    setPageIndex(newPageIndex);
+    setPageSize(newPageSize);
+    if (onPaginationChange) {
+      onPaginationChange(newPageIndex + 1, newPageSize);
+    }
+  };
 
-  // Handle server-side pagination
-  const [{ pageIndex, pageSize }, setPagination] = React.useState({
-    pageIndex: fallbackPage - 1,
-    pageSize: fallbackPerPage
-  });
-
-  // Initialize filters from URL params
-  const initialFilters = React.useMemo(() => {
-    const filters: ColumnFiltersState = [];
-    filterFields.forEach((field) => {
-      const value = searchParams.get(field.value.toString());
-      if (value) {
-        filters.push({ id: field.value.toString(), value });
-      }
-    });
-    return filters;
-  }, []);
-
-  const [columnFilters, setColumnFilters] =
-    useState<ColumnFiltersState>(initialFilters);
-  const [pendingColumnFilters, setPendingColumnFilters] =
-    useState<ColumnFiltersState>(initialFilters);
-
-  const handleApplyFilters = React.useCallback(() => {
-    const newParams = new URLSearchParams(searchParams);
-    newParams.set('page', '1');
-    newParams.set('limit', pageSize.toString());
-
-    filterFields.forEach((field) => {
-      newParams.delete(field.value.toString());
-    });
-
-    pendingColumnFilters.forEach((filter) => {
-      if (filter.value) {
-        newParams.set(filter.id, filter.value.toString());
-      }
-    });
-
-    setSearchParams(newParams);
+  const handleApplyFilters = () => {
     setColumnFilters(pendingColumnFilters);
-  }, [
-    pendingColumnFilters,
-    pageSize,
-    searchParams,
-    setSearchParams,
-    filterFields
-  ]);
+    if (onFiltersChange) {
+      const formattedFilters = pendingColumnFilters
+        .filter((filter) => filter.value)
+        .map((filter) => ({
+          id: filter.id,
+          value: filter.value as string
+        }));
+      onFiltersChange(formattedFilters);
+    }
+    setIsFilterModalOpen(false);
+  };
 
-  // Update filters when URL params change
-  useEffect(() => {
-    const newFilters: ColumnFiltersState = [];
-    filterFields.forEach((field) => {
-      const value = searchParams.get(field.value.toString());
-      if (value) {
-        newFilters.push({ id: field.value.toString(), value });
-      }
-    });
-    setPendingColumnFilters(newFilters);
-    setColumnFilters(newFilters);
-  }, [searchParams, filterFields]);
+  const handleClearFilters = () => {
+    setPendingColumnFilters([]);
+    setColumnFilters([]);
+    if (onFiltersChange) {
+      onFiltersChange([]);
+    }
+    setIsFilterModalOpen(false);
+  };
 
   const table = useReactTable({
     data,
@@ -164,14 +131,7 @@ export default function DataTable<TData, TValue>({
           pageIndex,
           pageSize
         });
-
-        // Update URL params with new pagination state
-        const newParams = new URLSearchParams(searchParams);
-        newParams.set('page', (newState.pageIndex + 1).toString());
-        newParams.set('limit', newState.pageSize.toString());
-        setSearchParams(newParams);
-
-        setPagination(newState);
+        handlePaginationChange(newState.pageIndex, newState.pageSize);
       }
     },
     onColumnFiltersChange: setPendingColumnFilters,
@@ -182,46 +142,9 @@ export default function DataTable<TData, TValue>({
     manualFiltering: true
   });
 
-  // Add this effect after the table initialization
-  useEffect(() => {
-    const page = searchParams?.get('page');
-    const limit = searchParams?.get('limit');
-
-    if (page !== null || limit !== null) {
-      setPagination({
-        pageIndex: page ? Number(page) - 1 : 0,
-        pageSize: limit ? Number(limit) : 10
-      });
-    }
-  }, [searchParams]);
-
   const getActiveFiltersCount = () => {
     return columnFilters.filter((filter) => filter.value).length;
   };
-
-  const handleClearFilters = () => {
-    setPendingColumnFilters([]);
-    setColumnFilters([]);
-
-    // Clear URL params for filters
-    const newParams = new URLSearchParams(searchParams);
-    filterFields.forEach((field) => {
-      newParams.delete(field.value.toString());
-    });
-
-    // Keep pagination params
-    newParams.set('page', '1');
-    newParams.set('limit', pageSize.toString());
-
-    setSearchParams(newParams);
-    setIsFilterModalOpen(false);
-  };
-
-  useEffect(() => {
-    if (onPaginationChange) {
-      onPaginationChange(pageIndex + 1, pageSize);
-    }
-  }, [pageIndex, pageSize, onPaginationChange]);
 
   return (
     <div className="flex flex-col space-y-4">
@@ -321,12 +244,6 @@ export default function DataTable<TData, TValue>({
                     onValueChange={(value: string) => {
                       const newSize = Number(value);
                       table.setPageSize(newSize);
-
-                      // Update URL params with new page size
-                      const newParams = new URLSearchParams(searchParams);
-                      newParams.set('page', '1'); // Reset to first page when changing page size
-                      newParams.set('limit', value);
-                      setSearchParams(newParams);
                     }}
                   >
                     <SelectTrigger className="h-8 w-[70px]">

@@ -1,7 +1,7 @@
+import { useState } from 'react';
 import PageHead from '@/components/shared/page-head';
 import { useGetAreas } from '@/pages/application/areas/queries/queries';
 import AreasTable from '@/pages/application/areas/components/areas-table';
-import { useSearchParams } from 'react-router-dom';
 import { DataTableSkeleton } from '@/components/shared/data-table-skeleton';
 import { Breadcrumbs } from '@/components/shared/breadcrumbs';
 import { useQueryClient } from '@tanstack/react-query';
@@ -9,30 +9,36 @@ import { useEffect } from 'react';
 import Areas from '@/lib/methods/application/areas';
 
 export default function AreasPage() {
-  const [searchParams] = useSearchParams();
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [filters, setFilters] = useState<Array<{ id: string; value: string }>>(
+    []
+  );
   const queryClient = useQueryClient();
-  const page = Number(searchParams.get('page') || 1);
-  const pageLimit = Number(searchParams.get('limit') || 10);
 
-  // Transform filters to match C# model
-  const filters = Array.from(searchParams.entries())
-    .filter(([key]) => ['nome'].includes(key))
-    .map(([field, value]) => ({
-      id: field,
-      value
-    }));
+  const { data, isLoading } = useGetAreas(page, pageSize, filters, null);
 
-  const { data, isLoading } = useGetAreas(page, pageLimit, filters, null);
+  const handleFiltersChange = (
+    newFilters: Array<{ id: string; value: string }>
+  ) => {
+    setFilters(newFilters);
+    setPage(1); // Reset to first page when filters change
+  };
+
+  const handlePaginationChange = (newPage: number, newPageSize: number) => {
+    setPage(newPage);
+    setPageSize(newPageSize);
+  };
 
   // Prefetch adjacent pages
   useEffect(() => {
     if (page > 1) {
       queryClient.prefetchQuery({
-        queryKey: ['areas', page - 1, pageLimit, filters, null],
+        queryKey: ['areas', page - 1, pageSize, filters, null],
         queryFn: () =>
           Areas('areas').getAreasPaginated({
             pageNumber: page - 1,
-            pageSize: pageLimit,
+            pageSize: pageSize,
             filters:
               (filters as unknown as Record<string, string>) ?? undefined,
             sorting: undefined
@@ -40,16 +46,16 @@ export default function AreasPage() {
       });
     }
     queryClient.prefetchQuery({
-      queryKey: ['areas', page + 1, pageLimit, filters, null],
+      queryKey: ['areas', page + 1, pageSize, filters, null],
       queryFn: () =>
         Areas('areas').getAreasPaginated({
           pageNumber: page + 1,
-          pageSize: pageLimit,
+          pageSize: pageSize,
           filters: (filters as unknown as Record<string, string>) ?? undefined,
           sorting: undefined
         })
     });
-  }, [page, pageLimit, filters, queryClient]);
+  }, [page, pageSize, filters, queryClient]);
 
   // Get the areas from the transformed response
   const areas = data?.info?.data || [];
@@ -82,7 +88,8 @@ export default function AreasPage() {
         page={page}
         totalAreas={totalAreas}
         pageCount={pageCount}
-        searchParams={Object.fromEntries(searchParams)}
+        onFiltersChange={handleFiltersChange}
+        onPaginationChange={handlePaginationChange}
       />
     </div>
   );

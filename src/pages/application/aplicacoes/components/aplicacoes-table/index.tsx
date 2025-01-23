@@ -1,25 +1,39 @@
 import DataTable from '@/components/shared/data-table';
-import { columns } from '@/pages/application/aplicacoes/components/aplicacoes-table/columns';
-import AplicacoesTableActions from '@/pages/application/aplicacoes/components/aplicacoes-table/aplicacao-table-action';
+import { columns } from './columns';
+import AplicacoesTableActions from './aplicacao-table-action';
 import { Aplicacao } from '@/types/entities';
 import { filterFields } from './constants';
-import { searchParamsCache } from '@/pages/application/aplicacoes/components/aplicacoes-table/search-params';
 import { AplicacoesFilterControls } from './aplicacoes-filter-controls';
+import { ColumnFiltersState } from '@tanstack/react-table';
 
 type TAplicacoesTableProps = {
   aplicacoes: Aplicacao[];
   page: number;
   totalAreas: number;
   pageCount: number;
-  searchParams?: { [key: string]: string | string[] | undefined };
+  onFiltersChange?: (filters: Array<{ id: string; value: string }>) => void;
+  onPaginationChange?: (page: number, pageSize: number) => void;
 };
 
 export default function AplicacoesTable({
   aplicacoes,
   pageCount,
-  searchParams = {}
+  onFiltersChange,
+  onPaginationChange
 }: TAplicacoesTableProps) {
-  const search = searchParamsCache.parse(searchParams);
+  const handleFiltersChange = (
+    filters: Array<{ id: string; value: string }>
+  ) => {
+    if (onFiltersChange) {
+      onFiltersChange(filters);
+    }
+  };
+
+  const handlePaginationChange = (page: number, pageSize: number) => {
+    if (onPaginationChange) {
+      onPaginationChange(page, pageSize);
+    }
+  };
 
   return (
     <>
@@ -31,12 +45,8 @@ export default function AplicacoesTable({
           pageCount={pageCount}
           filterFields={filterFields}
           FilterControls={AplicacoesFilterControls}
-          defaultColumnFilters={Object.entries(search)
-            .map(([key, value]) => ({
-              id: key,
-              value: value?.toString() ?? null
-            }))
-            .filter(({ value }) => value ?? undefined)}
+          onFiltersChange={handleFiltersChange}
+          onPaginationChange={handlePaginationChange}
         />
       )}
     </>

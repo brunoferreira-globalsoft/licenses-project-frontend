@@ -3,23 +3,37 @@ import { columns } from './columns';
 import AreaTableActions from './area-table-action';
 import { Area } from '@/types/entities';
 import { filterFields } from './constants';
-import { searchParamsCache } from './search-params';
 import { AreasFilterControls } from './areas-filter-controls';
+import { ColumnFiltersState } from '@tanstack/react-table';
 
 type TAreasTableProps = {
   areas: Area[];
   page: number;
   totalAreas: number;
   pageCount: number;
-  searchParams?: { [key: string]: string | string[] | undefined };
+  onFiltersChange?: (filters: Array<{ id: string; value: string }>) => void;
+  onPaginationChange?: (page: number, pageSize: number) => void;
 };
 
 export default function AreasTable({
   areas,
   pageCount,
-  searchParams = {}
+  onFiltersChange,
+  onPaginationChange
 }: TAreasTableProps) {
-  const search = searchParamsCache.parse(searchParams);
+  const handleFiltersChange = (
+    filters: Array<{ id: string; value: string }>
+  ) => {
+    if (onFiltersChange) {
+      onFiltersChange(filters);
+    }
+  };
+
+  const handlePaginationChange = (page: number, pageSize: number) => {
+    if (onPaginationChange) {
+      onPaginationChange(page, pageSize);
+    }
+  };
 
   return (
     <>
@@ -31,12 +45,8 @@ export default function AreasTable({
           pageCount={pageCount}
           filterFields={filterFields}
           FilterControls={AreasFilterControls}
-          defaultColumnFilters={Object.entries(search)
-            .map(([key, value]) => ({
-              id: key,
-              value: value?.toString() ?? null
-            }))
-            .filter(({ value }) => value ?? undefined)}
+          onFiltersChange={handleFiltersChange}
+          onPaginationChange={handlePaginationChange}
         />
       )}
     </>
