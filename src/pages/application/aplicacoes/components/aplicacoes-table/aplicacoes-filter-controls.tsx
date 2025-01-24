@@ -9,16 +9,15 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { BaseFilterControlsProps } from '@/components/shared/data-table-filter-controls-base';
-import { Aplicacao } from '@/types/entities';
 import { ColumnDef } from '@tanstack/react-table';
 import { useGetAreasSelect } from '@/pages/application/areas/queries/areas-queries';
-
+import { AplicacaoDTO } from '@/types/dtos';
 export function AplicacoesFilterControls({
   table,
   columns,
   onApplyFilters,
   onClearFilters
-}: BaseFilterControlsProps<Aplicacao>) {
+}: BaseFilterControlsProps<AplicacaoDTO>) {
   const [filterValues, setFilterValues] = useState<Record<string, string>>({});
 
   const { data: areasData } = useGetAreasSelect();
@@ -56,13 +55,15 @@ export function AplicacoesFilterControls({
     table.getColumn(columnId)?.setFilterValue(value);
   };
 
-  const getColumnHeader = (column: ColumnDef<Aplicacao, unknown>): string => {
+  const getColumnHeader = (
+    column: ColumnDef<AplicacaoDTO, unknown>
+  ): string => {
     if (typeof column.header === 'string') return column.header;
     if ('accessorKey' in column) return column.accessorKey.toString();
     return '';
   };
 
-  const renderFilterInput = (column: ColumnDef<Aplicacao, unknown>) => {
+  const renderFilterInput = (column: ColumnDef<AplicacaoDTO, unknown>) => {
     if (!('accessorKey' in column) || !column.accessorKey) return null;
 
     if (column.accessorKey === 'ativo') {

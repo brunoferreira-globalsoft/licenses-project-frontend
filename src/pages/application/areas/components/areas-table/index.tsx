@@ -1,12 +1,12 @@
 import DataTable from '@/components/shared/data-table';
 import { columns } from '@/pages/application/areas/components/areas-table/areas-columns';
 import AreaTableActions from '@/pages/application/areas/components/areas-table/areas-table-action';
-import { Area } from '@/types/entities';
 import { filterFields } from '@/pages/application/areas/components/areas-table/areas-constants';
 import { AreasFilterControls } from '@/pages/application/areas/components/areas-table/areas-filter-controls';
+import { AreaDTO } from '@/types/dtos';
 
 type TAreasTableProps = {
-  areas: Area[];
+  areas: AreaDTO[];
   page: number;
   totalAreas: number;
   pageCount: number;

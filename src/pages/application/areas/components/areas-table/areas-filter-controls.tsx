@@ -2,15 +2,15 @@ import { useState, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { BaseFilterControlsProps } from '@/components/shared/data-table-filter-controls-base';
-import { Area } from '@/types/entities';
 import { ColumnDef } from '@tanstack/react-table';
+import { AreaDTO } from '@/types/dtos';
 
 export function AreasFilterControls({
   table,
   columns,
   onApplyFilters,
   onClearFilters
-}: BaseFilterControlsProps<Area>) {
+}: BaseFilterControlsProps<AreaDTO>) {
   const [filterValues, setFilterValues] = useState<Record<string, string>>({});
 
   useEffect(() => {
@@ -46,7 +46,7 @@ export function AreasFilterControls({
     table.getColumn(columnId)?.setFilterValue(value);
   };
 
-  const getColumnHeader = (column: ColumnDef<Area, unknown>): string => {
+  const getColumnHeader = (column: ColumnDef<AreaDTO, unknown>): string => {
     if (typeof column.header === 'string') return column.header;
     if ('accessorKey' in column) return column.accessorKey.toString();
     return '';

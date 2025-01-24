@@ -1,10 +1,10 @@
 import state from '@/states/state';
-import { GSResponseToken } from '@/types/common';
-import { ResponseApi } from '@/types/responses';
+import { GSResponseToken } from '@/types/api/responses';
 import axios, { type AxiosResponse, type AxiosError } from 'axios';
 import { jwtDecode } from 'jwt-decode';
 import { useAuthStore } from '@/stores/auth-store';
 import { BaseApiError } from '@/lib/base-client';
+import { ResponseApi } from '@/types/responses';
 
 // Define the base URL for your API
 const apiUrl = state.URL;

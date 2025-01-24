@@ -1,6 +1,5 @@
 import { createHttpClient, HttpClient } from '@/lib/http-client';
-import { GSResponse } from '@/types/common';
-
+import { GSResponse } from '@/types/api/responses';
 export class BaseApiError extends Error {
   name: string;
 

@@ -1,12 +1,11 @@
 import DataTable from '@/components/shared/data-table';
 import { columns } from '@/pages/application/aplicacoes/components/aplicacoes-table/aplicacoes-columns';
 import AplicacoesTableActions from '@/pages/application/aplicacoes/components/aplicacoes-table/aplicacoes-table-action';
-import { Aplicacao } from '@/types/entities';
 import { filterFields } from '@/pages/application/aplicacoes/components/aplicacoes-table/aplicacoes-constants';
 import { AplicacoesFilterControls } from '@/pages/application/aplicacoes/components/aplicacoes-table/aplicacoes-filter-controls';
-
+import { AplicacaoDTO } from '@/types/dtos';
 type TAplicacoesTableProps = {
-  aplicacoes: Aplicacao[];
+  aplicacoes: AplicacaoDTO[];
   page: number;
   totalAreas: number;
   pageCount: number;

@@ -14,14 +14,7 @@ import { useHeaderMenu } from '@/hooks/use-header-menu';
 import { cn } from '@/lib/utils';
 import { Logo } from '@/assets/logo-letters';
 import { Icons } from '@/components/ui/icons';
-
-interface MenuItem {
-  href: string;
-  label: string;
-  description?: string;
-  items?: MenuItem[];
-  icon?: React.ReactNode;
-}
+import { MenuItem } from '@/types/navigation/menu.types';
 
 export function HeaderNav() {
   const location = useLocation();

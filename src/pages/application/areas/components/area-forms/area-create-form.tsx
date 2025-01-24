@@ -35,7 +35,6 @@ const AreaCreateForm = ({ modalClose }: { modalClose: () => void }) => {
   const onSubmit = async (values: AreaFormSchemaType) => {
     try {
       const response = await createAreaMutation.mutateAsync({
-        id: '', // temporary id to satisfy type
         nome: values.nome
       });
 

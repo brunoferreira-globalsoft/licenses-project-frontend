@@ -1,10 +1,10 @@
 import { ColumnDef } from '@tanstack/react-table';
-import { Aplicacao } from '@/types/entities';
 import { CellAction } from '@/pages/application/aplicacoes/components/aplicacoes-table/aplicacoes-cell-action';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Check, X } from 'lucide-react';
+import { AplicacaoDTO } from '@/types/dtos';
 
-export const columns: ColumnDef<Aplicacao>[] = [
+export const columns: ColumnDef<AplicacaoDTO>[] = [
   {
     id: 'select',
     header: ({ table }) => (

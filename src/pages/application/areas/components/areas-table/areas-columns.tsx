@@ -1,9 +1,9 @@
 import { Checkbox } from '@/components/ui/checkbox';
-import { Area } from '@/types/entities';
 import { ColumnDef } from '@tanstack/react-table';
 import { CellAction } from '@/pages/application/areas/components/areas-table/areas-cell-action';
+import { AreaDTO } from '@/types/dtos';
 
-export const columns: ColumnDef<Area>[] = [
+export const columns: ColumnDef<AreaDTO>[] = [
   {
     id: 'select',
     header: ({ table }) => (

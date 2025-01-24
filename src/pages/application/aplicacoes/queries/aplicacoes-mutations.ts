@@ -1,7 +1,6 @@
 import AplicacoesService from '@/lib/services/application/aplicacoes-service';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { CreateAplicacaoDTO, UpdateAplicacaoDTO } from '@/types/entities';
-
+import { CreateAplicacaoDTO, UpdateAplicacaoDTO } from '@/types/dtos';
 export const useDeleteAplicacao = () => {
   const queryClient = useQueryClient();
 

@@ -1,23 +1,22 @@
 import { AlertModal } from '@/components/shared/alert-modal';
 import { Button } from '@/components/ui/button';
-import { Aplicacao } from '@/types/entities';
 import { Edit, Trash } from 'lucide-react';
 import { useState } from 'react';
 import { EnhancedModal } from '@/components/ui/enhanced-modal';
 import { toast } from '@/utils/toast-utils';
 import AplicacaoUpdateForm from '@/pages/application/aplicacoes/components/aplicacao-forms/aplicacao-update-form';
 import { useDeleteAplicacao } from '../../queries/aplicacoes-mutations';
+import { AplicacaoDTO } from '@/types/dtos';
 
 interface CellActionProps {
-  data: Aplicacao;
+  data: AplicacaoDTO;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const [open, setOpen] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
-  const [selectedAplicacao, setSelectedAplicacao] = useState<Aplicacao | null>(
-    null
-  );
+  const [selectedAplicacao, setSelectedAplicacao] =
+    useState<AplicacaoDTO | null>(null);
 
   const deleteAplicacaoMutation = useDeleteAplicacao();
 
@@ -32,7 +31,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
     }
   };
 
-  const handleUpdateClick = (aplicacao: Aplicacao) => {
+  const handleUpdateClick = (aplicacao: AplicacaoDTO) => {
     setSelectedAplicacao(aplicacao);
     setIsUpdateModalOpen(true);
   };

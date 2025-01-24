@@ -1,6 +1,5 @@
 import { AlertModal } from '@/components/shared/alert-modal';
 import { Button } from '@/components/ui/button';
-import { Area } from '@/types/entities';
 import { Edit, Trash } from 'lucide-react';
 import { useState } from 'react';
 import AreaUpdateForm from '@/pages/application/areas/components/area-forms/area-update-form';
@@ -8,15 +7,16 @@ import { EnhancedModal } from '@/components/ui/enhanced-modal';
 import { toast } from '@/utils/toast-utils';
 import { handleApiError } from '@/utils/error-handlers';
 import { useDeleteArea } from '../../queries/areas-mutations';
+import { AreaDTO } from '@/types/dtos';
 
 interface CellActionProps {
-  data: Area;
+  data: AreaDTO;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const [open, setOpen] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
-  const [selectedArea, setSelectedArea] = useState<Area | null>(null);
+  const [selectedArea, setSelectedArea] = useState<AreaDTO | null>(null);
 
   const deleteAreaMutation = useDeleteArea();
 
@@ -31,7 +31,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
     }
   };
 
-  const handleUpdateClick = (area: Area) => {
+  const handleUpdateClick = (area: AreaDTO) => {
     setSelectedArea(area);
     setIsUpdateModalOpen(true);
   };

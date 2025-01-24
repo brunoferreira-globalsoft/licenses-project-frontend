@@ -1,6 +1,6 @@
 import { jwtDecode } from 'jwt-decode';
-import type { GSResponseToken } from '@/types/common';
-import { DynamicPermission } from '@/types/entities';
+import { DynamicPermissionDTO } from '@/types/dtos';
+import { GSResponseToken } from '@/types/api/responses';
 
 interface StateStorage {
   Token: string;
@@ -27,7 +27,7 @@ class State {
   public UserId = '';
   public ClienteId = '';
   public RoleId = '';
-  public Permissoes: DynamicPermission = {};
+  public Permissoes: DynamicPermissionDTO = {};
 
   public isLoaded = false;
 

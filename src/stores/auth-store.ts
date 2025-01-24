@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { jwtDecode } from 'jwt-decode';
-import type { GSResponseToken } from '@/types/common';
+import { GSResponseToken } from '@/types/api/responses';
 
 interface AuthState {
   token: string;

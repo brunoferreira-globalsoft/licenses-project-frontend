@@ -1,40 +1,30 @@
-export interface GSGenericResponse {
-  data: string;
-  messages: string[];
+export interface BaseEntity {
+  id: string;
+  createdOn?: string;
+  updatedOn?: string;
+}
+
+export interface BaseResponse {
   succeeded: boolean;
-}
-
-export interface GSResponseToken {
-  aud: string;
-  email: string;
-  exp: number;
-  iss: string;
-  jti: string;
-  name: string;
-  roles: string;
-  sub: string;
-  uid: string;
-}
-
-export interface GSResponse<T> {
-  data: T;
   messages: string[];
-  succeeded: boolean;
 }
 
-export interface PaginatedRequest {
-  pageNumber: number;
-  pageSize: number;
-  filters?: Record<string, string>;
-  sorting?: string[];
+export interface BaseRequest {
+  id?: string;
 }
 
-export interface PaginatedResponse<T> {
-  data: T[];
-  currentPage: number;
-  totalPages: number;
-  totalCount: number;
-  pageSize: number;
-  hasPreviousPage: boolean;
-  hasNextPage: boolean;
+export interface BaseDTO extends BaseRequest {
+  id: string;
+}
+
+export interface WithActive {
+  ativo: boolean;
+}
+
+export interface WithName {
+  nome: string;
+}
+
+export interface WithDescription {
+  descricao: string;
 }

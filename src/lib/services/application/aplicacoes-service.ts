@@ -3,10 +3,14 @@ import {
   GSResponse,
   PaginatedRequest,
   PaginatedResponse
-} from '@/types/common';
-import { Aplicacao } from '@/types/entities';
-import { ResponseApi } from '@/types/responses';
+} from '@/types/api/responses';
 import { BaseApiClient, BaseApiError } from '@/lib/base-client';
+import {
+  AplicacaoDTO,
+  CreateAplicacaoDTO,
+  UpdateAplicacaoDTO
+} from '@/types/dtos';
+import { ResponseApi } from '@/types/responses';
 
 export class AplicacaoError extends BaseApiError {
   name: string = 'AplicacaoError';
@@ -15,7 +19,7 @@ export class AplicacaoError extends BaseApiError {
 class AplicacoesClient extends BaseApiClient {
   public async getAplicacoesPaginated(
     params: PaginatedRequest
-  ): Promise<ResponseApi<PaginatedResponse<Aplicacao>>> {
+  ): Promise<ResponseApi<PaginatedResponse<AplicacaoDTO>>> {
     const cacheKey = this.getCacheKey(
       'POST',
       '/api/aplicacoes/aplicacoes-paginated',
@@ -26,7 +30,7 @@ class AplicacoesClient extends BaseApiClient {
         try {
           const response = await this.httpClient.postRequest<
             PaginatedRequest,
-            PaginatedResponse<Aplicacao>
+            PaginatedResponse<AplicacaoDTO>
           >('/api/aplicacoes/aplicacoes-paginated', params);
 
           if (!response.info || !response.info.data) {
@@ -46,13 +50,15 @@ class AplicacoesClient extends BaseApiClient {
     );
   }
 
-  public async getAplicacoes(): Promise<ResponseApi<GSResponse<Aplicacao[]>>> {
+  public async getAplicacoes(): Promise<
+    ResponseApi<GSResponse<AplicacaoDTO[]>>
+  > {
     const cacheKey = this.getCacheKey('GET', '/api/aplicacoes');
     return this.withCache(cacheKey, () =>
       this.withRetry(async () => {
         try {
           const response =
-            await this.httpClient.getRequest<GSResponse<Aplicacao[]>>(
+            await this.httpClient.getRequest<GSResponse<AplicacaoDTO[]>>(
               '/api/aplicacoes'
             );
 
@@ -74,12 +80,12 @@ class AplicacoesClient extends BaseApiClient {
   }
 
   public async createAplicacao(
-    data: Aplicacao
+    data: CreateAplicacaoDTO
   ): Promise<ResponseApi<GSResponse<string>>> {
     return this.withRetry(async () => {
       try {
         const response = await this.httpClient.postRequest<
-          Aplicacao,
+          CreateAplicacaoDTO,
           GSResponse<string>
         >('/api/aplicacoes', data);
 
@@ -100,13 +106,13 @@ class AplicacoesClient extends BaseApiClient {
 
   public async updateAplicacao(
     id: string,
-    data: Aplicacao
-  ): Promise<ResponseApi<GSGenericResponse>> {
+    data: UpdateAplicacaoDTO
+  ): Promise<ResponseApi<GSResponse<string>>> {
     return this.withRetry(async () => {
       try {
         const response = await this.httpClient.putRequest<
-          Aplicacao,
-          GSGenericResponse
+          UpdateAplicacaoDTO,
+          GSResponse<string>
         >(`/api/aplicacoes/${id}`, data);
 
         if (!response.info || !response.info.data) {

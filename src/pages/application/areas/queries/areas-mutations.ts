@@ -1,7 +1,7 @@
 import AreasService from '@/lib/services/application/areas-service';
 import { useQueryClient } from '@tanstack/react-query';
 import { useMutation } from '@tanstack/react-query';
-import { CreateAreaDTO, Area } from '@/types/entities';
+import { CreateAreaDTO, UpdateAreaDTO } from '@/types/dtos';
 
 export const useDeleteArea = () => {
   const queryClient = useQueryClient();
@@ -33,7 +33,7 @@ export const useUpdateArea = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, data }: { id: string; data: Area }) =>
+    mutationFn: ({ id, data }: { id: string; data: UpdateAreaDTO }) =>
       AreasService('areas').updateArea(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['areas'] });

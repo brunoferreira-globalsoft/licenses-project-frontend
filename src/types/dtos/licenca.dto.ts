@@ -1,0 +1,47 @@
+export interface CreateLicencaDTO {
+  nome: string;
+  dataInicio?: Date;
+  dataFim?: Date;
+  numeroUtilizadores: number;
+  ativo: boolean;
+  aplicacaoId: string;
+  clienteId: string;
+}
+
+export interface UpdateLicencaDTO extends CreateLicencaDTO {
+  id: string;
+}
+
+export interface LicencaDTO {
+  id: string;
+  nome: string;
+  dataInicio?: Date;
+  dataFim?: Date;
+  numeroUtilizadores: number;
+  ativo?: boolean;
+  aplicacaoId: string;
+  bloqueada?: boolean;
+  dataBloqueio?: Date;
+  motivoBloqueio?: string;
+  nomeCliente?: string;
+  nomeAplicacao?: string;
+  aplicacao?: {
+    nome: string;
+  };
+  cliente?: {
+    nome: string;
+  };
+  clienteId: string;
+  licencasFuncionalidades?: LicencaFuncionalidadeDTO[];
+  licencasModulos?: LicencaModuloDTO[];
+}
+
+export interface LicencaFuncionalidadeDTO {
+  licencaId: string;
+  funcionalidadeId: string;
+}
+
+export interface LicencaModuloDTO {
+  licencaId: string;
+  moduloId: string;
+}

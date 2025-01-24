@@ -1,6 +1,8 @@
-import { FuncionalidadePerfil, ModuloPerfil } from '@/types/entities';
-
-import { Funcionalidade } from '@/types/entities';
+import {
+  FuncionalidadeDTO,
+  FuncionalidadePerfilDTO,
+  ModuloPerfilDTO
+} from '../dtos';
 
 export interface ResponseApi<T> {
   info: T;
@@ -69,12 +71,12 @@ export interface ResponseModulo {
   aplicacaoId?: string;
   descricao: string;
   ativo?: boolean;
-  funcionalidades: Funcionalidade[];
+  funcionalidades: FuncionalidadeDTO[];
 }
 
 export interface ResponseModuloFuncionalidadeLicenca {
-  modulos: ModuloPerfil[];
-  funcionalidades: FuncionalidadePerfil[];
+  modulos: ModuloPerfilDTO[];
+  funcionalidades: FuncionalidadePerfilDTO[];
 }
 
 export interface ResponsePerfil {
@@ -93,15 +95,15 @@ export interface ResponsePaginatedCliente {
   hasNextPage: boolean;
 }
 
-export class ResponseUser {
-  id = '';
-  imageUrl = '';
-  firstName = '';
-  lastName = '';
-  email = '';
-  isActive = false;
-  phoneNumber = '';
-  roleId = '';
-  clienteId = '';
+export interface ResponseUser {
+  id: string;
+  imageUrl: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  isActive: boolean;
+  phoneNumber: string;
+  roleId: string;
+  clienteId: string;
   perfisUtilizador?: string[];
 }

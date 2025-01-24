@@ -2,9 +2,8 @@ import { createHttpClient, HttpClient } from '@/lib/http-client';
 import { useAuthStore } from '@/stores/auth-store';
 import axios, { type AxiosRequestConfig } from 'axios';
 import type { ResponseLogin } from '@/types/responses';
-import { GSResponse } from '@/types/common';
-import { Licenca } from '@/types/entities';
-
+import { LicencaDTO } from '@/types/dtos';
+import { GSResponse } from '@/types/api/responses';
 class TokensClient {
   private httpClient: HttpClient;
 
@@ -42,7 +41,7 @@ class TokensClient {
 
         // Get license info
         const licenseResponse = await this.httpClient.getRequest<
-          GSResponse<Licenca>
+          GSResponse<LicencaDTO>
         >('/api/licencas/by-api-key');
 
         if (licenseResponse.info.data) {

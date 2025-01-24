@@ -1,12 +1,12 @@
+import { BaseApiClient, BaseApiError } from '@/lib/base-client';
+import { ResponseApi } from '@/types/responses';
+import { AreaDTO, CreateAreaDTO, UpdateAreaDTO } from '@/types/dtos';
 import {
   GSGenericResponse,
   GSResponse,
-  PaginatedRequest,
-  PaginatedResponse
-} from '@/types/common';
-import { Area } from '@/types/entities';
-import { BaseApiClient, BaseApiError } from '@/lib/base-client';
-import { ResponseApi } from '@/types/responses';
+  PaginatedRequest
+} from '@/types/api/responses';
+import { PaginatedResponse } from '@/types/api/responses';
 
 export class AreaError extends BaseApiError {
   name: string = 'AreaError';
@@ -15,7 +15,7 @@ export class AreaError extends BaseApiError {
 class AreasClient extends BaseApiClient {
   public async getAreasPaginated(
     params: PaginatedRequest
-  ): Promise<ResponseApi<PaginatedResponse<Area>>> {
+  ): Promise<ResponseApi<PaginatedResponse<AreaDTO>>> {
     const cacheKey = this.getCacheKey(
       'POST',
       '/api/areas/areas-paginated',
@@ -26,7 +26,7 @@ class AreasClient extends BaseApiClient {
         try {
           const response = await this.httpClient.postRequest<
             PaginatedRequest,
-            PaginatedResponse<Area>
+            PaginatedResponse<AreaDTO>
           >('/api/areas/areas-paginated', params);
 
           console.log('Areas API Response:', response);
@@ -49,13 +49,15 @@ class AreasClient extends BaseApiClient {
     );
   }
 
-  public async getAreas(): Promise<ResponseApi<GSResponse<Area[]>>> {
+  public async getAreas(): Promise<ResponseApi<GSResponse<AreaDTO[]>>> {
     const cacheKey = this.getCacheKey('GET', '/api/areas');
     return this.withCache(cacheKey, () =>
       this.withRetry(async () => {
         try {
           const response =
-            await this.httpClient.getRequest<GSResponse<Area[]>>('/api/areas');
+            await this.httpClient.getRequest<GSResponse<AreaDTO[]>>(
+              '/api/areas'
+            );
 
           if (!response.info || !response.info.data) {
             console.error('Formato de resposta inválido:', response);
@@ -70,12 +72,14 @@ class AreasClient extends BaseApiClient {
     );
   }
 
-  public async createArea(data: Area): Promise<ResponseApi<GSGenericResponse>> {
+  public async createArea(
+    data: CreateAreaDTO
+  ): Promise<ResponseApi<GSResponse<string>>> {
     return this.withRetry(async () => {
       try {
         const response = await this.httpClient.postRequest<
-          Area,
-          GSGenericResponse
+          CreateAreaDTO,
+          GSResponse<string>
         >('/api/areas', data);
 
         if (!response.info || !response.info.data) {
@@ -92,13 +96,13 @@ class AreasClient extends BaseApiClient {
 
   public async updateArea(
     id: string,
-    data: Area
-  ): Promise<ResponseApi<GSGenericResponse>> {
+    data: UpdateAreaDTO
+  ): Promise<ResponseApi<GSResponse<string>>> {
     return this.withRetry(async () => {
       try {
         const response = await this.httpClient.putRequest<
-          Area,
-          GSGenericResponse
+          UpdateAreaDTO,
+          GSResponse<string>
         >(`/api/areas/${id}`, data);
 
         if (!response.info || !response.info.data) {

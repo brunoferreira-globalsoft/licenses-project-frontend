@@ -1,6 +1,6 @@
 import { useAuthStore } from '@/stores/auth-store';
 import { roleMenuItems } from '@/config/menu-items';
-import { NavItem } from '@/types';
+import { NavItem } from '@/types/navigation/nav.types';
 
 export const useMenuItems = (): NavItem[] => {
   const roleId = useAuthStore((state) => state.roleId);

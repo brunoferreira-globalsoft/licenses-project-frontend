@@ -55,7 +55,6 @@ const AplicacaoCreateForm = ({ modalClose }: { modalClose: () => void }) => {
   const onSubmit = async (values: AplicacaoFormSchemaType) => {
     try {
       const response = await createAplicacaoMutation.mutateAsync({
-        id: '', // temporary id to satisfy type
         nome: values.nome,
         descricao: values.descricao || '',
         versao: '1.0.0',
