@@ -1,2 +1,2 @@
-export { usePathname } from './use-pathname';
-export { useRouter } from './use-router';
+export { usePathname } from '@/routes/hooks/use-pathname';
+export { useRouter } from '@/routes/hooks/use-router';

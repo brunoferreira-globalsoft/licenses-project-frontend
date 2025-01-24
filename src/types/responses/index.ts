@@ -1,6 +1,6 @@
-import { FuncionalidadePerfil, ModuloPerfil } from '../entities';
+import { FuncionalidadePerfil, ModuloPerfil } from '@/types/entities';
 
-import { Funcionalidade } from '../entities';
+import { Funcionalidade } from '@/types/entities';
 
 export interface ResponseApi<T> {
   info: T;

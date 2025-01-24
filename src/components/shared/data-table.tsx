@@ -29,8 +29,8 @@ import {
 } from '@tanstack/react-table';
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 import React, { useState } from 'react';
-import { DataTableFilterField } from './data-table-types';
-import { DataTableFilterModal } from './data-table-filter-modal';
+import { DataTableFilterField } from '@/components/shared/data-table-types';
+import { DataTableFilterModal } from '@/components/shared/data-table-filter-modal';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 

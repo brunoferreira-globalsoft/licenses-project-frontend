@@ -1,9 +1,9 @@
 import DataTable from '@/components/shared/data-table';
-import { columns } from './columns';
-import AplicacoesTableActions from './aplicacao-table-action';
+import { columns } from '@/pages/application/aplicacoes/components/aplicacoes-table/aplicacoes-columns';
+import AplicacoesTableActions from '@/pages/application/aplicacoes/components/aplicacoes-table/aplicacoes-table-action';
 import { Aplicacao } from '@/types/entities';
-import { filterFields } from './constants';
-import { AplicacoesFilterControls } from './aplicacoes-filter-controls';
+import { filterFields } from '@/pages/application/aplicacoes/components/aplicacoes-table/aplicacoes-constants';
+import { AplicacoesFilterControls } from '@/pages/application/aplicacoes/components/aplicacoes-table/aplicacoes-filter-controls';
 
 type TAplicacoesTableProps = {
   aplicacoes: Aplicacao[];

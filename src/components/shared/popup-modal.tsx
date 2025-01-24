@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Modal } from '@/components/ui/modal';
 import { Plus } from 'lucide-react';
 import { useState } from 'react';
-import { ScrollArea } from '../ui/scroll-area';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 type TPopupModalProps = {
   title?: string;

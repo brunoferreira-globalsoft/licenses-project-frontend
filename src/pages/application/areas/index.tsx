@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import PageHead from '@/components/shared/page-head';
-import { useGetAreas, usePrefetchAdjacentAreas } from './queries/queries';
+import {
+  useGetAreas,
+  usePrefetchAdjacentAreas
+} from '@/pages/application/areas/queries/areas-queries';
 import AreasTable from '@/pages/application/areas/components/areas-table';
 import { DataTableSkeleton } from '@/components/shared/data-table-skeleton';
 import { Breadcrumbs } from '@/components/shared/breadcrumbs';

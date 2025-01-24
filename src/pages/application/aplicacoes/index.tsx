@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import PageHead from '@/components/shared/page-head';
-import AplicacoesTable from './components/aplicacoes-table';
+import AplicacoesTable from '@/pages/application/aplicacoes/components/aplicacoes-table';
 import { DataTableSkeleton } from '@/components/shared/data-table-skeleton';
 import {
   useGetAplicacoes,
   usePrefetchAdjacentAplicacoes
-} from './queries/queries';
+} from '@/pages/application/aplicacoes/queries/aplicacoes-queries';
 import { Breadcrumbs } from '@/components/shared/breadcrumbs';
 
 export default function AplicacoesPage() {

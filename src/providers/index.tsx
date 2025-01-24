@@ -6,7 +6,7 @@ import { Suspense } from 'react';
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 import { HelmetProvider } from 'react-helmet-async';
 import { BrowserRouter } from 'react-router-dom';
-import ThemeProvider from './theme-provider';
+import ThemeProvider from '@/providers/theme-provider';
 import { SidebarProvider } from '@/hooks/use-sidebar';
 import { Toaster } from '@/components/ui/toaster';
 import { HeaderNavProvider } from '@/contexts/header-nav-context';

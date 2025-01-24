@@ -12,7 +12,7 @@ import {
   TabsList,
   TabsTrigger
 } from '@/components/ui/tabs.js';
-import RecentSales from './components/recent-sales.js';
+import RecentSales from '@/pages/dashboard/components/recent-sales.js';
 
 export default function DashboardPage() {
   return (

@@ -11,7 +11,7 @@ import {
 import { BaseFilterControlsProps } from '@/components/shared/data-table-filter-controls-base';
 import { Aplicacao } from '@/types/entities';
 import { ColumnDef } from '@tanstack/react-table';
-import { useGetAreasSelect } from '@/pages/application/areas/queries/queries';
+import { useGetAreasSelect } from '@/pages/application/areas/queries/areas-queries';
 
 export function AplicacoesFilterControls({
   table,

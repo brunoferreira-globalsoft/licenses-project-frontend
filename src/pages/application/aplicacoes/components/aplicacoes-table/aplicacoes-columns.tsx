@@ -1,6 +1,6 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { Aplicacao } from '@/types/entities';
-import { CellAction } from './cell-action';
+import { CellAction } from '@/pages/application/aplicacoes/components/aplicacoes-table/aplicacoes-cell-action';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Check, X } from 'lucide-react';
 

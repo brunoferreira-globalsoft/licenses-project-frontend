@@ -4,7 +4,7 @@ import { Aplicacao } from '@/types/entities';
 import { Edit, Trash } from 'lucide-react';
 import { useState } from 'react';
 import { EnhancedModal } from '@/components/ui/enhanced-modal';
-import AplicacaoUpdateForm from '../aplicacao-forms/aplicacao-update-form';
+import AplicacaoUpdateForm from '@/pages/application/aplicacoes/components/aplicacao-forms/aplicacao-update-form';
 
 interface CellActionProps {
   data: Aplicacao;

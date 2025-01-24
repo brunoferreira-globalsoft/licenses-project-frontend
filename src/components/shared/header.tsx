@@ -1,8 +1,8 @@
 import { useMenuItems } from '@/hooks/use-menu-items';
 import { usePathname } from '@/routes/hooks';
-import Heading from './heading';
-import UserNav from './user-nav';
-import { ModeToggle } from './theme-toggle';
+import Heading from '@/components/shared/heading';
+import UserNav from '@/components/shared/user-nav';
+import { ModeToggle } from '@/components/shared/theme-toggle';
 
 // Custom hook to find the matched path
 const useMatchedPath = (pathname: string) => {

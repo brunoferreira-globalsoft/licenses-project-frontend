@@ -25,7 +25,7 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import { useGetAreasSelect } from '@/pages/application/areas/queries/queries';
+import { useGetAreasSelect } from '@/pages/application/areas/queries/areas-queries';
 
 const aplicacaoFormSchema = z.object({
   nome: z

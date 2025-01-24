@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import { EnhancedModal } from '@/components/ui/enhanced-modal';
 import { Plus } from 'lucide-react';
-import AplicacaoCreateForm from '../aplicacao-forms/aplicacao-create-form';
+import AplicacaoCreateForm from '@/pages/application/aplicacoes/components/aplicacao-forms/aplicacao-create-form';
 
 export default function AplicacaoTableActions() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
