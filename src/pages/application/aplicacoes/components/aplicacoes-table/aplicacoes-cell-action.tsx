@@ -6,40 +6,28 @@ import { useState } from 'react';
 import { EnhancedModal } from '@/components/ui/enhanced-modal';
 import { toast } from '@/utils/toast-utils';
 import AplicacaoUpdateForm from '@/pages/application/aplicacoes/components/aplicacao-forms/aplicacao-update-form';
-import AplicacoesService from '@/lib/services/application/aplicacoes-service';
-import { queryClient } from '@/providers';
-import { handleApiError } from '@/utils/error-handlers';
+import { useDeleteAplicacao } from '../../queries/aplicacoes-mutations';
 
 interface CellActionProps {
   data: Aplicacao;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
-  const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [selectedAplicacao, setSelectedAplicacao] = useState<Aplicacao | null>(
     null
   );
 
+  const deleteAplicacaoMutation = useDeleteAplicacao();
+
   const handleDeleteConfirm = async () => {
     try {
-      setLoading(true);
-      const response = await AplicacoesService('aplicacoes').deleteAplicacao(
-        data.id || ''
-      );
-      if (response.info.succeeded) {
-        toast.success('Aplicação removida com sucesso');
-        await queryClient.invalidateQueries({
-          queryKey: ['aplicacoes']
-        });
-      } else {
-        toast.error('Erro ao remover a aplicação');
-      }
+      await deleteAplicacaoMutation.mutateAsync(data.id || '');
+      toast.success('Aplicação removida com sucesso');
     } catch (error) {
-      toast.error(handleApiError(error, 'Erro ao remover a aplicação'));
+      toast.error('Erro ao remover a aplicação');
     } finally {
-      setLoading(false);
       setOpen(false);
     }
   };
@@ -77,7 +65,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         isOpen={open}
         onClose={() => setOpen(false)}
         onConfirm={handleDeleteConfirm}
-        loading={loading}
+        loading={deleteAplicacaoMutation.isPending}
       />
 
       <div className="flex items-center gap-2">

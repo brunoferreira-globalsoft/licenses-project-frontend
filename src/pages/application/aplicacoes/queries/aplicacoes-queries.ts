@@ -72,3 +72,13 @@ export const useGetAreasSelect = () => {
     staleTime: 30000
   });
 };
+
+export const useGetAplicacoesCount = () => {
+  return useQuery({
+    queryKey: ['aplicacoes-count'],
+    queryFn: async () => {
+      const response = await AplicacoesService('aplicacoes').getAplicacoes();
+      return response.info?.data?.length || 0;
+    }
+  });
+};

@@ -25,6 +25,28 @@ export type CreateAplicacaoRequest = {
   areaId: string;
 };
 
+export interface CreateAplicacaoDTO {
+  id: string;
+  nome: string;
+  descricao: string;
+  versao: string;
+  ativo: boolean;
+  areaId: string;
+}
+
+export interface UpdateAplicacaoDTO {
+  nome: string;
+  descricao: string;
+  versao: string;
+  ativo: boolean;
+  areaId: string;
+}
+
+export interface CreateAreaDTO {
+  id: string;
+  nome: string;
+}
+
 export interface BloqueioLicenca {
   motivoBloqueio: string;
 }

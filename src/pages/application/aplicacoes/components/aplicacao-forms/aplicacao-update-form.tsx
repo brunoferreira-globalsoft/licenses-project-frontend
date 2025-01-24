@@ -12,9 +12,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { toast } from '@/utils/toast-utils';
-import AplicacoesService from '@/lib/services/application/aplicacoes-service';
-import { useState } from 'react';
-import { useQueryClient } from '@tanstack/react-query';
 import { getErrorMessage, handleApiError } from '@/utils/error-handlers';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
@@ -26,6 +23,7 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { useGetAreasSelect } from '@/pages/application/areas/queries/areas-queries';
+import { useUpdateAplicacao } from '@/pages/application/aplicacoes/queries/aplicacoes-mutations';
 
 const aplicacaoFormSchema = z.object({
   nome: z
@@ -55,10 +53,8 @@ const AplicacaoUpdateForm = ({
   aplicacaoId,
   initialData
 }: AplicacaoUpdateFormProps) => {
-  const [loading, setLoading] = useState(false);
-  const queryClient = useQueryClient();
-
   const { data: areasData } = useGetAreasSelect();
+  const updateAplicacaoMutation = useUpdateAplicacao();
 
   const form = useForm<AplicacaoFormSchemaType>({
     resolver: zodResolver(aplicacaoFormSchema),
@@ -72,10 +68,9 @@ const AplicacaoUpdateForm = ({
 
   const onSubmit = async (values: AplicacaoFormSchemaType) => {
     try {
-      setLoading(true);
-      const response = await AplicacoesService('').updateAplicacao(
-        aplicacaoId,
-        {
+      const response = await updateAplicacaoMutation.mutateAsync({
+        id: aplicacaoId,
+        data: {
           nome: values.nome,
           descricao: values.descricao || '',
           ativo: values.ativo,
@@ -83,19 +78,16 @@ const AplicacaoUpdateForm = ({
           id: aplicacaoId,
           versao: initialData.versao
         }
-      );
+      });
 
       if (response.info.succeeded) {
         toast.success('Aplicação atualizada com sucesso');
-        await queryClient.invalidateQueries({ queryKey: ['aplicacoes'] });
         modalClose();
       } else {
         toast.error(getErrorMessage(response, 'Erro ao atualizar aplicação'));
       }
     } catch (error) {
       toast.error(handleApiError(error, 'Erro ao atualizar aplicação'));
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -193,8 +185,10 @@ const AplicacaoUpdateForm = ({
             <Button type="button" variant="outline" onClick={modalClose}>
               Cancelar
             </Button>
-            <Button type="submit" disabled={loading}>
-              {loading ? 'Atualizando...' : 'Atualizar'}
+            <Button type="submit" disabled={updateAplicacaoMutation.isPending}>
+              {updateAplicacaoMutation.isPending
+                ? 'Atualizando...'
+                : 'Atualizar'}
             </Button>
           </div>
         </form>

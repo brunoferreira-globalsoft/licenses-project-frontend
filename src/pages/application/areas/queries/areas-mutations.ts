@@ -1,0 +1,44 @@
+import AreasService from '@/lib/services/application/areas-service';
+import { useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
+import { CreateAreaDTO, Area } from '@/types/entities';
+
+export const useDeleteArea = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: string) => AreasService('areas').deleteArea(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['areas'] });
+      queryClient.invalidateQueries({ queryKey: ['areas-count'] });
+      queryClient.invalidateQueries({ queryKey: ['areas-select'] });
+    }
+  });
+};
+
+export const useCreateArea = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: CreateAreaDTO) => AreasService('areas').createArea(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['areas'] });
+      queryClient.invalidateQueries({ queryKey: ['areas-count'] });
+      queryClient.invalidateQueries({ queryKey: ['areas-select'] });
+    }
+  });
+};
+
+export const useUpdateArea = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, data }: { id: string; data: Area }) =>
+      AreasService('areas').updateArea(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['areas'] });
+      queryClient.invalidateQueries({ queryKey: ['areas-count'] });
+      queryClient.invalidateQueries({ queryKey: ['areas-select'] });
+    }
+  });
+};

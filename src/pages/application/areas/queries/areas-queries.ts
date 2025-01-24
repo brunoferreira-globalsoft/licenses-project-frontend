@@ -71,3 +71,13 @@ export const useGetAreasSelect = () => {
     staleTime: 30000
   });
 };
+
+export const useGetAreasCount = () => {
+  return useQuery({
+    queryKey: ['areas-count'],
+    queryFn: async () => {
+      const response = await AreasService('areas').getAreas();
+      return response.info?.data?.length || 0;
+    }
+  });
+};

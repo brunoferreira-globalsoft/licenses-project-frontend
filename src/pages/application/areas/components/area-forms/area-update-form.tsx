@@ -11,10 +11,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { toast } from '@/utils/toast-utils';
-import AreasService from '@/lib/services/application/areas-service';
-import { useState } from 'react';
-import { useQueryClient } from '@tanstack/react-query';
 import { getErrorMessage, handleApiError } from '@/utils/error-handlers';
+import { useUpdateArea } from '../../queries/areas-mutations';
 
 const areaFormSchema = z.object({
   nome: z
@@ -37,8 +35,7 @@ const AreaUpdateForm = ({
   areaId,
   initialData
 }: AreaUpdateFormProps) => {
-  const [loading, setLoading] = useState(false);
-  const queryClient = useQueryClient();
+  const updateAreaMutation = useUpdateArea();
 
   const form = useForm<AreaFormSchemaType>({
     resolver: zodResolver(areaFormSchema),
@@ -49,29 +46,21 @@ const AreaUpdateForm = ({
 
   const onSubmit = async (values: AreaFormSchemaType) => {
     try {
-      setLoading(true);
-      const response = await AreasService('areas').updateArea(areaId, {
-        nome: values.nome
+      const response = await updateAreaMutation.mutateAsync({
+        id: areaId,
+        data: {
+          nome: values.nome
+        }
       });
 
       if (response.info.succeeded) {
         toast.success('Área atualizada com sucesso');
-        await Promise.all([
-          queryClient.invalidateQueries({
-            queryKey: ['areas']
-          }),
-          queryClient.invalidateQueries({
-            queryKey: ['areas-select']
-          })
-        ]);
         modalClose();
       } else {
         toast.error(getErrorMessage(response, 'Erro ao atualizar área'));
       }
     } catch (error) {
       toast.error(handleApiError(error, 'Erro ao atualizar área'));
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -106,8 +95,8 @@ const AreaUpdateForm = ({
             <Button type="button" variant="secondary" onClick={modalClose}>
               Cancelar
             </Button>
-            <Button type="submit" disabled={loading}>
-              {loading ? 'Atualizando...' : 'Atualizar'}
+            <Button type="submit" disabled={updateAreaMutation.isPending}>
+              {updateAreaMutation.isPending ? 'Atualizando...' : 'Atualizar'}
             </Button>
           </div>
         </form>

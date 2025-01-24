@@ -11,11 +11,6 @@ import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { toast } from '@/utils/toast-utils';
-import AplicacoesService from '@/lib/services/application/aplicacoes-service';
-import { useState } from 'react';
-import { useQueryClient } from '@tanstack/react-query';
-import { getErrorMessage, handleApiError } from '@/utils/error-handlers';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import {
@@ -26,6 +21,9 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import { useGetAreasSelect } from '@/pages/application/areas/queries/areas-queries';
+import { useCreateAplicacao } from '@/pages/application/aplicacoes/queries/aplicacoes-mutations';
+import { toast } from '@/utils/toast-utils';
+import { getErrorMessage, handleApiError } from '@/utils/error-handlers';
 
 const aplicacaoFormSchema = z.object({
   nome: z
@@ -41,10 +39,8 @@ const aplicacaoFormSchema = z.object({
 type AplicacaoFormSchemaType = z.infer<typeof aplicacaoFormSchema>;
 
 const AplicacaoCreateForm = ({ modalClose }: { modalClose: () => void }) => {
-  const [loading, setLoading] = useState(false);
-  const queryClient = useQueryClient();
-
   const { data: areasData } = useGetAreasSelect();
+  const createAplicacaoMutation = useCreateAplicacao();
 
   const form = useForm<AplicacaoFormSchemaType>({
     resolver: zodResolver(aplicacaoFormSchema),
@@ -58,8 +54,7 @@ const AplicacaoCreateForm = ({ modalClose }: { modalClose: () => void }) => {
 
   const onSubmit = async (values: AplicacaoFormSchemaType) => {
     try {
-      setLoading(true);
-      const response = await AplicacoesService('aplicacoes').createAplicacao({
+      const response = await createAplicacaoMutation.mutateAsync({
         id: '', // temporary id to satisfy type
         nome: values.nome,
         descricao: values.descricao || '',
@@ -70,15 +65,12 @@ const AplicacaoCreateForm = ({ modalClose }: { modalClose: () => void }) => {
 
       if (response.info.succeeded) {
         toast.success('Aplicação criada com sucesso');
-        await queryClient.invalidateQueries({ queryKey: ['aplicacoes'] });
         modalClose();
       } else {
         toast.error(getErrorMessage(response, 'Erro ao criar aplicação'));
       }
     } catch (error) {
       toast.error(handleApiError(error, 'Erro ao criar aplicação'));
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -180,8 +172,8 @@ const AplicacaoCreateForm = ({ modalClose }: { modalClose: () => void }) => {
             <Button type="button" variant="outline" onClick={modalClose}>
               Cancelar
             </Button>
-            <Button type="submit" disabled={loading}>
-              {loading ? 'Criando...' : 'Criar'}
+            <Button type="submit" disabled={createAplicacaoMutation.isPending}>
+              {createAplicacaoMutation.isPending ? 'Criando...' : 'Criar'}
             </Button>
           </div>
         </form>

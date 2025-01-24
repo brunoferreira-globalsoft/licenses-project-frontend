@@ -11,10 +11,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { toast } from '@/utils/toast-utils';
-import AreasService from '@/lib/services/application/areas-service';
-import { useState } from 'react';
-import { useQueryClient } from '@tanstack/react-query';
 import { getErrorMessage, handleApiError } from '@/utils/error-handlers';
+import { useCreateArea } from '../../queries/areas-mutations';
 
 const areaFormSchema = z.object({
   nome: z
@@ -25,8 +23,7 @@ const areaFormSchema = z.object({
 type AreaFormSchemaType = z.infer<typeof areaFormSchema>;
 
 const AreaCreateForm = ({ modalClose }: { modalClose: () => void }) => {
-  const [loading, setLoading] = useState(false);
-  const queryClient = useQueryClient();
+  const createAreaMutation = useCreateArea();
 
   const form = useForm<AreaFormSchemaType>({
     resolver: zodResolver(areaFormSchema),
@@ -37,29 +34,19 @@ const AreaCreateForm = ({ modalClose }: { modalClose: () => void }) => {
 
   const onSubmit = async (values: AreaFormSchemaType) => {
     try {
-      setLoading(true);
-      const response = await AreasService('areas').createArea({
+      const response = await createAreaMutation.mutateAsync({
+        id: '', // temporary id to satisfy type
         nome: values.nome
       });
 
       if (response.info.succeeded) {
         toast.success('Área criada com sucesso');
-        await Promise.all([
-          queryClient.invalidateQueries({
-            queryKey: ['areas']
-          }),
-          queryClient.invalidateQueries({
-            queryKey: ['areas-select']
-          })
-        ]);
         modalClose();
       } else {
         toast.error(getErrorMessage(response, 'Erro ao criar área'));
       }
     } catch (error) {
       toast.error(handleApiError(error, 'Erro ao criar área'));
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -94,8 +81,8 @@ const AreaCreateForm = ({ modalClose }: { modalClose: () => void }) => {
             <Button type="button" variant="outline" onClick={modalClose}>
               Cancelar
             </Button>
-            <Button type="submit" disabled={loading}>
-              {loading ? 'Criando...' : 'Criar'}
+            <Button type="submit" disabled={createAreaMutation.isPending}>
+              {createAreaMutation.isPending ? 'Criando...' : 'Criar'}
             </Button>
           </div>
         </form>
