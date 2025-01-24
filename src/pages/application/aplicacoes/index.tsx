@@ -9,10 +9,13 @@ import {
 import { Breadcrumbs } from '@/components/shared/breadcrumbs';
 
 export default function AplicacoesPage() {
+  const searchParams = new URLSearchParams(window.location.search);
+  const areaIdParam = searchParams.get('areaId');
+
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [filters, setFilters] = useState<Array<{ id: string; value: string }>>(
-    []
+    areaIdParam ? [{ id: 'areaId', value: areaIdParam }] : []
   );
 
   const { data, isLoading } = useGetAplicacoes(page, pageSize, filters, null);

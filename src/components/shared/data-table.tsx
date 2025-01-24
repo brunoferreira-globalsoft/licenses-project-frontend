@@ -28,7 +28,7 @@ import {
   useReactTable
 } from '@tanstack/react-table';
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { DataTableFilterField } from '@/components/shared/data-table-types';
 import { DataTableFilterModal } from '@/components/shared/data-table-filter-modal';
 import { Badge } from '@/components/ui/badge';
@@ -79,6 +79,18 @@ export default function DataTable<TData, TValue>({
   const [pendingColumnFilters, setPendingColumnFilters] =
     useState<ColumnFiltersState>([]);
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
+
+  // Add this useEffect to handle initial filters
+  useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search);
+    const areaId = searchParams.get('areaId');
+
+    if (areaId) {
+      const initialFilter = { id: 'areaId', value: areaId };
+      setColumnFilters([initialFilter]);
+      setPendingColumnFilters([initialFilter]);
+    }
+  }, []);
 
   const handlePaginationChange = (
     newPageIndex: number,

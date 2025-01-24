@@ -1,6 +1,6 @@
 import { AlertModal } from '@/components/shared/alert-modal';
 import { Button } from '@/components/ui/button';
-import { Edit, Trash } from 'lucide-react';
+import { Edit, Trash, Rows3 } from 'lucide-react';
 import { useState } from 'react';
 import AreaUpdateForm from '@/pages/application/areas/components/area-forms/area-update-form';
 import { EnhancedModal } from '@/components/ui/enhanced-modal';
@@ -8,6 +8,7 @@ import { toast } from '@/utils/toast-utils';
 import { handleApiError } from '@/utils/error-handlers';
 import { useDeleteArea } from '../../queries/areas-mutations';
 import { AreaDTO } from '@/types/dtos';
+import { useNavigate } from 'react-router-dom';
 
 interface CellActionProps {
   data: AreaDTO;
@@ -17,6 +18,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const [open, setOpen] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [selectedArea, setSelectedArea] = useState<AreaDTO | null>(null);
+  const navigate = useNavigate();
 
   const deleteAreaMutation = useDeleteArea();
 
@@ -34,6 +36,10 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const handleUpdateClick = (area: AreaDTO) => {
     setSelectedArea(area);
     setIsUpdateModalOpen(true);
+  };
+
+  const handleViewApplications = (areaId: string) => {
+    navigate(`/aplicacoes?areaId=${areaId}`);
   };
 
   return (
@@ -79,6 +85,14 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         >
           <Trash color="hsl(var(--destructive))" className="h-4 w-4" />
           <span className="sr-only">Apagar</span>
+        </Button>
+        <Button
+          onClick={() => handleViewApplications(data.id || '')}
+          variant="ghost"
+          className="h-8 w-8 p-0"
+        >
+          <Rows3 className="h-4 w-4" />
+          <span className="sr-only">Ver Aplicações</span>
         </Button>
       </div>
     </>

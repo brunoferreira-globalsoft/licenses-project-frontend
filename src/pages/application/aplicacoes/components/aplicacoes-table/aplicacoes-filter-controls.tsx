@@ -12,6 +12,7 @@ import { BaseFilterControlsProps } from '@/components/shared/data-table-filter-c
 import { ColumnDef } from '@tanstack/react-table';
 import { useGetAreasSelect } from '@/pages/application/areas/queries/areas-queries';
 import { AplicacaoDTO } from '@/types/dtos';
+
 export function AplicacoesFilterControls({
   table,
   columns,
@@ -19,6 +20,8 @@ export function AplicacoesFilterControls({
   onClearFilters
 }: BaseFilterControlsProps<AplicacaoDTO>) {
   const [filterValues, setFilterValues] = useState<Record<string, string>>({});
+  const searchParams = new URLSearchParams(window.location.search);
+  const areaIdParam = searchParams.get('areaId');
 
   const { data: areasData } = useGetAreasSelect();
 
@@ -35,17 +38,28 @@ export function AplicacoesFilterControls({
       })
       .forEach((column) => {
         if ('accessorKey' in column && column.accessorKey) {
-          const columnFilterValue = table
-            .getColumn(column.accessorKey)
-            ?.getFilterValue();
-          if (columnFilterValue) {
-            initialFilterValues[column.accessorKey.toString()] =
-              columnFilterValue.toString();
+          if (column.accessorKey === 'areaId' && areaIdParam) {
+            initialFilterValues[column.accessorKey.toString()] = areaIdParam;
+            table.getColumn(column.accessorKey)?.setFilterValue(areaIdParam);
+          } else {
+            const columnFilterValue = table
+              .getColumn(column.accessorKey)
+              ?.getFilterValue();
+            if (columnFilterValue) {
+              initialFilterValues[column.accessorKey.toString()] =
+                columnFilterValue.toString();
+            }
           }
         }
       });
     setFilterValues(initialFilterValues);
-  }, [table, columns]);
+
+    // Instead of calling onApplyFilters directly, update the columnFilters state
+    if (areaIdParam) {
+      const initialFilter = { id: 'areaId', value: areaIdParam };
+      table.setColumnFilters([initialFilter]);
+    }
+  }, [table, columns, areaIdParam]);
 
   const handleFilterChange = (columnId: string, value: string) => {
     setFilterValues((prev) => ({
