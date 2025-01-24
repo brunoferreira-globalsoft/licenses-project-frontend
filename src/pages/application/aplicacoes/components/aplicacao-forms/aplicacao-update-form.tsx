@@ -157,7 +157,7 @@ const AplicacaoUpdateForm = ({
                       </SelectTrigger>
                       <SelectContent>
                         {areasData?.map((area) => (
-                          <SelectItem key={area.id} value={area.id}>
+                          <SelectItem key={area.id || ''} value={area.id || ''}>
                             {area.nome}
                           </SelectItem>
                         ))}
