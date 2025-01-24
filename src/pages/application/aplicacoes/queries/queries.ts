@@ -1,5 +1,5 @@
 import AplicacoesService from '@/lib/services/application/aplicacoes-service';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 export const useGetAplicacoes = (
   pageNumber: number,
@@ -20,4 +20,43 @@ export const useGetAplicacoes = (
     staleTime: 5 * 60 * 1000,
     gcTime: 30 * 60 * 1000
   });
+};
+
+export const usePrefetchAdjacentAplicacoes = (
+  page: number,
+  pageSize: number,
+  filters: Array<{ id: string; value: string }> | null
+) => {
+  const queryClient = useQueryClient();
+
+  const prefetchPreviousPage = async () => {
+    if (page > 1) {
+      await queryClient.prefetchQuery({
+        queryKey: ['aplicacoes', page - 1, pageSize, filters, null],
+        queryFn: () =>
+          AplicacoesService('aplicacoes').getAplicacoesPaginated({
+            pageNumber: page - 1,
+            pageSize: pageSize,
+            filters:
+              (filters as unknown as Record<string, string>) ?? undefined,
+            sorting: undefined
+          })
+      });
+    }
+  };
+
+  const prefetchNextPage = async () => {
+    await queryClient.prefetchQuery({
+      queryKey: ['aplicacoes', page + 1, pageSize, filters, null],
+      queryFn: () =>
+        AplicacoesService('aplicacoes').getAplicacoesPaginated({
+          pageNumber: page + 1,
+          pageSize: pageSize,
+          filters: (filters as unknown as Record<string, string>) ?? undefined,
+          sorting: undefined
+        })
+    });
+  };
+
+  return { prefetchPreviousPage, prefetchNextPage };
 };

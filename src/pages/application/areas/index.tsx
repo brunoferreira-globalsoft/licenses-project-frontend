@@ -1,12 +1,10 @@
 import { useState } from 'react';
 import PageHead from '@/components/shared/page-head';
-import { useGetAreas } from '@/pages/application/areas/queries/queries';
+import { useGetAreas, usePrefetchAdjacentAreas } from './queries/queries';
 import AreasTable from '@/pages/application/areas/components/areas-table';
 import { DataTableSkeleton } from '@/components/shared/data-table-skeleton';
 import { Breadcrumbs } from '@/components/shared/breadcrumbs';
-import { useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
-import AreasService from '@/lib/services/application/areas-service';
 
 export default function AreasPage() {
   const [page, setPage] = useState(1);
@@ -14,9 +12,13 @@ export default function AreasPage() {
   const [filters, setFilters] = useState<Array<{ id: string; value: string }>>(
     []
   );
-  const queryClient = useQueryClient();
 
   const { data, isLoading } = useGetAreas(page, pageSize, filters, null);
+  const { prefetchPreviousPage, prefetchNextPage } = usePrefetchAdjacentAreas(
+    page,
+    pageSize,
+    filters
+  );
 
   const handleFiltersChange = (
     newFilters: Array<{ id: string; value: string }>
@@ -30,32 +32,10 @@ export default function AreasPage() {
     setPageSize(newPageSize);
   };
 
-  // Prefetch adjacent pages
   useEffect(() => {
-    if (page > 1) {
-      queryClient.prefetchQuery({
-        queryKey: ['areas', page - 1, pageSize, filters, null],
-        queryFn: () =>
-          AreasService('areas').getAreasPaginated({
-            pageNumber: page - 1,
-            pageSize: pageSize,
-            filters:
-              (filters as unknown as Record<string, string>) ?? undefined,
-            sorting: undefined
-          })
-      });
-    }
-    queryClient.prefetchQuery({
-      queryKey: ['areas', page + 1, pageSize, filters, null],
-      queryFn: () =>
-        AreasService('areas').getAreasPaginated({
-          pageNumber: page + 1,
-          pageSize: pageSize,
-          filters: (filters as unknown as Record<string, string>) ?? undefined,
-          sorting: undefined
-        })
-    });
-  }, [page, pageSize, filters, queryClient]);
+    prefetchPreviousPage();
+    prefetchNextPage();
+  }, [page, pageSize, filters]);
 
   // Get the areas from the transformed response
   const areas = data?.info?.data || [];

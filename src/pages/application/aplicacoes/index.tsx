@@ -1,12 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import PageHead from '@/components/shared/page-head';
 import AplicacoesTable from './components/aplicacoes-table';
 import { DataTableSkeleton } from '@/components/shared/data-table-skeleton';
-import { useGetAplicacoes } from './queries/queries';
+import {
+  useGetAplicacoes,
+  usePrefetchAdjacentAplicacoes
+} from './queries/queries';
 import { Breadcrumbs } from '@/components/shared/breadcrumbs';
-import { useQueryClient } from '@tanstack/react-query';
-import { useEffect } from 'react';
-import AplicacoesService from '@/lib/services/application/aplicacoes-service';
 
 export default function AplicacoesPage() {
   const [page, setPage] = useState(1);
@@ -14,9 +14,10 @@ export default function AplicacoesPage() {
   const [filters, setFilters] = useState<Array<{ id: string; value: string }>>(
     []
   );
-  const queryClient = useQueryClient();
 
   const { data, isLoading } = useGetAplicacoes(page, pageSize, filters, null);
+  const { prefetchPreviousPage, prefetchNextPage } =
+    usePrefetchAdjacentAplicacoes(page, pageSize, filters);
 
   const handleFiltersChange = (
     newFilters: Array<{ id: string; value: string }>
@@ -30,32 +31,10 @@ export default function AplicacoesPage() {
     setPageSize(newPageSize);
   };
 
-  // Prefetch adjacent pages
   useEffect(() => {
-    if (page > 1) {
-      queryClient.prefetchQuery({
-        queryKey: ['aplicacoes', page - 1, pageSize, filters, null],
-        queryFn: () =>
-          AplicacoesService('aplicacoes').getAplicacoesPaginated({
-            pageNumber: page - 1,
-            pageSize: pageSize,
-            filters:
-              (filters as unknown as Record<string, string>) ?? undefined,
-            sorting: undefined
-          })
-      });
-    }
-    queryClient.prefetchQuery({
-      queryKey: ['aplicacoes', page + 1, pageSize, filters, null],
-      queryFn: () =>
-        AplicacoesService('aplicacoes').getAplicacoesPaginated({
-          pageNumber: page + 1,
-          pageSize: pageSize,
-          filters: (filters as unknown as Record<string, string>) ?? undefined,
-          sorting: undefined
-        })
-    });
-  }, [page, pageSize, filters, queryClient]);
+    prefetchPreviousPage();
+    prefetchNextPage();
+  }, [page, pageSize, filters]);
 
   const aplicacoes = data?.info?.data || [];
   const totalAreas = data?.info?.totalCount || 0;
