@@ -34,7 +34,7 @@ export const columns: ColumnDef<Aplicacao>[] = [
   },
   {
     accessorKey: 'ativo',
-    header: 'Estado',
+    header: () => <div className="text-center">Estado</div>,
     cell: ({ row }) => (
       <div className="flex items-center justify-center">
         {row.original.ativo ? (
