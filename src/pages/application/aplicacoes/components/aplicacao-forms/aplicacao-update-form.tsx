@@ -13,7 +13,7 @@ import { z } from 'zod';
 import { toast } from '@/utils/toast-utils';
 import AplicacoesService from '@/lib/services/application/aplicacoes-service';
 import { useState } from 'react';
-import { useQueryClient, useQuery } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { getErrorMessage, handleApiError } from '@/utils/error-handlers';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
@@ -25,7 +25,7 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import AreasService from '@/lib/services/application/areas-service';
+import { useGetAreasSelect } from '@/pages/application/areas/queries/queries';
 
 const aplicacaoFormSchema = z.object({
   nome: z
@@ -58,14 +58,7 @@ const AplicacaoUpdateForm = ({
   const [loading, setLoading] = useState(false);
   const queryClient = useQueryClient();
 
-  const { data: areasData } = useQuery({
-    queryKey: ['areas-select'],
-    queryFn: async () => {
-      const response = await AreasService('areas').getAreas();
-      return response.info.data || [];
-    },
-    staleTime: 30000
-  });
+  const { data: areasData } = useGetAreasSelect();
 
   const form = useForm<AplicacaoFormSchemaType>({
     resolver: zodResolver(aplicacaoFormSchema),

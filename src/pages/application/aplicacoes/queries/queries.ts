@@ -1,5 +1,6 @@
 import AplicacoesService from '@/lib/services/application/aplicacoes-service';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import AreasService from '@/lib/services/application/areas-service';
 
 export const useGetAplicacoes = (
   pageNumber: number,
@@ -59,4 +60,15 @@ export const usePrefetchAdjacentAplicacoes = (
   };
 
   return { prefetchPreviousPage, prefetchNextPage };
+};
+
+export const useGetAreasSelect = () => {
+  return useQuery({
+    queryKey: ['areas-select'],
+    queryFn: async () => {
+      const response = await AreasService('areas').getAreas();
+      return response.info.data || [];
+    },
+    staleTime: 30000
+  });
 };

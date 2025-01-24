@@ -11,8 +11,7 @@ import {
 import { BaseFilterControlsProps } from '@/components/shared/data-table-filter-controls-base';
 import { Aplicacao } from '@/types/entities';
 import { ColumnDef } from '@tanstack/react-table';
-import { useQuery } from '@tanstack/react-query';
-import AreasService from '@/lib/services/application/areas-service';
+import { useGetAreasSelect } from '@/pages/application/areas/queries/queries';
 
 export function AplicacoesFilterControls({
   table,
@@ -22,14 +21,7 @@ export function AplicacoesFilterControls({
 }: BaseFilterControlsProps<Aplicacao>) {
   const [filterValues, setFilterValues] = useState<Record<string, string>>({});
 
-  const { data: areasData } = useQuery({
-    queryKey: ['areas-select'],
-    queryFn: async () => {
-      const response = await AreasService('areas').getAreas();
-      return response.info.data || [];
-    },
-    staleTime: 30000
-  });
+  const { data: areasData } = useGetAreasSelect();
 
   useEffect(() => {
     const initialFilterValues: Record<string, string> = {};

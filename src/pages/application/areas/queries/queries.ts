@@ -60,3 +60,14 @@ export const usePrefetchAdjacentAreas = (
 
   return { prefetchPreviousPage, prefetchNextPage };
 };
+
+export const useGetAreasSelect = () => {
+  return useQuery({
+    queryKey: ['areas-select'],
+    queryFn: async () => {
+      const response = await AreasService('areas').getAreas();
+      return response.info.data || [];
+    },
+    staleTime: 30000
+  });
+};
