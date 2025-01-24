@@ -13,12 +13,14 @@ import { useHeaderNav } from '@/contexts/header-nav-context';
 import { useHeaderMenu } from '@/hooks/use-header-menu';
 import { cn } from '@/lib/utils';
 import { Logo } from '@/assets/logo-letters';
+import { Icons } from '@/components/ui/icons';
 
 interface MenuItem {
   href: string;
   label: string;
   description?: string;
   items?: MenuItem[];
+  icon?: React.ReactNode;
 }
 
 export function HeaderNav() {
@@ -82,11 +84,17 @@ export function HeaderNav() {
                                 'group block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground',
                                 isItemActive(subItem.href) &&
                                   'bg-accent text-accent-foreground'
-                                // 'bg-primary/10 text-primary hover:bg-primary/10 hover:text-primary'
                               )}
                             >
-                              <div className="text-sm font-medium leading-none">
+                              <div className="flex items-center text-sm font-medium leading-none">
                                 {subItem.label}
+                                {subItem.icon && (
+                                  <span className="ml-2">
+                                    {Icons[
+                                      subItem.icon as keyof typeof Icons
+                                    ]?.({ className: 'h-3 w-3' })}
+                                  </span>
+                                )}
                               </div>
                               {subItem.description && (
                                 <p className="mt-2 line-clamp-2 text-[10px] leading-snug text-muted-foreground">

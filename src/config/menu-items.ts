@@ -34,7 +34,8 @@ export const roleHeaderMenus = {
           {
             label: 'Aplicações',
             href: '/aplicacoes',
-            description: 'Faça a gestão das aplicações da sua empresa'
+            description: 'Faça a gestão das aplicações da sua empresa',
+            icon: 'application' as keyof typeof Icons
           }
         ]
       }
