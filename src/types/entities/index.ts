@@ -12,6 +12,9 @@ export interface Aplicacao {
   versao: string;
   ativo: boolean;
   areaId: string;
+  area?: {
+    nome: string;
+  };
 }
 
 export type CreateAplicacaoRequest = {

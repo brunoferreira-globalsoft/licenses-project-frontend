@@ -47,7 +47,10 @@ export const columns: ColumnDef<Aplicacao>[] = [
   },
   {
     accessorKey: 'areaId',
-    header: 'Area'
+    header: 'Área',
+    cell: ({ row }) => {
+      return <div>{row.original.area?.nome || '-'}</div>;
+    }
   },
   {
     id: 'actions',
