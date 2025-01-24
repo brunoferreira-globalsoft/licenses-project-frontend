@@ -1,6 +1,6 @@
 import { AlertModal } from '@/components/shared/alert-modal';
 import { Button } from '@/components/ui/button';
-import { Edit, Trash, Rows3 } from 'lucide-react';
+import { Edit, Trash, AppWindow } from 'lucide-react';
 import { useState } from 'react';
 import AreaUpdateForm from '@/pages/application/areas/components/area-forms/area-update-form';
 import { EnhancedModal } from '@/components/ui/enhanced-modal';
@@ -91,7 +91,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
           variant="ghost"
           className="h-8 w-8 p-0"
         >
-          <Rows3 className="h-4 w-4" />
+          <AppWindow className="h-4 w-4" />
           <span className="sr-only">Ver Aplicações</span>
         </Button>
       </div>

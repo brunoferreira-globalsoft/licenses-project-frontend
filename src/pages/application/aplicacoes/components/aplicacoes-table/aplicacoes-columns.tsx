@@ -54,9 +54,9 @@ export const columns: ColumnDef<AplicacaoDTO>[] = [
   },
   {
     id: 'actions',
-    header: () => <div className="text-center">Ações</div>,
+    header: () => <div className="text-right"></div>,
     cell: ({ row }) => (
-      <div className="flex items-center justify-center">
+      <div className="flex items-center justify-end">
         <CellAction data={row.original} />
       </div>
     )

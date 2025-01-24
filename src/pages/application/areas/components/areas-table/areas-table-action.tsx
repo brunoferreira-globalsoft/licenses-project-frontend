@@ -13,7 +13,7 @@ export default function AreaTableActions() {
         {/* <TableSearchInput placeholder="Procurar Áreas..." /> */}
       </div>
       <div className="flex gap-3">
-        <Button variant="outline" onClick={() => setIsCreateModalOpen(true)}>
+        <Button variant="emerald" onClick={() => setIsCreateModalOpen(true)}>
           <Plus className="mr-2 h-4 w-4" /> Adicionar
         </Button>
 
