@@ -14,6 +14,8 @@ import {
 } from '@/components/ui/tabs.js';
 import RecentSales from '@/pages/dashboard/components/recent-sales.js';
 import { useGetDashboardCounts } from './queries/dashboard-queries';
+import AplicacoesPorArea from './components/aplicacoes-por-area-chart';
+import RecentAplicacoes from './components/recent-aplicacoes';
 
 export default function DashboardPage() {
   const { areasCount, aplicacoesCount, isLoading } = useGetDashboardCounts();
@@ -60,7 +62,7 @@ export default function DashboardPage() {
                     {isLoading ? '...' : areasCount}
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    Áreas cadastradas
+                    Áreas registadas
                   </p>
                 </CardContent>
               </Card>
@@ -88,7 +90,7 @@ export default function DashboardPage() {
                     {isLoading ? '...' : aplicacoesCount}
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    Aplicações cadastradas
+                    Aplicações registadas
                   </p>
                 </CardContent>
               </Card>
@@ -197,19 +199,21 @@ export default function DashboardPage() {
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-7">
               <Card className="col-span-4">
                 <CardHeader>
-                  <CardTitle>Overview</CardTitle>
+                  <CardTitle>Aplicações por Área</CardTitle>
                 </CardHeader>
-                <CardContent className="pl-2">{/* <Overview /> */}</CardContent>
+                <CardContent className="pl-2">
+                  <AplicacoesPorArea />
+                </CardContent>
               </Card>
               <Card className="col-span-4 md:col-span-3">
                 <CardHeader>
-                  <CardTitle>Recent Sales</CardTitle>
+                  <CardTitle>Aplicações Recentes</CardTitle>
                   <CardDescription>
-                    You made 265 sales this month.
+                    Novas aplicações nos últimos 7 dias
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <RecentSales />
+                  <RecentAplicacoes />
                 </CardContent>
               </Card>
             </div>

@@ -15,6 +15,7 @@ export interface Aplicacao {
   area?: {
     nome: string;
   };
+  createdOn: string;
 }
 
 export type CreateAplicacaoRequest = {
