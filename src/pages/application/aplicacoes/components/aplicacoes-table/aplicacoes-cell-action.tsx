@@ -4,21 +4,45 @@ import { Aplicacao } from '@/types/entities';
 import { Edit, Trash } from 'lucide-react';
 import { useState } from 'react';
 import { EnhancedModal } from '@/components/ui/enhanced-modal';
+import { toast } from '@/utils/toast-utils';
 import AplicacaoUpdateForm from '@/pages/application/aplicacoes/components/aplicacao-forms/aplicacao-update-form';
+import AplicacoesService from '@/lib/services/application/aplicacoes-service';
+import { queryClient } from '@/providers';
+import { handleApiError } from '@/utils/error-handlers';
 
 interface CellActionProps {
   data: Aplicacao;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
-  const [loading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [selectedAplicacao, setSelectedAplicacao] = useState<Aplicacao | null>(
     null
   );
 
-  const onConfirm = async () => {};
+  const handleDeleteConfirm = async () => {
+    try {
+      setLoading(true);
+      const response = await AplicacoesService('aplicacoes').deleteAplicacao(
+        data.id || ''
+      );
+      if (response.info.succeeded) {
+        toast.success('Aplicação removida com sucesso');
+        await queryClient.invalidateQueries({
+          queryKey: ['aplicacoes']
+        });
+      } else {
+        toast.error('Erro ao remover a aplicação');
+      }
+    } catch (error) {
+      toast.error(handleApiError(error, 'Erro ao remover a aplicação'));
+    } finally {
+      setLoading(false);
+      setOpen(false);
+    }
+  };
 
   const handleUpdateClick = (aplicacao: Aplicacao) => {
     setSelectedAplicacao(aplicacao);
@@ -52,7 +76,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
       <AlertModal
         isOpen={open}
         onClose={() => setOpen(false)}
-        onConfirm={onConfirm}
+        onConfirm={handleDeleteConfirm}
         loading={loading}
       />
 
