@@ -50,15 +50,20 @@ const AreaUpdateForm = ({
   const onSubmit = async (values: AreaFormSchemaType) => {
     try {
       setLoading(true);
-      const response = await AreasService('').updateArea(areaId, {
+      const response = await AreasService('areas').updateArea(areaId, {
         nome: values.nome
       });
 
       if (response.info.succeeded) {
         toast.success('Área atualizada com sucesso');
-        await queryClient.invalidateQueries({
-          queryKey: ['areas', 'areas-select']
-        });
+        await Promise.all([
+          queryClient.invalidateQueries({
+            queryKey: ['areas']
+          }),
+          queryClient.invalidateQueries({
+            queryKey: ['areas-select']
+          })
+        ]);
         modalClose();
       } else {
         toast.error(getErrorMessage(response, 'Erro ao atualizar área'));

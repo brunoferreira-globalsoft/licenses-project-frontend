@@ -44,9 +44,14 @@ const AreaCreateForm = ({ modalClose }: { modalClose: () => void }) => {
 
       if (response.info.succeeded) {
         toast.success('Área criada com sucesso');
-        await queryClient.invalidateQueries({
-          queryKey: ['areas', 'areas-select']
-        });
+        await Promise.all([
+          queryClient.invalidateQueries({
+            queryKey: ['areas']
+          }),
+          queryClient.invalidateQueries({
+            queryKey: ['areas-select']
+          })
+        ]);
         modalClose();
       } else {
         toast.error(getErrorMessage(response, 'Erro ao criar área'));
