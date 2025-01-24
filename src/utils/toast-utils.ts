@@ -1,6 +1,6 @@
 import { toast as baseToast } from '@/components/ui/use-toast';
 
-type ToastVariant = 'default' | 'destructive';
+type ToastVariant = 'default' | 'destructive' | 'success' | 'warning';
 
 interface ToastOptions {
   title?: string;
@@ -13,7 +13,7 @@ export const toast = {
     baseToast({
       title,
       description,
-      variant: 'default'
+      variant: 'success'
     });
   },
 
@@ -26,6 +26,14 @@ export const toast = {
       title,
       description: errorMessage,
       variant: 'destructive'
+    });
+  },
+
+  warning: (description: string, title: string = 'Atenção') => {
+    baseToast({
+      title,
+      description,
+      variant: 'warning'
     });
   },
 
