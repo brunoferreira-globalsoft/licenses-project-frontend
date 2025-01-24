@@ -4,17 +4,19 @@ import {
   NavigationMenuItem,
   NavigationMenuList,
   NavigationMenuTrigger,
-  NavigationMenuContent
+  NavigationMenuContent,
+  NavigationMenuLink,
+  navigationMenuTriggerStyle
 } from '@/components/ui/navigation-menu';
-import { Button } from '@/components/ui/button';
 import { ModeToggle } from '@/components/shared/theme-toggle';
 import UserNav from '@/components/shared/user-nav';
 import { useHeaderNav } from '@/contexts/header-nav-context';
 import { useHeaderMenu } from '@/hooks/use-header-menu';
 import { cn } from '@/lib/utils';
 import { Logo } from '@/assets/logo-letters';
-import { Icons } from '@/components/ui/icons';
 import { MenuItem } from '@/types/navigation/menu.types';
+import { ListItem } from '@/components/ui/navigation-menu-item';
+import { Icons } from '@/components/ui/icons';
 
 export function HeaderNav() {
   const location = useLocation();
@@ -69,49 +71,39 @@ export function HeaderNav() {
                       {item.label}
                     </NavigationMenuTrigger>
                     <NavigationMenuContent>
-                      <div className="grid gap-3 p-4 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
+                      <ul className="grid gap-3 p-4 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
                         {item.items.map((subItem, subIndex) => (
-                          <Link key={subIndex} to={subItem.href}>
-                            <div
-                              className={cn(
-                                'group block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground',
-                                isItemActive(subItem.href) &&
-                                  'bg-accent text-accent-foreground'
-                              )}
-                            >
-                              <div className="flex items-center text-sm font-medium leading-none">
-                                {subItem.label}
-                                {subItem.icon && (
-                                  <span className="ml-2">
-                                    {Icons[
-                                      subItem.icon as keyof typeof Icons
-                                    ]?.({ className: 'h-3 w-3' })}
-                                  </span>
-                                )}
-                              </div>
-                              {subItem.description && (
-                                <p className="mt-2 line-clamp-2 text-[10px] leading-snug text-muted-foreground">
-                                  {subItem.description}
-                                </p>
-                              )}
+                          <ListItem
+                            key={subIndex}
+                            title={subItem.label}
+                            to={subItem.href}
+                            icon={subItem.icon as keyof typeof Icons}
+                            className={cn(
+                              isItemActive(subItem.href) &&
+                                'bg-accent text-accent-foreground'
+                            )}
+                          >
+                            <div className="flex items-center">
+                              {subItem.description}
                             </div>
-                          </Link>
+                          </ListItem>
                         ))}
-                      </div>
+                      </ul>
                     </NavigationMenuContent>
                   </>
                 ) : (
-                  <Link to={item.href}>
-                    <Button
-                      variant="ghost"
+                  <NavigationMenuLink asChild>
+                    <Link
+                      to={item.href}
                       className={cn(
-                        isItemActive(item.href, item.items) &&
+                        navigationMenuTriggerStyle(),
+                        isItemActive(item.href) &&
                           'bg-accent text-accent-foreground'
                       )}
                     >
                       {item.label}
-                    </Button>
-                  </Link>
+                    </Link>
+                  </NavigationMenuLink>
                 )}
               </NavigationMenuItem>
             ))}
