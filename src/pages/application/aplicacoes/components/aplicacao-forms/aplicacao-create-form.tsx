@@ -4,6 +4,7 @@ import {
   FormControl,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
@@ -17,7 +18,6 @@ import { useQueryClient } from '@tanstack/react-query';
 import { getErrorMessage, handleApiError } from '@/utils/error-handlers';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
-import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
@@ -97,6 +97,7 @@ const AplicacaoCreateForm = ({ modalClose }: { modalClose: () => void }) => {
               name="nome"
               render={({ field }) => (
                 <FormItem>
+                  <FormLabel>Nome</FormLabel>
                   <FormControl>
                     <Input
                       placeholder="Introduza o nome"
@@ -114,6 +115,7 @@ const AplicacaoCreateForm = ({ modalClose }: { modalClose: () => void }) => {
               name="descricao"
               render={({ field }) => (
                 <FormItem>
+                  <FormLabel>Descrição</FormLabel>
                   <FormControl>
                     <Textarea
                       placeholder="Introduza a descrição"
@@ -131,12 +133,13 @@ const AplicacaoCreateForm = ({ modalClose }: { modalClose: () => void }) => {
               name="areaId"
               render={({ field }) => (
                 <FormItem>
+                  <FormLabel>Área</FormLabel>
                   <FormControl>
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}
                     >
-                      <SelectTrigger>
+                      <SelectTrigger className="px-4 py-6 shadow-inner drop-shadow-xl">
                         <SelectValue placeholder="Selecione uma área" />
                       </SelectTrigger>
                       <SelectContent>
@@ -159,11 +162,13 @@ const AplicacaoCreateForm = ({ modalClose }: { modalClose: () => void }) => {
               render={({ field }) => (
                 <FormItem>
                   <div className="flex items-center space-x-2">
-                    <Switch
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                    <Label>Ativo</Label>
+                    <FormLabel>Ativo</FormLabel>
+                    <FormControl>
+                      <Switch
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
                   </div>
                   <FormMessage />
                 </FormItem>
