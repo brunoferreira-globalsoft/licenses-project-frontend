@@ -7,6 +7,7 @@ import { Suspense, lazy } from 'react';
 import { Navigate, Outlet, useRoutes } from 'react-router-dom';
 import { HeaderNavProvider } from '@/contexts/header-nav-context';
 import FuncionalidadesPage from '@/pages/application/funcionalidades';
+import ClientesPage from '@/pages/platform/clientes';
 
 const DashboardLayout = lazy(
   () => import('@/components/layout/dashboard-layout')
@@ -56,6 +57,10 @@ export default function AppRouter() {
         {
           path: 'funcionalidades',
           element: <FuncionalidadesPage />
+        },
+        {
+          path: 'clientes',
+          element: <ClientesPage />
         }
       ]
     }

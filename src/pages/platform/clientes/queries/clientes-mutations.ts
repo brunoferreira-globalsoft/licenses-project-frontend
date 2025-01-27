@@ -1,0 +1,44 @@
+import ClientesService from '@/lib/services/platform/clientes-service';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { CreateClienteDTO, UpdateClienteDTO } from '@/types/dtos';
+
+export const useDeleteCliente = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: string) => ClientesService('clientes').deleteCliente(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['clientes'] });
+      queryClient.invalidateQueries({ queryKey: ['clientes-count'] });
+      queryClient.invalidateQueries({ queryKey: ['clientes-select'] });
+    }
+  });
+};
+
+export const useCreateCliente = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: CreateClienteDTO) =>
+      ClientesService('clientes').createCliente(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['clientes'] });
+      queryClient.invalidateQueries({ queryKey: ['clientes-count'] });
+      queryClient.invalidateQueries({ queryKey: ['clientes-select'] });
+    }
+  });
+};
+
+export const useUpdateCliente = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, data }: { id: string; data: UpdateClienteDTO }) =>
+      ClientesService('clientes').updateCliente(id, { ...data, id }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['clientes'] });
+      queryClient.invalidateQueries({ queryKey: ['clientes-count'] });
+      queryClient.invalidateQueries({ queryKey: ['clientes-select'] });
+    }
+  });
+};
