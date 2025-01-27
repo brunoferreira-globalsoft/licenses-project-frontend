@@ -49,21 +49,13 @@ export function DatePicker({
         onOpenAutoFocus={(e) => e.preventDefault()}
         forceMount
       >
-        <div
-          className="relative"
-          style={{
-            isolation: 'isolate',
-            zIndex: 100
-          }}
-        >
-          <Calendar
-            mode="single"
-            selected={value}
-            onSelect={onChange}
-            locale={pt}
-            initialFocus
-          />
-        </div>
+        <Calendar
+          mode="single"
+          selected={value}
+          onSelect={onChange}
+          locale={pt}
+          initialFocus
+        />
       </PopoverContent>
     </Popover>
   );
