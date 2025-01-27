@@ -1,17 +1,16 @@
-import AplicacoesService from '@/lib/services/application/aplicacoes-service';
+import ModulosService from '@/lib/services/application/modulos-service';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import AreasService from '@/lib/services/application/areas-service';
 
-export const useGetAplicacoes = (
+export const useGetModulos = (
   pageNumber: number,
   pageLimit: number,
   filters: Array<{ id: string; value: string }> | null,
   sorting: string[] | null
 ) => {
   return useQuery({
-    queryKey: ['aplicacoes', pageNumber, pageLimit, filters, sorting],
+    queryKey: ['modulos', pageNumber, pageLimit, filters, sorting],
     queryFn: () =>
-      AplicacoesService('aplicacoes').getAplicacoesPaginated({
+      ModulosService('modulos').getModulosPaginated({
         pageNumber: pageNumber,
         pageSize: pageLimit,
         filters: (filters as unknown as Record<string, string>) ?? undefined,
@@ -23,7 +22,7 @@ export const useGetAplicacoes = (
   });
 };
 
-export const usePrefetchAdjacentAplicacoes = (
+export const usePrefetchAdjacentModulos = (
   page: number,
   pageSize: number,
   filters: Array<{ id: string; value: string }> | null
@@ -33,9 +32,9 @@ export const usePrefetchAdjacentAplicacoes = (
   const prefetchPreviousPage = async () => {
     if (page > 1) {
       await queryClient.prefetchQuery({
-        queryKey: ['aplicacoes', page - 1, pageSize, filters, null],
+        queryKey: ['modulos', page - 1, pageSize, filters, null],
         queryFn: () =>
-          AplicacoesService('aplicacoes').getAplicacoesPaginated({
+          ModulosService('modulos').getModulosPaginated({
             pageNumber: page - 1,
             pageSize: pageSize,
             filters:
@@ -48,9 +47,9 @@ export const usePrefetchAdjacentAplicacoes = (
 
   const prefetchNextPage = async () => {
     await queryClient.prefetchQuery({
-      queryKey: ['aplicacoes', page + 1, pageSize, filters, null],
+      queryKey: ['modulos', page + 1, pageSize, filters, null],
       queryFn: () =>
-        AplicacoesService('aplicacoes').getAplicacoesPaginated({
+        ModulosService('modulos').getModulosPaginated({
           pageNumber: page + 1,
           pageSize: pageSize,
           filters: (filters as unknown as Record<string, string>) ?? undefined,
@@ -62,34 +61,12 @@ export const usePrefetchAdjacentAplicacoes = (
   return { prefetchPreviousPage, prefetchNextPage };
 };
 
-export const useGetAreasSelect = () => {
+export const useGetModulosCount = () => {
   return useQuery({
-    queryKey: ['areas-select'],
+    queryKey: ['modulos-count'],
     queryFn: async () => {
-      const response = await AreasService('areas').getAreas();
-      return response.info.data || [];
-    },
-    staleTime: 30000
-  });
-};
-
-export const useGetAplicacoesCount = () => {
-  return useQuery({
-    queryKey: ['aplicacoes-count'],
-    queryFn: async () => {
-      const response = await AplicacoesService('aplicacoes').getAplicacoes();
+      const response = await ModulosService('modulos').getModulos();
       return response.info?.data?.length || 0;
     }
-  });
-};
-
-export const useGetAplicacoesSelect = () => {
-  return useQuery({
-    queryKey: ['aplicacoes-select'],
-    queryFn: async () => {
-      const response = await AplicacoesService('aplicacoes').getAplicacoes();
-      return response.info.data || [];
-    },
-    staleTime: 30000
   });
 };

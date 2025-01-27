@@ -1,5 +1,6 @@
 import ProtectedRoute from '@/components/auth/protected-route';
 import AplicacoesPage from '@/pages/application/aplicacoes';
+import ModulosPage from '@/pages/application/modulos';
 import AreasPage from '@/pages/application/areas';
 import NotFound from '@/pages/not-found';
 import { Suspense, lazy } from 'react';
@@ -46,6 +47,10 @@ export default function AppRouter() {
         {
           path: 'aplicacoes',
           element: <AplicacoesPage />
+        },
+        {
+          path: 'modulos',
+          element: <ModulosPage />
         }
       ]
     }

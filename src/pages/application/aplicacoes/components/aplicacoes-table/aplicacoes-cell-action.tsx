@@ -1,12 +1,13 @@
 import { AlertModal } from '@/components/shared/alert-modal';
 import { Button } from '@/components/ui/button';
-import { Edit, Trash } from 'lucide-react';
+import { AppWindow, Edit, Trash } from 'lucide-react';
 import { useState } from 'react';
 import { EnhancedModal } from '@/components/ui/enhanced-modal';
 import { toast } from '@/utils/toast-utils';
 import AplicacaoUpdateForm from '@/pages/application/aplicacoes/components/aplicacao-forms/aplicacao-update-form';
 import { useDeleteAplicacao } from '../../queries/aplicacoes-mutations';
 import { AplicacaoDTO } from '@/types/dtos';
+import { useNavigate } from 'react-router-dom';
 
 interface CellActionProps {
   data: AplicacaoDTO;
@@ -17,6 +18,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [selectedAplicacao, setSelectedAplicacao] =
     useState<AplicacaoDTO | null>(null);
+  const navigate = useNavigate();
 
   const deleteAplicacaoMutation = useDeleteAplicacao();
 
@@ -34,6 +36,10 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const handleUpdateClick = (aplicacao: AplicacaoDTO) => {
     setSelectedAplicacao(aplicacao);
     setIsUpdateModalOpen(true);
+  };
+
+  const handleViewModulos = (aplicacaoId: string) => {
+    navigate(`/modulos?aplicacaoId=${aplicacaoId}`);
   };
 
   return (
@@ -83,6 +89,14 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         >
           <Trash color="hsl(var(--destructive))" className="h-4 w-4" />
           <span className="sr-only">Apagar</span>
+        </Button>
+        <Button
+          onClick={() => handleViewModulos(data.id || '')}
+          variant="ghost"
+          className="h-8 w-8 p-0"
+        >
+          <AppWindow className="h-4 w-4" />
+          <span className="sr-only">Ver Modulos</span>
         </Button>
       </div>
     </>

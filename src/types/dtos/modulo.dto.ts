@@ -18,6 +18,10 @@ export interface ModuloDTO {
   ativo?: boolean;
   aplicacaoId?: string;
   funcionalidades?: FuncionalidadeDTO[];
+  aplicacao?: {
+    nome: string;
+  };
+  createdOn: string;
 }
 
 export interface ModuloPerfilDTO {

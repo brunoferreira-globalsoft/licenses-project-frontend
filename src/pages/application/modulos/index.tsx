@@ -1,26 +1,29 @@
 import { useState, useEffect } from 'react';
 import PageHead from '@/components/shared/page-head';
-import AplicacoesTable from '@/pages/application/aplicacoes/components/aplicacoes-table';
+import ModulosTable from '@/pages/application/modulos/components/modulos-table';
 import { DataTableSkeleton } from '@/components/shared/data-table-skeleton';
 import {
-  useGetAplicacoes,
-  usePrefetchAdjacentAplicacoes
-} from '@/pages/application/aplicacoes/queries/aplicacoes-queries';
+  useGetModulos,
+  usePrefetchAdjacentModulos
+} from '@/pages/application/modulos/queries/modulos-queries';
 import { Breadcrumbs } from '@/components/shared/breadcrumbs';
 
-export default function AplicacoesPage() {
+export default function ModulosPage() {
   const searchParams = new URLSearchParams(window.location.search);
-  const areaIdParam = searchParams.get('areaId');
+  const aplicacaoIdParam = searchParams.get('aplicacaoId');
 
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [filters, setFilters] = useState<Array<{ id: string; value: string }>>(
-    areaIdParam ? [{ id: 'areaId', value: areaIdParam }] : []
+    aplicacaoIdParam ? [{ id: 'aplicacaoId', value: aplicacaoIdParam }] : []
   );
 
-  const { data, isLoading } = useGetAplicacoes(page, pageSize, filters, null);
-  const { prefetchPreviousPage, prefetchNextPage } =
-    usePrefetchAdjacentAplicacoes(page, pageSize, filters);
+  const { data, isLoading } = useGetModulos(page, pageSize, filters, null);
+  const { prefetchPreviousPage, prefetchNextPage } = usePrefetchAdjacentModulos(
+    page,
+    pageSize,
+    filters
+  );
 
   const handleFiltersChange = (
     newFilters: Array<{ id: string; value: string }>
@@ -39,8 +42,8 @@ export default function AplicacoesPage() {
     prefetchNextPage();
   }, [page, pageSize, filters]);
 
-  const aplicacoes = data?.info?.data || [];
-  const totalAplicacoes = data?.info?.totalCount || 0;
+  const modulos = data?.info?.data || [];
+  const totalModulos = data?.info?.totalCount || 0;
   const pageCount = data?.info?.totalPages || 0;
 
   if (isLoading) {
@@ -57,17 +60,17 @@ export default function AplicacoesPage() {
 
   return (
     <div className="p-4 md:p-8">
-      <PageHead title="Aplicações | GSLP" />
+      <PageHead title="Modulos | GSLP" />
       <Breadcrumbs
         items={[
           { title: 'Administração', link: '/administracao' },
-          { title: 'Aplicações', link: '/aplicacoes' }
+          { title: 'Modulos', link: '/modulos' }
         ]}
       />
-      <AplicacoesTable
-        aplicacoes={aplicacoes}
+      <ModulosTable
+        modulos={modulos}
         page={page}
-        totalAreas={totalAplicacoes}
+        totalModulos={totalModulos}
         pageCount={pageCount}
         onFiltersChange={handleFiltersChange}
         onPaginationChange={handlePaginationChange}

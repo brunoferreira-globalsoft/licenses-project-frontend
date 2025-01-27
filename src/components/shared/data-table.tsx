@@ -80,13 +80,19 @@ export default function DataTable<TData, TValue>({
     useState<ColumnFiltersState>([]);
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
 
-  // Add this useEffect to handle initial filters
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
     const areaId = searchParams.get('areaId');
+    const aplicacaoId = searchParams.get('aplicacaoId');
 
     if (areaId) {
       const initialFilter = { id: 'areaId', value: areaId };
+      setColumnFilters([initialFilter]);
+      setPendingColumnFilters([initialFilter]);
+    }
+
+    if (aplicacaoId) {
+      const initialFilter = { id: 'aplicacaoId', value: aplicacaoId };
       setColumnFilters([initialFilter]);
       setPendingColumnFilters([initialFilter]);
     }

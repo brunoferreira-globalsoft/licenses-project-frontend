@@ -10,6 +10,7 @@ export const useDeleteAplicacao = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['aplicacoes'] });
       queryClient.invalidateQueries({ queryKey: ['aplicacoes-count'] });
+      queryClient.invalidateQueries({ queryKey: ['aplicacoes-select'] });
     }
   });
 };
@@ -23,6 +24,7 @@ export const useCreateAplicacao = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['aplicacoes'] });
       queryClient.invalidateQueries({ queryKey: ['aplicacoes-count'] });
+      queryClient.invalidateQueries({ queryKey: ['aplicacoes-select'] });
     }
   });
 };
@@ -36,6 +38,7 @@ export const useUpdateAplicacao = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['aplicacoes'] });
       queryClient.invalidateQueries({ queryKey: ['aplicacoes-count'] });
+      queryClient.invalidateQueries({ queryKey: ['aplicacoes-select'] });
     }
   });
 };
