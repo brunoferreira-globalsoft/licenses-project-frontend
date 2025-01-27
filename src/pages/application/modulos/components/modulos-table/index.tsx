@@ -33,6 +33,10 @@ export default function ModulosTable({
     }
   };
 
+  const searchParams = new URLSearchParams(window.location.search);
+  const aplicacaoIdParam = searchParams.get('aplicacaoId');
+  const initialActiveFiltersCount = aplicacaoIdParam ? 1 : 0;
+
   return (
     <>
       <ModulosTableActions />
@@ -45,6 +49,8 @@ export default function ModulosTable({
           FilterControls={ModulosFilterControls}
           onFiltersChange={handleFiltersChange}
           onPaginationChange={handlePaginationChange}
+          initialActiveFiltersCount={initialActiveFiltersCount}
+          baseRoute="/modulos"
         />
       )}
     </>

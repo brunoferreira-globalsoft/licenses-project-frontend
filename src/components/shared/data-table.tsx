@@ -33,6 +33,7 @@ import { DataTableFilterField } from '@/components/shared/data-table-types';
 import { DataTableFilterModal } from '@/components/shared/data-table-filter-modal';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+import { useNavigate } from 'react-router-dom';
 
 type DataTableProps<TData, TValue> = {
   columns: ColumnDef<TData, TValue>[];
@@ -40,6 +41,8 @@ type DataTableProps<TData, TValue> = {
   pageCount: number;
   filterFields?: DataTableFilterField<TData>[];
   pageSizeOptions?: number[];
+  initialFilters?: ColumnFiltersState;
+  initialActiveFiltersCount?: number;
   onPaginationChange?: (page: number, pageSize: number) => void;
   onFiltersChange?: (filters: Array<{ id: string; value: string }>) => void;
   FilterControls: React.ComponentType<{
@@ -48,6 +51,7 @@ type DataTableProps<TData, TValue> = {
     onApplyFilters: () => void;
     onClearFilters: () => void;
   }>;
+  baseRoute?: string;
 };
 
 // Add these translations
@@ -69,34 +73,21 @@ export default function DataTable<TData, TValue>({
   pageCount,
   filterFields = [],
   pageSizeOptions = [10, 20, 30, 40, 50],
+  initialFilters = [],
+  initialActiveFiltersCount,
   onPaginationChange,
   onFiltersChange,
-  FilterControls
+  FilterControls,
+  baseRoute
 }: DataTableProps<TData, TValue>) {
   const [pageIndex, setPageIndex] = useState(0);
   const [pageSize, setPageSize] = useState(10);
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [columnFilters, setColumnFilters] =
+    useState<ColumnFiltersState>(initialFilters);
   const [pendingColumnFilters, setPendingColumnFilters] =
-    useState<ColumnFiltersState>([]);
+    useState<ColumnFiltersState>(initialFilters);
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
-
-  useEffect(() => {
-    const searchParams = new URLSearchParams(window.location.search);
-    const areaId = searchParams.get('areaId');
-    const aplicacaoId = searchParams.get('aplicacaoId');
-
-    if (areaId) {
-      const initialFilter = { id: 'areaId', value: areaId };
-      setColumnFilters([initialFilter]);
-      setPendingColumnFilters([initialFilter]);
-    }
-
-    if (aplicacaoId) {
-      const initialFilter = { id: 'aplicacaoId', value: aplicacaoId };
-      setColumnFilters([initialFilter]);
-      setPendingColumnFilters([initialFilter]);
-    }
-  }, []);
+  const navigate = useNavigate();
 
   const handlePaginationChange = (
     newPageIndex: number,
@@ -129,6 +120,9 @@ export default function DataTable<TData, TValue>({
     if (onFiltersChange) {
       onFiltersChange([]);
     }
+    if (baseRoute) {
+      navigate(baseRoute);
+    }
     setIsFilterModalOpen(false);
   };
 
@@ -158,7 +152,10 @@ export default function DataTable<TData, TValue>({
   });
 
   const getActiveFiltersCount = () => {
-    return columnFilters.filter((filter) => filter.value).length;
+    const columnFiltersCount = columnFilters.filter(
+      (filter) => filter.value
+    ).length;
+    return Math.max(columnFiltersCount, initialActiveFiltersCount || 0);
   };
 
   return (

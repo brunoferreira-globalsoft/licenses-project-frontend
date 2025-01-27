@@ -19,6 +19,10 @@ export default function AplicacoesTable({
   onFiltersChange,
   onPaginationChange
 }: TAplicacoesTableProps) {
+  const searchParams = new URLSearchParams(window.location.search);
+  const areaIdParam = searchParams.get('areaId');
+  const initialActiveFiltersCount = areaIdParam ? 1 : 0;
+
   const handleFiltersChange = (
     filters: Array<{ id: string; value: string }>
   ) => {
@@ -45,6 +49,8 @@ export default function AplicacoesTable({
           FilterControls={AplicacoesFilterControls}
           onFiltersChange={handleFiltersChange}
           onPaginationChange={handlePaginationChange}
+          initialActiveFiltersCount={initialActiveFiltersCount}
+          baseRoute="/aplicacoes"
         />
       )}
     </>
