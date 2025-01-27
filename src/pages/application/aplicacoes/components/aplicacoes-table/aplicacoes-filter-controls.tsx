@@ -22,6 +22,7 @@ export function AplicacoesFilterControls({
   onClearFilters
 }: BaseFilterControlsProps<AplicacaoDTO>) {
   const [filterValues, setFilterValues] = useState<Record<string, string>>({});
+  const [initialParamApplied, setInitialParamApplied] = useState(false);
   const searchParams = new URLSearchParams(window.location.search);
   const areaIdParam = searchParams.get('areaId');
 
@@ -39,21 +40,34 @@ export function AplicacoesFilterControls({
       }
     });
 
-    // Then, if we have an areaIdParam and it's not already set, apply it
-    if (areaIdParam && !newFilterValues['areaId']) {
+    // Only apply the areaIdParam if it hasn't been applied before
+    if (areaIdParam && !initialParamApplied) {
       newFilterValues['areaId'] = areaIdParam;
       table.getColumn('areaId')?.setFilterValue(areaIdParam);
+      setInitialParamApplied(true);
     }
 
     setFilterValues(newFilterValues);
-  }, [table.getState().columnFilters, areaIdParam]);
+  }, [table.getState().columnFilters, areaIdParam, initialParamApplied]);
 
   const handleFilterChange = (columnId: string, value: string) => {
+    const newValue = value === 'all' ? '' : value;
+
+    // Update local state
     setFilterValues((prev) => ({
       ...prev,
-      [columnId]: value
+      [columnId]: newValue
     }));
-    table.getColumn(columnId)?.setFilterValue(value);
+
+    // Update table filter
+    table.getColumn(columnId)?.setFilterValue(newValue);
+
+    // Always update URL when changing filters after initial load
+    if (initialParamApplied) {
+      const newUrl = new URL(window.location.href);
+      newUrl.searchParams.delete('areaId');
+      window.history.pushState({}, '', newUrl);
+    }
   };
 
   const renderFilterInput = (column: ColumnDef<AplicacaoDTO, unknown>) => {
@@ -65,10 +79,7 @@ export function AplicacoesFilterControls({
         <Select
           value={currentValue === '' ? 'all' : currentValue}
           onValueChange={(value) =>
-            handleFilterChange(
-              column.accessorKey!.toString(),
-              value === 'all' ? '' : value
-            )
+            handleFilterChange(column.accessorKey!.toString(), value)
           }
         >
           <SelectTrigger className="max-w-sm">
@@ -89,10 +100,7 @@ export function AplicacoesFilterControls({
         <Select
           value={currentValue === '' ? 'all' : currentValue}
           onValueChange={(value) =>
-            handleFilterChange(
-              column.accessorKey!.toString(),
-              value === 'all' ? '' : value
-            )
+            handleFilterChange(column.accessorKey!.toString(), value)
           }
         >
           <SelectTrigger className="max-w-sm">

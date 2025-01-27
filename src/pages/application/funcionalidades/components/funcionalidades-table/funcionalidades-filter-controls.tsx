@@ -22,39 +22,46 @@ export function FuncionalidadesFilterControls({
   onClearFilters
 }: BaseFilterControlsProps<FuncionalidadeDTO>) {
   const [filterValues, setFilterValues] = useState<Record<string, string>>({});
+  const [initialParamApplied, setInitialParamApplied] = useState(false);
   const searchParams = new URLSearchParams(window.location.search);
   const moduloIdParam = searchParams.get('moduloId');
 
   const { data: modulosData } = useGetModulosSelect();
 
   useEffect(() => {
-    // Get current filters from the table's state
     const currentFilters = table.getState().columnFilters;
     const newFilterValues: Record<string, string> = {};
 
-    // First, apply any existing table filters
     currentFilters.forEach((filter) => {
       if (filter.value) {
         newFilterValues[filter.id] = filter.value as string;
       }
     });
 
-    // Then, if we have a moduloIdParam and it's not already set, apply it
-    if (moduloIdParam && !newFilterValues['moduloId']) {
+    if (moduloIdParam && !initialParamApplied) {
       newFilterValues['moduloId'] = moduloIdParam;
       table.getColumn('moduloId')?.setFilterValue(moduloIdParam);
+      setInitialParamApplied(true);
     }
 
     setFilterValues(newFilterValues);
-  }, [table.getState().columnFilters, moduloIdParam]);
+  }, [table.getState().columnFilters, moduloIdParam, initialParamApplied]);
 
   const handleFilterChange = (columnId: string, value: string) => {
     const newValue = value === 'all' ? '' : value;
+
     setFilterValues((prev) => ({
       ...prev,
       [columnId]: newValue
     }));
+
     table.getColumn(columnId)?.setFilterValue(newValue);
+
+    if (initialParamApplied) {
+      const newUrl = new URL(window.location.href);
+      newUrl.searchParams.delete('moduloId');
+      window.history.pushState({}, '', newUrl);
+    }
   };
 
   const renderFilterInput = (column: ColumnDef<FuncionalidadeDTO, unknown>) => {
