@@ -7,7 +7,7 @@ import { Icons } from '@/components/ui/icons';
 interface ListItemProps extends React.ComponentPropsWithoutRef<'a'> {
   title: string;
   to: string;
-  icon?: string;
+  icon?: keyof typeof Icons;
 }
 
 const ListItem = React.forwardRef<React.ElementRef<'a'>, ListItemProps>(
