@@ -15,6 +15,10 @@ export interface FuncionalidadeDTO {
   descricao: string;
   moduloId: string;
   ativo?: boolean;
+  modulo?: {
+    nome: string;
+  };
+  createdOn: string;
 }
 
 export interface FuncionalidadePerfilDTO {

@@ -10,6 +10,7 @@ export const useDeleteModulo = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['modulos'] });
       queryClient.invalidateQueries({ queryKey: ['modulos-count'] });
+      queryClient.invalidateQueries({ queryKey: ['modulos-select'] });
     }
   });
 };
@@ -23,6 +24,7 @@ export const useCreateModulo = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['modulos'] });
       queryClient.invalidateQueries({ queryKey: ['modulos-count'] });
+      queryClient.invalidateQueries({ queryKey: ['modulos-select'] });
     }
   });
 };
@@ -36,6 +38,7 @@ export const useUpdateModulo = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['modulos'] });
       queryClient.invalidateQueries({ queryKey: ['modulos-count'] });
+      queryClient.invalidateQueries({ queryKey: ['modulos-select'] });
     }
   });
 };

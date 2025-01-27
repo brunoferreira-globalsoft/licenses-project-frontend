@@ -23,9 +23,12 @@ export const HeaderNavProvider: React.FC<{ children: React.ReactNode }> = ({
     // Function to determine the current menu based on path
     const determineCurrentMenu = (pathname: string) => {
       // Check if the current path matches any administration submenu paths
-      const isAdminPath = ['/areas', '/aplicacoes', '/modulos'].some((path) =>
-        pathname.startsWith(path)
-      );
+      const isAdminPath = [
+        '/areas',
+        '/aplicacoes',
+        '/modulos',
+        '/funcionalidades'
+      ].some((path) => pathname.startsWith(path));
 
       if (isAdminPath || pathname === '/administracao') {
         return 'administracao';

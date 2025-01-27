@@ -6,6 +6,7 @@ import NotFound from '@/pages/not-found';
 import { Suspense, lazy } from 'react';
 import { Navigate, Outlet, useRoutes } from 'react-router-dom';
 import { HeaderNavProvider } from '@/contexts/header-nav-context';
+import FuncionalidadesPage from '@/pages/application/funcionalidades';
 
 const DashboardLayout = lazy(
   () => import('@/components/layout/dashboard-layout')
@@ -51,6 +52,10 @@ export default function AppRouter() {
         {
           path: 'modulos',
           element: <ModulosPage />
+        },
+        {
+          path: 'funcionalidades',
+          element: <FuncionalidadesPage />
         }
       ]
     }

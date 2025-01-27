@@ -1,16 +1,16 @@
-import ModulosService from '@/lib/services/application/modulos-service';
+import FuncionalidadesService from '@/lib/services/application/funcionalidade-service';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 
-export const useGetModulos = (
+export const useGetFuncionalidades = (
   pageNumber: number,
   pageLimit: number,
   filters: Array<{ id: string; value: string }> | null,
   sorting: string[] | null
 ) => {
   return useQuery({
-    queryKey: ['modulos', pageNumber, pageLimit, filters, sorting],
+    queryKey: ['funcionalidades', pageNumber, pageLimit, filters, sorting],
     queryFn: () =>
-      ModulosService('modulos').getModulosPaginated({
+      FuncionalidadesService('funcionalidades').getFuncionalidadesPaginated({
         pageNumber: pageNumber,
         pageSize: pageLimit,
         filters: (filters as unknown as Record<string, string>) ?? undefined,
@@ -22,7 +22,7 @@ export const useGetModulos = (
   });
 };
 
-export const usePrefetchAdjacentModulos = (
+export const usePrefetchAdjacentFuncionalidades = (
   page: number,
   pageSize: number,
   filters: Array<{ id: string; value: string }> | null
@@ -32,24 +32,26 @@ export const usePrefetchAdjacentModulos = (
   const prefetchPreviousPage = async () => {
     if (page > 1) {
       await queryClient.prefetchQuery({
-        queryKey: ['modulos', page - 1, pageSize, filters, null],
+        queryKey: ['funcionalidades', page - 1, pageSize, filters, null],
         queryFn: () =>
-          ModulosService('modulos').getModulosPaginated({
-            pageNumber: page - 1,
-            pageSize: pageSize,
-            filters:
-              (filters as unknown as Record<string, string>) ?? undefined,
-            sorting: undefined
-          })
+          FuncionalidadesService('funcionalidades').getFuncionalidadesPaginated(
+            {
+              pageNumber: page - 1,
+              pageSize: pageSize,
+              filters:
+                (filters as unknown as Record<string, string>) ?? undefined,
+              sorting: undefined
+            }
+          )
       });
     }
   };
 
   const prefetchNextPage = async () => {
     await queryClient.prefetchQuery({
-      queryKey: ['modulos', page + 1, pageSize, filters, null],
+      queryKey: ['funcionalidades', page + 1, pageSize, filters, null],
       queryFn: () =>
-        ModulosService('modulos').getModulosPaginated({
+        FuncionalidadesService('funcionalidades').getFuncionalidadesPaginated({
           pageNumber: page + 1,
           pageSize: pageSize,
           filters: (filters as unknown as Record<string, string>) ?? undefined,
@@ -61,21 +63,23 @@ export const usePrefetchAdjacentModulos = (
   return { prefetchPreviousPage, prefetchNextPage };
 };
 
-export const useGetModulosCount = () => {
+export const useGetFuncionalidadesCount = () => {
   return useQuery({
-    queryKey: ['modulos-count'],
+    queryKey: ['funcionalidades-count'],
     queryFn: async () => {
-      const response = await ModulosService('modulos').getModulos();
+      const response =
+        await FuncionalidadesService('funcionalidades').getFuncionalidades();
       return response.info?.data?.length || 0;
     }
   });
 };
 
-export const useGetModulosSelect = () => {
+export const useGetFuncionalidadesSelect = () => {
   return useQuery({
-    queryKey: ['modulos-select'],
+    queryKey: ['funcionalidades-select'],
     queryFn: async () => {
-      const response = await ModulosService('modulos').getModulos();
+      const response =
+        await FuncionalidadesService('funcionalidades').getFuncionalidades();
       return response.info.data || [];
     },
     staleTime: 30000
