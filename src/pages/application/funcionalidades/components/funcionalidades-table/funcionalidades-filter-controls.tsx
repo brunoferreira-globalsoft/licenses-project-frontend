@@ -12,6 +12,8 @@ import { BaseFilterControlsProps } from '@/components/shared/data-table-filter-c
 import { ColumnDef } from '@tanstack/react-table';
 import { useGetModulosSelect } from '@/pages/application/modulos/queries/modulos-queries';
 import { FuncionalidadeDTO } from '@/types/dtos';
+import { getColumnHeader } from '@/utils/table-utils';
+import { filterFields } from './funcionalidades-constants';
 
 export function FuncionalidadesFilterControls({
   table,
@@ -53,14 +55,6 @@ export function FuncionalidadesFilterControls({
       [columnId]: newValue
     }));
     table.getColumn(columnId)?.setFilterValue(newValue);
-  };
-
-  const getColumnHeader = (
-    column: ColumnDef<FuncionalidadeDTO, unknown>
-  ): string => {
-    if (typeof column.header === 'string') return column.header;
-    if ('accessorKey' in column) return column.accessorKey.toString();
-    return '';
   };
 
   const renderFilterInput = (column: ColumnDef<FuncionalidadeDTO, unknown>) => {
@@ -119,7 +113,7 @@ export function FuncionalidadesFilterControls({
 
     return (
       <Input
-        placeholder={`Filtrar por ${getColumnHeader(column).toLowerCase()}...`}
+        placeholder={`Filtrar por ${getColumnHeader(column, filterFields).toLowerCase()}...`}
         value={filterValues[column.accessorKey.toString()] ?? ''}
         onChange={(event) =>
           handleFilterChange(column.accessorKey.toString(), event.target.value)
@@ -147,7 +141,7 @@ export function FuncionalidadesFilterControls({
               key={`${column.id}-${column.accessorKey}`}
               className="space-y-2"
             >
-              <Label>{getColumnHeader(column)}</Label>
+              <Label>{getColumnHeader(column, filterFields)}</Label>
               {renderFilterInput(column)}
             </div>
           );

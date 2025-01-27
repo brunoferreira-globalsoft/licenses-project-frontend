@@ -12,6 +12,8 @@ import { BaseFilterControlsProps } from '@/components/shared/data-table-filter-c
 import { ColumnDef } from '@tanstack/react-table';
 import { useGetAplicacoesSelect } from '@/pages/application/aplicacoes/queries/aplicacoes-queries';
 import { ModuloDTO } from '@/types/dtos';
+import { getColumnHeader } from '@/utils/table-utils';
+import { filterFields } from './modulos-constants';
 
 export function ModulosFilterControls({
   table,
@@ -52,12 +54,6 @@ export function ModulosFilterControls({
       [columnId]: value
     }));
     table.getColumn(columnId)?.setFilterValue(value);
-  };
-
-  const getColumnHeader = (column: ColumnDef<ModuloDTO, unknown>): string => {
-    if (typeof column.header === 'string') return column.header;
-    if ('accessorKey' in column) return column.accessorKey.toString();
-    return '';
   };
 
   const renderFilterInput = (column: ColumnDef<ModuloDTO, unknown>) => {
@@ -116,7 +112,7 @@ export function ModulosFilterControls({
 
     return (
       <Input
-        placeholder={`Filtrar por ${getColumnHeader(column).toLowerCase()}...`}
+        placeholder={`Filtrar por ${getColumnHeader(column, filterFields).toLowerCase()}...`}
         value={filterValues[column.accessorKey.toString()] ?? ''}
         onChange={(event) =>
           handleFilterChange(column.accessorKey.toString(), event.target.value)
@@ -144,7 +140,7 @@ export function ModulosFilterControls({
               key={`${column.id}-${column.accessorKey}`}
               className="space-y-2"
             >
-              <Label>{getColumnHeader(column)}</Label>
+              <Label>{getColumnHeader(column, filterFields)}</Label>
               {renderFilterInput(column)}
             </div>
           );

@@ -4,6 +4,8 @@ import { Label } from '@/components/ui/label';
 import { BaseFilterControlsProps } from '@/components/shared/data-table-filter-controls-base';
 import { ColumnDef } from '@tanstack/react-table';
 import { AreaDTO } from '@/types/dtos';
+import { getColumnHeader } from '@/utils/table-utils';
+import { filterFields } from './areas-constants';
 
 export function AreasFilterControls({
   table,
@@ -46,12 +48,6 @@ export function AreasFilterControls({
     table.getColumn(columnId)?.setFilterValue(value);
   };
 
-  const getColumnHeader = (column: ColumnDef<AreaDTO, unknown>): string => {
-    if (typeof column.header === 'string') return column.header;
-    if ('accessorKey' in column) return column.accessorKey.toString();
-    return '';
-  };
-
   return (
     <>
       {columns
@@ -70,9 +66,9 @@ export function AreasFilterControls({
               key={`${column.id}-${column.accessorKey}`}
               className="space-y-2"
             >
-              <Label>{getColumnHeader(column)}</Label>
+              <Label>{getColumnHeader(column, filterFields)}</Label>
               <Input
-                placeholder={`Filtrar por ${getColumnHeader(column).toLowerCase()}...`}
+                placeholder={`Filtrar por ${getColumnHeader(column, filterFields).toLowerCase()}...`}
                 value={filterValues[column.accessorKey.toString()] ?? ''}
                 onChange={(event) =>
                   handleFilterChange(

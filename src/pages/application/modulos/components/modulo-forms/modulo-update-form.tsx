@@ -166,17 +166,16 @@ const ModuloUpdateForm = ({
               control={form.control}
               name="ativo"
               render={({ field }) => (
-                <FormItem>
-                  <div className="flex items-center space-x-2">
-                    <FormLabel>Ativo</FormLabel>
-                    <FormControl>
-                      <Switch
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                    </FormControl>
+                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                  <div className="space-y-0.5">
+                    <FormLabel className="text-base">Ativo</FormLabel>
                   </div>
-                  <FormMessage />
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
                 </FormItem>
               )}
             />
