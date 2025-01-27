@@ -26,46 +26,33 @@ export function FuncionalidadesFilterControls({
   const { data: modulosData } = useGetModulosSelect();
 
   useEffect(() => {
-    const initialFilterValues: Record<string, string> = {};
-    columns
-      .filter((column) => {
-        const excludedColumns = ['select', 'actions', 'page', 'limit'];
-        return (
-          'accessorKey' in column &&
-          column.accessorKey &&
-          !excludedColumns.includes(column.accessorKey.toString())
-        );
-      })
-      .forEach((column) => {
-        if ('accessorKey' in column && column.accessorKey) {
-          if (column.accessorKey === 'moduloId' && moduloIdParam) {
-            initialFilterValues[column.accessorKey.toString()] = moduloIdParam;
-            table.getColumn(column.accessorKey)?.setFilterValue(moduloIdParam);
-          } else {
-            const columnFilterValue = table
-              .getColumn(column.accessorKey)
-              ?.getFilterValue();
-            if (columnFilterValue) {
-              initialFilterValues[column.accessorKey.toString()] =
-                columnFilterValue.toString();
-            }
-          }
-        }
-      });
-    setFilterValues(initialFilterValues);
+    // Get current filters from the table's state
+    const currentFilters = table.getState().columnFilters;
+    const newFilterValues: Record<string, string> = {};
 
-    if (moduloIdParam) {
-      const initialFilter = { id: 'moduloId', value: moduloIdParam };
-      table.setColumnFilters([initialFilter]);
+    // First, apply any existing table filters
+    currentFilters.forEach((filter) => {
+      if (filter.value) {
+        newFilterValues[filter.id] = filter.value as string;
+      }
+    });
+
+    // Then, if we have a moduloIdParam and it's not already set, apply it
+    if (moduloIdParam && !newFilterValues['moduloId']) {
+      newFilterValues['moduloId'] = moduloIdParam;
+      table.getColumn('moduloId')?.setFilterValue(moduloIdParam);
     }
-  }, [table, columns, moduloIdParam]);
+
+    setFilterValues(newFilterValues);
+  }, [table.getState().columnFilters, moduloIdParam]);
 
   const handleFilterChange = (columnId: string, value: string) => {
+    const newValue = value === 'all' ? '' : value;
     setFilterValues((prev) => ({
       ...prev,
-      [columnId]: value
+      [columnId]: newValue
     }));
-    table.getColumn(columnId)?.setFilterValue(value);
+    table.getColumn(columnId)?.setFilterValue(newValue);
   };
 
   const getColumnHeader = (

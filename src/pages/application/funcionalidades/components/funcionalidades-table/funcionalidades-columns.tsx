@@ -1,5 +1,5 @@
 import { ColumnDef } from '@tanstack/react-table';
-import { CellAction } from '@/pages/application/modulos/components/modulos-table/modulos-cell-action';
+import { CellAction } from '@/pages/application/funcionalidades/components/funcionalidades-table/funcionalidades-cell-action';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Check, X } from 'lucide-react';
 import { FuncionalidadeDTO } from '@/types/dtos';

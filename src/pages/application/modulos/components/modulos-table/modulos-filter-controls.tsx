@@ -26,43 +26,25 @@ export function ModulosFilterControls({
   const { data: aplicacoesData } = useGetAplicacoesSelect();
 
   useEffect(() => {
-    const initialFilterValues: Record<string, string> = {};
-    columns
-      .filter((column) => {
-        const excludedColumns = ['select', 'actions', 'page', 'limit'];
-        return (
-          'accessorKey' in column &&
-          column.accessorKey &&
-          !excludedColumns.includes(column.accessorKey.toString())
-        );
-      })
-      .forEach((column) => {
-        if ('accessorKey' in column && column.accessorKey) {
-          if (column.accessorKey === 'aplicacaoId' && aplicacaoIdParam) {
-            initialFilterValues[column.accessorKey.toString()] =
-              aplicacaoIdParam;
-            table
-              .getColumn(column.accessorKey)
-              ?.setFilterValue(aplicacaoIdParam);
-          } else {
-            const columnFilterValue = table
-              .getColumn(column.accessorKey)
-              ?.getFilterValue();
-            if (columnFilterValue) {
-              initialFilterValues[column.accessorKey.toString()] =
-                columnFilterValue.toString();
-            }
-          }
-        }
-      });
-    setFilterValues(initialFilterValues);
+    // Get current filters from the table's state
+    const currentFilters = table.getState().columnFilters;
+    const newFilterValues: Record<string, string> = {};
 
-    // Instead of calling onApplyFilters directly, update the columnFilters state
-    if (aplicacaoIdParam) {
-      const initialFilter = { id: 'aplicacaoId', value: aplicacaoIdParam };
-      table.setColumnFilters([initialFilter]);
+    // First, apply any existing table filters
+    currentFilters.forEach((filter) => {
+      if (filter.value) {
+        newFilterValues[filter.id] = filter.value as string;
+      }
+    });
+
+    // Then, if we have an aplicacaoIdParam and it's not already set, apply it
+    if (aplicacaoIdParam && !newFilterValues['aplicacaoId']) {
+      newFilterValues['aplicacaoId'] = aplicacaoIdParam;
+      table.getColumn('aplicacaoId')?.setFilterValue(aplicacaoIdParam);
     }
-  }, [table, columns, aplicacaoIdParam]);
+
+    setFilterValues(newFilterValues);
+  }, [table.getState().columnFilters, aplicacaoIdParam]);
 
   const handleFilterChange = (columnId: string, value: string) => {
     setFilterValues((prev) => ({

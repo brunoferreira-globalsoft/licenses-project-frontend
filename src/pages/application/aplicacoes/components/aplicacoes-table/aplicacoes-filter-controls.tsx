@@ -26,40 +26,25 @@ export function AplicacoesFilterControls({
   const { data: areasData } = useGetAreasSelect();
 
   useEffect(() => {
-    const initialFilterValues: Record<string, string> = {};
-    columns
-      .filter((column) => {
-        const excludedColumns = ['select', 'actions', 'page', 'limit'];
-        return (
-          'accessorKey' in column &&
-          column.accessorKey &&
-          !excludedColumns.includes(column.accessorKey.toString())
-        );
-      })
-      .forEach((column) => {
-        if ('accessorKey' in column && column.accessorKey) {
-          if (column.accessorKey === 'areaId' && areaIdParam) {
-            initialFilterValues[column.accessorKey.toString()] = areaIdParam;
-            table.getColumn(column.accessorKey)?.setFilterValue(areaIdParam);
-          } else {
-            const columnFilterValue = table
-              .getColumn(column.accessorKey)
-              ?.getFilterValue();
-            if (columnFilterValue) {
-              initialFilterValues[column.accessorKey.toString()] =
-                columnFilterValue.toString();
-            }
-          }
-        }
-      });
-    setFilterValues(initialFilterValues);
+    // Get current filters from the table's state
+    const currentFilters = table.getState().columnFilters;
+    const newFilterValues: Record<string, string> = {};
 
-    // Instead of calling onApplyFilters directly, update the columnFilters state
-    if (areaIdParam) {
-      const initialFilter = { id: 'areaId', value: areaIdParam };
-      table.setColumnFilters([initialFilter]);
+    // First, apply any existing table filters
+    currentFilters.forEach((filter) => {
+      if (filter.value) {
+        newFilterValues[filter.id] = filter.value as string;
+      }
+    });
+
+    // Then, if we have an areaIdParam and it's not already set, apply it
+    if (areaIdParam && !newFilterValues['areaId']) {
+      newFilterValues['areaId'] = areaIdParam;
+      table.getColumn('areaId')?.setFilterValue(areaIdParam);
     }
-  }, [table, columns, areaIdParam]);
+
+    setFilterValues(newFilterValues);
+  }, [table.getState().columnFilters, areaIdParam]);
 
   const handleFilterChange = (columnId: string, value: string) => {
     setFilterValues((prev) => ({
