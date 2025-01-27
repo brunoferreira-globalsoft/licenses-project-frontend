@@ -25,12 +25,12 @@ export function DatePicker({
   className
 }: DatePickerProps) {
   return (
-    <Popover>
+    <Popover modal={true}>
       <PopoverTrigger asChild>
         <Button
           variant={'outline'}
           className={cn(
-            'w-full justify-start text-left font-normal',
+            'w-full justify-start px-4 py-6 text-left font-normal shadow-inner',
             !value && 'text-muted-foreground',
             className
           )}
@@ -41,14 +41,29 @@ export function DatePicker({
             : placeholder || 'Selecione uma data'}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-auto p-0" align="start">
-        <Calendar
-          mode="single"
-          selected={value}
-          onSelect={onChange}
-          locale={pt}
-          initialFocus
-        />
+      <PopoverContent
+        className="w-auto p-0"
+        align="start"
+        side="bottom"
+        sideOffset={4}
+        onOpenAutoFocus={(e) => e.preventDefault()}
+        forceMount
+      >
+        <div
+          className="relative"
+          style={{
+            isolation: 'isolate',
+            zIndex: 100
+          }}
+        >
+          <Calendar
+            mode="single"
+            selected={value}
+            onSelect={onChange}
+            locale={pt}
+            initialFocus
+          />
+        </div>
       </PopoverContent>
     </Popover>
   );
