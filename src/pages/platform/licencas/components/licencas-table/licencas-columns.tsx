@@ -35,7 +35,7 @@ export const columns: ColumnDef<LicencaDTO>[] = [
     )
   },
   {
-    accessorKey: 'cliente.nome',
+    accessorKey: 'clienteId',
     header: 'Cliente',
     cell: ({ row }) => (
       <div
@@ -47,8 +47,16 @@ export const columns: ColumnDef<LicencaDTO>[] = [
     )
   },
   {
-    accessorKey: 'aplicacao.nome',
-    header: 'Aplicação'
+    accessorKey: 'aplicacaoId',
+    header: 'Aplicação',
+    cell: ({ row }) => (
+      <div
+        className="max-w-[200px] truncate"
+        title={row.original.aplicacao?.nome}
+      >
+        {row.original.aplicacao?.nome}
+      </div>
+    )
   },
   {
     accessorKey: 'numeroUtilizadores',

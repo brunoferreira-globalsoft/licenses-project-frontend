@@ -8,10 +8,14 @@ export const filterFields: DataTableFilterField<LicencaDTO>[] = [
   },
   {
     label: 'Cliente',
-    value: 'nomeCliente'
+    value: 'clienteId'
   },
   {
     label: 'Aplicação',
-    value: 'nomeAplicacao'
+    value: 'aplicacaoId'
+  },
+  {
+    label: 'Estado',
+    value: 'ativo'
   }
 ];
