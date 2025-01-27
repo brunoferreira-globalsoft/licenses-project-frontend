@@ -23,8 +23,6 @@ export interface LicencaDTO {
   bloqueada?: boolean;
   dataBloqueio?: Date;
   motivoBloqueio?: string;
-  nomeCliente?: string;
-  nomeAplicacao?: string;
   aplicacao?: {
     nome: string;
   };
@@ -44,4 +42,8 @@ export interface LicencaFuncionalidadeDTO {
 export interface LicencaModuloDTO {
   licencaId: string;
   moduloId: string;
+}
+
+export interface BloqueioLicencaDTO {
+  motivoBloqueio: string;
 }

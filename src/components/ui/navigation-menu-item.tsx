@@ -34,9 +34,9 @@ const ListItem = React.forwardRef<React.ElementRef<'a'>, ListItemProps>(
                 </span>
               )}
             </div>
-            <p className="line-clamp-2 text-xs leading-snug text-muted-foreground">
+            <span className="line-clamp-2 text-xs leading-snug text-muted-foreground">
               {children}
-            </p>
+            </span>
           </Link>
         </NavigationMenuLink>
       </li>

@@ -28,7 +28,8 @@ export const HeaderNavProvider: React.FC<{ children: React.ReactNode }> = ({
         '/aplicacoes',
         '/modulos',
         '/funcionalidades',
-        '/clientes'
+        '/clientes',
+        '/licencas'
       ].some((path) => pathname.startsWith(path));
 
       if (isAdministratorPath || pathname === '/administracao') {

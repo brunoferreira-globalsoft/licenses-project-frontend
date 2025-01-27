@@ -8,6 +8,7 @@ import { Navigate, Outlet, useRoutes } from 'react-router-dom';
 import { HeaderNavProvider } from '@/contexts/header-nav-context';
 import FuncionalidadesPage from '@/pages/application/funcionalidades';
 import ClientesPage from '@/pages/platform/clientes';
+import LicencasPage from '@/pages/platform/licencas';
 
 const DashboardLayout = lazy(
   () => import('@/components/layout/dashboard-layout')
@@ -61,6 +62,10 @@ export default function AppRouter() {
         {
           path: 'clientes',
           element: <ClientesPage />
+        },
+        {
+          path: 'licencas',
+          element: <LicencasPage />
         }
       ]
     }
