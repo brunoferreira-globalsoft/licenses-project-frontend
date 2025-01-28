@@ -80,9 +80,9 @@ export const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
                 onChange?.(date);
                 handleClose();
               }}
-              disabled={(date) =>
-                date > new Date() || date < new Date('1900-01-01')
-              }
+              // disabled={(date) =>
+              //   date > new Date() || date < new Date('1900-01-01')
+              // }
               initialFocus
               locale={pt}
             />
