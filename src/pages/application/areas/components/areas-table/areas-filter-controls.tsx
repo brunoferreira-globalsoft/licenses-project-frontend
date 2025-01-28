@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { BaseFilterControlsProps } from '@/components/shared/data-table-filter-controls-base';
-import { ColumnDef } from '@tanstack/react-table';
 import { AreaDTO } from '@/types/dtos';
 import { getColumnHeader } from '@/utils/table-utils';
 import { filterFields } from './areas-constants';
@@ -16,35 +15,24 @@ export function AreasFilterControls({
   const [filterValues, setFilterValues] = useState<Record<string, string>>({});
 
   useEffect(() => {
-    const initialFilterValues: Record<string, string> = {};
-    columns
-      .filter((column) => {
-        const excludedColumns = ['select', 'actions', 'page', 'limit'];
-        return (
-          'accessorKey' in column &&
-          column.accessorKey &&
-          !excludedColumns.includes(column.accessorKey.toString())
-        );
-      })
-      .forEach((column) => {
-        if ('accessorKey' in column && column.accessorKey) {
-          const columnFilterValue = table
-            .getColumn(column.accessorKey)
-            ?.getFilterValue();
-          if (columnFilterValue) {
-            initialFilterValues[column.accessorKey.toString()] =
-              columnFilterValue.toString();
-          }
-        }
-      });
-    setFilterValues(initialFilterValues);
-  }, [table, columns]);
+    const currentFilters = table.getState().columnFilters;
+    const newFilterValues: Record<string, string> = {};
+
+    currentFilters.forEach((filter) => {
+      if (filter.value) {
+        newFilterValues[filter.id] = filter.value as string;
+      }
+    });
+
+    setFilterValues(newFilterValues);
+  }, [table.getState().columnFilters]);
 
   const handleFilterChange = (columnId: string, value: string) => {
     setFilterValues((prev) => ({
       ...prev,
       [columnId]: value
     }));
+
     table.getColumn(columnId)?.setFilterValue(value);
   };
 
@@ -52,12 +40,20 @@ export function AreasFilterControls({
     <>
       {columns
         .filter((column) => {
-          const excludedColumns = ['select', 'actions', 'page', 'limit'];
           return (
             'accessorKey' in column &&
             column.accessorKey &&
-            !excludedColumns.includes(column.accessorKey.toString())
+            filterFields.some((field) => field.value === column.accessorKey)
           );
+        })
+        .sort((a, b) => {
+          const aField = filterFields.find(
+            (field) => 'accessorKey' in a && field.value === a.accessorKey
+          );
+          const bField = filterFields.find(
+            (field) => 'accessorKey' in b && field.value === b.accessorKey
+          );
+          return (aField?.order ?? Infinity) - (bField?.order ?? Infinity);
         })
         .map((column) => {
           if (!('accessorKey' in column) || !column.accessorKey) return null;
@@ -76,7 +72,7 @@ export function AreasFilterControls({
                     event.target.value
                   )
                 }
-                className="max-w-sm"
+                className="w-full justify-start px-4 py-6 text-left font-normal shadow-inner"
               />
             </div>
           );

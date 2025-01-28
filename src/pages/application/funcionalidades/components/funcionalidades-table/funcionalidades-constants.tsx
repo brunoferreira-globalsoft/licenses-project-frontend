@@ -4,14 +4,22 @@ import { FuncionalidadeDTO } from '@/types/dtos';
 export const filterFields: DataTableFilterField<FuncionalidadeDTO>[] = [
   {
     label: 'Nome',
-    value: 'nome'
+    value: 'nome',
+    order: 1
   },
   {
     label: 'Descrição',
-    value: 'descricao'
+    value: 'descricao',
+    order: 2
   },
   {
     label: 'Ativo',
-    value: 'ativo'
+    value: 'ativo',
+    order: 3
+  },
+  {
+    label: 'Módulo',
+    value: 'moduloId',
+    order: 4
   }
 ];

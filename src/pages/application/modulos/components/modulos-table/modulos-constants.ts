@@ -4,18 +4,22 @@ import { ModuloDTO } from '@/types/dtos';
 export const filterFields: DataTableFilterField<ModuloDTO>[] = [
   {
     label: 'Nome',
-    value: 'nome'
+    value: 'nome',
+    order: 1
   },
   {
     label: 'Descrição',
-    value: 'descricao'
+    value: 'descricao',
+    order: 2
   },
   {
     label: 'Ativo',
-    value: 'ativo'
+    value: 'ativo',
+    order: 3
   },
   {
     label: 'Aplicação',
-    value: 'aplicacaoId'
+    value: 'aplicacaoId',
+    order: 4
   }
 ];

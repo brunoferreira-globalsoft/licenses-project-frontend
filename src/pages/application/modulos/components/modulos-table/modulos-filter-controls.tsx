@@ -67,6 +67,9 @@ export function ModulosFilterControls({
   const renderFilterInput = (column: ColumnDef<ModuloDTO, unknown>) => {
     if (!('accessorKey' in column) || !column.accessorKey) return null;
 
+    const commonInputStyles =
+      'w-full justify-start px-4 py-6 text-left font-normal shadow-inner';
+
     if (column.accessorKey === 'ativo') {
       const currentValue = filterValues[column.accessorKey] ?? '';
       return (
@@ -79,7 +82,7 @@ export function ModulosFilterControls({
             )
           }
         >
-          <SelectTrigger className="max-w-sm">
+          <SelectTrigger className={commonInputStyles}>
             <SelectValue placeholder="Selecione o estado" />
           </SelectTrigger>
           <SelectContent>
@@ -103,7 +106,7 @@ export function ModulosFilterControls({
             )
           }
         >
-          <SelectTrigger className="max-w-sm">
+          <SelectTrigger className={commonInputStyles}>
             <SelectValue placeholder="Selecione uma aplicação" />
           </SelectTrigger>
           <SelectContent>
@@ -125,7 +128,7 @@ export function ModulosFilterControls({
         onChange={(event) =>
           handleFilterChange(column.accessorKey.toString(), event.target.value)
         }
-        className="max-w-sm"
+        className={commonInputStyles}
       />
     );
   };
@@ -134,12 +137,20 @@ export function ModulosFilterControls({
     <>
       {columns
         .filter((column) => {
-          const excludedColumns = ['select', 'actions', 'page', 'limit'];
           return (
             'accessorKey' in column &&
             column.accessorKey &&
-            !excludedColumns.includes(column.accessorKey.toString())
+            filterFields.some((field) => field.value === column.accessorKey)
           );
+        })
+        .sort((a, b) => {
+          const aField = filterFields.find(
+            (field) => 'accessorKey' in a && field.value === a.accessorKey
+          );
+          const bField = filterFields.find(
+            (field) => 'accessorKey' in b && field.value === b.accessorKey
+          );
+          return (aField?.order ?? Infinity) - (bField?.order ?? Infinity);
         })
         .map((column) => {
           if (!('accessorKey' in column) || !column.accessorKey) return null;
