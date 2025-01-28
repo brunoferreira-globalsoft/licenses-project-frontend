@@ -14,7 +14,9 @@ import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
 import { getColumnHeader } from '@/utils/table-utils';
-import { filterFields } from './licencas-constants';
+import { filterFields, dateFields } from './licencas-constants';
+import { DatePicker } from '@/components/ui/date-picker';
+import { ColumnDef } from '@tanstack/react-table';
 
 export function LicencasFilterControls({
   table,
@@ -58,6 +60,106 @@ export function LicencasFilterControls({
     table.getColumn(columnId)?.setFilterValue(newValue);
   };
 
+  const renderFilterInput = (column: ColumnDef<LicencaDTO, unknown>) => {
+    if (!('accessorKey' in column) || !column.accessorKey) return null;
+
+    const commonInputStyles =
+      'w-full justify-start px-4 py-6 text-left font-normal shadow-inner';
+
+    if (
+      column.accessorKey === 'dataInicio' ||
+      column.accessorKey === 'dataFim'
+    ) {
+      const currentValue = filterValues[column.accessorKey] ?? '';
+      return (
+        <DatePicker
+          value={currentValue ? new Date(currentValue) : undefined}
+          onChange={(date) =>
+            handleFilterChange(
+              column.accessorKey!.toString(),
+              date ? date.toISOString() : ''
+            )
+          }
+          className={commonInputStyles}
+          placeholder={`Selecione a ${column.accessorKey === 'dataInicio' ? 'data de início' : 'data de fim'}`}
+        />
+      );
+    }
+
+    if (column.accessorKey === 'clienteId') {
+      return (
+        <Select
+          value={filterValues['clienteId'] || 'all'}
+          onValueChange={(value) => handleFilterChange('clienteId', value)}
+        >
+          <SelectTrigger className={commonInputStyles}>
+            <SelectValue placeholder="Selecione um cliente" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Todos</SelectItem>
+            {clientes?.map((cliente) => (
+              <SelectItem key={cliente.id} value={cliente.id}>
+                {cliente.nome}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      );
+    }
+
+    if (column.accessorKey === 'aplicacaoId') {
+      return (
+        <Select
+          value={filterValues['aplicacaoId'] || 'all'}
+          onValueChange={(value) => handleFilterChange('aplicacaoId', value)}
+        >
+          <SelectTrigger className={commonInputStyles}>
+            <SelectValue placeholder="Selecione uma aplicação" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Todas</SelectItem>
+            {aplicacoes?.map((aplicacao) => (
+              <SelectItem key={aplicacao.id} value={aplicacao.id}>
+                {aplicacao.nome}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      );
+    }
+
+    if (column.accessorKey === 'ativo') {
+      return (
+        <Select
+          value={filterValues[column.accessorKey] || 'all'}
+          onValueChange={(value) =>
+            handleFilterChange(column.accessorKey!.toString(), value)
+          }
+        >
+          <SelectTrigger className={commonInputStyles}>
+            <SelectValue placeholder="Selecione o estado" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Todos</SelectItem>
+            <SelectItem value="true">Ativo</SelectItem>
+            <SelectItem value="false">Inativo</SelectItem>
+          </SelectContent>
+        </Select>
+      );
+    }
+
+    return (
+      <Input
+        placeholder={`Filtrar por ${getColumnHeader(column, filterFields).toLowerCase()}...`}
+        value={filterValues[column.accessorKey.toString()] ?? ''}
+        onChange={(event) =>
+          handleFilterChange(column.accessorKey.toString(), event.target.value)
+        }
+        className={commonInputStyles}
+      />
+    );
+  };
+
   return (
     <>
       {columns
@@ -68,82 +170,24 @@ export function LicencasFilterControls({
             filterFields.some((field) => field.value === column.accessorKey)
           );
         })
+        .sort((a, b) => {
+          const aField = filterFields.find(
+            (field) => 'accessorKey' in a && field.value === a.accessorKey
+          );
+          const bField = filterFields.find(
+            (field) => 'accessorKey' in b && field.value === b.accessorKey
+          );
+          return (aField?.order ?? Infinity) - (bField?.order ?? Infinity);
+        })
         .map((column) => {
           if (!('accessorKey' in column) || !column.accessorKey) return null;
-
           return (
             <div
               key={`${column.id}-${column.accessorKey}`}
               className="space-y-2"
             >
               <Label>{getColumnHeader(column, filterFields)}</Label>
-              {column.accessorKey === 'clienteId' ? (
-                <Select
-                  value={filterValues['clienteId'] || 'all'}
-                  onValueChange={(value) =>
-                    handleFilterChange('clienteId', value)
-                  }
-                >
-                  <SelectTrigger className="max-w-sm">
-                    <SelectValue placeholder="Selecione um cliente" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Todos</SelectItem>
-                    {clientes?.map((cliente) => (
-                      <SelectItem key={cliente.id} value={cliente.id}>
-                        {cliente.nome}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              ) : column.accessorKey === 'aplicacaoId' ? (
-                <Select
-                  value={filterValues['aplicacaoId'] || 'all'}
-                  onValueChange={(value) =>
-                    handleFilterChange('aplicacaoId', value)
-                  }
-                >
-                  <SelectTrigger className="max-w-sm">
-                    <SelectValue placeholder="Selecione uma aplicação" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Todas</SelectItem>
-                    {aplicacoes?.map((aplicacao) => (
-                      <SelectItem key={aplicacao.id} value={aplicacao.id}>
-                        {aplicacao.nome}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              ) : column.accessorKey === 'ativo' ? (
-                <Select
-                  value={filterValues[column.accessorKey] || 'all'}
-                  onValueChange={(value) =>
-                    handleFilterChange(column.accessorKey!.toString(), value)
-                  }
-                >
-                  <SelectTrigger className="max-w-sm">
-                    <SelectValue placeholder="Selecione o estado" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Todos</SelectItem>
-                    <SelectItem value="true">Ativo</SelectItem>
-                    <SelectItem value="false">Inativo</SelectItem>
-                  </SelectContent>
-                </Select>
-              ) : (
-                <Input
-                  placeholder={`Filtrar por ${getColumnHeader(column, filterFields).toLowerCase()}...`}
-                  value={filterValues[column.accessorKey.toString()] ?? ''}
-                  onChange={(event) =>
-                    handleFilterChange(
-                      column.accessorKey.toString(),
-                      event.target.value
-                    )
-                  }
-                  className="max-w-sm"
-                />
-              )}
+              {renderFilterInput(column)}
             </div>
           );
         })}

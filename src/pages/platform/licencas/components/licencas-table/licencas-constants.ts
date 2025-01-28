@@ -4,18 +4,35 @@ import { LicencaDTO } from '@/types/dtos';
 export const filterFields: DataTableFilterField<LicencaDTO>[] = [
   {
     label: 'Nome',
-    value: 'nome'
+    value: 'nome',
+    order: 1
   },
   {
     label: 'Cliente',
-    value: 'clienteId'
+    value: 'clienteId',
+    order: 2
   },
   {
     label: 'Aplicação',
-    value: 'aplicacaoId'
+    value: 'aplicacaoId',
+    order: 3
   },
   {
     label: 'Estado',
-    value: 'ativo'
+    value: 'ativo',
+    order: 4
+  },
+  {
+    label: 'Data Início',
+    value: 'dataInicio',
+    order: 5
+  },
+  {
+    label: 'Data Fim',
+    value: 'dataFim',
+    order: 6
   }
 ];
+
+// Add a constant to identify date fields
+export const dateFields = ['dataInicio', 'dataFim'];
