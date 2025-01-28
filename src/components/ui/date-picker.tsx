@@ -18,45 +18,78 @@ interface DatePickerProps {
   className?: string;
 }
 
-export function DatePicker({
-  value,
-  onChange,
-  placeholder,
-  className
-}: DatePickerProps) {
-  return (
-    <Popover modal={true}>
-      <PopoverTrigger asChild>
-        <Button
-          variant={'outline'}
-          className={cn(
-            'w-full justify-start px-4 py-6 text-left font-normal shadow-inner',
-            !value && 'text-muted-foreground',
-            className
-          )}
-        >
-          <CalendarIcon className="mr-2 h-4 w-4" />
-          {value
-            ? format(value, 'PPP', { locale: pt })
-            : placeholder || 'Selecione uma data'}
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent
-        className="w-auto p-0"
-        align="start"
-        side="bottom"
-        sideOffset={4}
-        onOpenAutoFocus={(e) => e.preventDefault()}
-        forceMount
-      >
-        <Calendar
-          mode="single"
-          selected={value}
-          onSelect={onChange}
-          locale={pt}
-          initialFocus
-        />
-      </PopoverContent>
-    </Popover>
-  );
-}
+const DatePickerButton = React.forwardRef<
+  HTMLButtonElement,
+  Omit<React.ComponentPropsWithoutRef<typeof Button>, 'value'> & {
+    value?: Date | null;
+    placeholder?: string;
+  }
+>(({ className, value, placeholder, ...props }, ref) => (
+  <Button
+    ref={ref}
+    type="button"
+    variant="outline"
+    className={cn(
+      'w-full justify-start px-4 py-6 text-left font-normal shadow-inner',
+      !value && 'text-muted-foreground',
+      className
+    )}
+    {...props}
+  >
+    <CalendarIcon className="mr-2 h-4 w-4" />
+    {value
+      ? format(value, 'PPP', { locale: pt })
+      : placeholder || 'Selecione uma data'}
+  </Button>
+));
+DatePickerButton.displayName = 'DatePickerButton';
+
+export const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
+  ({ value, onChange, placeholder, className }, ref) => {
+    const [open, setOpen] = React.useState(false);
+
+    const handleClose = React.useCallback(() => {
+      setOpen(false);
+    }, []);
+
+    return (
+      <div ref={ref}>
+        <Popover open={open} onOpenChange={setOpen} modal={true}>
+          <PopoverTrigger asChild>
+            <DatePickerButton
+              value={value as Date | null}
+              placeholder={placeholder}
+              className={className}
+              aria-expanded={open}
+            />
+          </PopoverTrigger>
+          <PopoverContent
+            className="w-auto p-0"
+            align="start"
+            side="bottom"
+            sideOffset={4}
+            onInteractOutside={(e) => {
+              e.preventDefault();
+            }}
+            onEscapeKeyDown={handleClose}
+          >
+            <Calendar
+              mode="single"
+              selected={value}
+              onSelect={(date) => {
+                onChange?.(date);
+                handleClose();
+              }}
+              disabled={(date) =>
+                date > new Date() || date < new Date('1900-01-01')
+              }
+              initialFocus
+              locale={pt}
+            />
+          </PopoverContent>
+        </Popover>
+      </div>
+    );
+  }
+);
+DatePicker.displayName = 'DatePicker';
