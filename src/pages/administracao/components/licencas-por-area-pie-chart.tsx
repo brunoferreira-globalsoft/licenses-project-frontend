@@ -1,27 +1,23 @@
 import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
+  PieChart,
+  Pie,
+  Cell,
+  ResponsiveContainer,
   Legend,
-  ResponsiveContainer
+  Tooltip
 } from 'recharts';
 import { useGetLicencas } from '@/pages/platform/licencas/queries/licencas-queries';
 import { subDays } from 'date-fns';
+import { getAreaColors } from '@/lib/constants/area-colors';
 
 interface AreaCount {
   name: string;
-  total: number;
-  active: number;
-  expired: number;
+  value: number;
 }
 
-export default function AreasComMaisLicencas() {
+export default function LicencasPorAreaPieChart() {
   const { data: licencasResponse, isLoading, error } = useGetLicencas();
   const licencas = licencasResponse?.info?.data || [];
-
-  console.log(licencas);
 
   if (isLoading) {
     return (
@@ -56,74 +52,54 @@ export default function AreasComMaisLicencas() {
   // Process data to count licenses by area
   const processedData = recentLicencas.reduce<AreaCount[]>((acc, lic) => {
     const areaName = lic.aplicacao?.area?.nome || 'Sem área';
-    const isActive =
-      lic.dataFim && new Date(lic.dataFim) > new Date() && lic.ativo === true;
 
     const existingArea = acc.find((item) => item.name === areaName);
     if (existingArea) {
-      existingArea.total++;
-      isActive ? existingArea.active++ : existingArea.expired++;
+      existingArea.value++;
     } else {
       acc.push({
         name: areaName,
-        total: 1,
-        active: isActive ? 1 : 0,
-        expired: isActive ? 0 : 1
+        value: 1
       });
     }
     return acc;
   }, []);
 
-  // Sort by total and get top 5
+  // Sort by value and get top 5
   const topAreas = processedData
-    .sort((a, b) => b.total - a.total)
+    .sort((a, b) => b.value - a.value)
     .slice(0, 5)
     .map((area) => ({
       ...area,
       name: area.name.length > 20 ? `${area.name.slice(0, 20)}...` : area.name
     }));
 
+  const areaNames = topAreas.map((area) => area.name);
+  const colors = getAreaColors(areaNames);
+
   return (
     <div className="h-[350px] w-full">
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart
-          data={topAreas}
-          margin={{ top: 10, right: 10, left: 10, bottom: 20 }}
-        >
-          <XAxis
-            dataKey="name"
-            stroke="#888888"
-            fontSize={12}
-            tickLine={false}
-            axisLine={false}
-            angle={-45}
-            textAnchor="end"
-            height={60}
-          />
-          <YAxis
-            stroke="#888888"
-            fontSize={12}
-            tickLine={false}
-            axisLine={false}
-            tickFormatter={(value) => `${value}`}
-          />
+        <PieChart>
+          <Pie
+            data={topAreas}
+            cx="50%"
+            cy="50%"
+            labelLine={false}
+            label={({ name, percent }) =>
+              `${name} (${(percent * 100).toFixed(0)}%)`
+            }
+            outerRadius={130}
+            fill="#8884d8"
+            dataKey="value"
+          >
+            {topAreas.map((_, index) => (
+              <Cell key={`cell-${index}`} fill={colors[index]} />
+            ))}
+          </Pie>
           <Tooltip />
           <Legend />
-          <Bar
-            dataKey="active"
-            name="Ativas"
-            fill="#4ade80"
-            radius={[4, 4, 0, 0]}
-            stackId="stack"
-          />
-          <Bar
-            dataKey="expired"
-            name="Expiradas"
-            fill="#f87171"
-            radius={[4, 4, 0, 0]}
-            stackId="stack"
-          />
-        </BarChart>
+        </PieChart>
       </ResponsiveContainer>
     </div>
   );

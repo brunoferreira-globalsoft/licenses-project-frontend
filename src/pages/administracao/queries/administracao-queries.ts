@@ -14,7 +14,8 @@ export const useGetAdministracaoCounts = () => {
 
   const activeLicencasCount =
     licencasResponse?.info?.data?.filter(
-      (lic) => lic.dataFim && new Date(lic.dataFim) > new Date()
+      (lic) =>
+        lic.dataFim && new Date(lic.dataFim) > new Date() && lic.ativo === true
     ).length || 0;
 
   console.log(clientesCount);

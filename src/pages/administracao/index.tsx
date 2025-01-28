@@ -1,8 +1,16 @@
 import PageHead from '@/components/shared/page-head';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription
+} from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import AreasComMaisLicencas from './components/areas-com-mais-licencas-chart';
 import { useGetAdministracaoCounts } from './queries/administracao-queries';
+import LicencasPorAreaPieChart from './components/licencas-por-area-pie-chart';
+import LicencasAExpirarChart from './components/licencas-a-expirar-chart';
 
 export default function AdministracaoPage() {
   const { clientesCount, licencasCount, activeLicencasCount, isLoading } =
@@ -25,7 +33,7 @@ export default function AdministracaoPage() {
             </TabsTrigger>
           </TabsList>
           <TabsContent value="overview" className="space-y-4">
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">
@@ -72,13 +80,31 @@ export default function AdministracaoPage() {
                 </CardContent>
               </Card>
             </div>
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-7">
+            <div className="grid grid-cols-1 gap-4 pb-4 md:grid-cols-2 lg:grid-cols-12">
               <Card className="col-span-4">
                 <CardHeader>
                   <CardTitle>Áreas com mais licenças</CardTitle>
                 </CardHeader>
                 <CardContent className="pl-2">
                   <AreasComMaisLicencas />
+                </CardContent>
+              </Card>
+              <Card className="col-span-4">
+                <CardHeader>
+                  <CardTitle>Distribuição de Licenças por Área</CardTitle>
+                  <CardDescription>Últimos 30 dias</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <LicencasPorAreaPieChart />
+                </CardContent>
+              </Card>
+              <Card className="col-span-4">
+                <CardHeader>
+                  <CardTitle>Licenças a Expirar</CardTitle>
+                  <CardDescription>Próximos 30 dias</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <LicencasAExpirarChart />
                 </CardContent>
               </Card>
             </div>
