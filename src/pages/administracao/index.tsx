@@ -1,7 +1,7 @@
 import PageHead from '@/components/shared/page-head';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-// import AreasComMaisLicencas from './components/areas-com-mais-licencas-chart';
+import AreasComMaisLicencas from './components/areas-com-mais-licencas-chart';
 import { useGetAdministracaoCounts } from './queries/administracao-queries';
 
 export default function AdministracaoPage() {
@@ -78,7 +78,7 @@ export default function AdministracaoPage() {
                   <CardTitle>Áreas com mais licenças</CardTitle>
                 </CardHeader>
                 <CardContent className="pl-2">
-                  {/* <AreasComMaisLicencas /> */}
+                  <AreasComMaisLicencas />
                 </CardContent>
               </Card>
             </div>

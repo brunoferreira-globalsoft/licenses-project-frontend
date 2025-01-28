@@ -1,6 +1,8 @@
 import { useGetClientesCount } from '@/pages/platform/clientes/queries/clientes-queries';
-import { useGetLicencasCount } from '@/pages/platform/licencas/queries/licencas-queries';
-import { useGetLicencasPaginated } from '@/pages/platform/licencas/queries/licencas-queries';
+import {
+  useGetLicencas,
+  useGetLicencasCount
+} from '@/pages/platform/licencas/queries/licencas-queries';
 
 export const useGetAdministracaoCounts = () => {
   const { data: clientesCount, isLoading: isLoadingClientes } =
@@ -8,12 +10,16 @@ export const useGetAdministracaoCounts = () => {
   const { data: licencasCount, isLoading: isLoadingLicencas } =
     useGetLicencasCount();
   const { data: licencasResponse, isLoading: isLoadingLicencasData } =
-    useGetLicencasPaginated(1, 100, null, null);
+    useGetLicencas();
 
   const activeLicencasCount =
     licencasResponse?.info?.data?.filter(
-      (lic) => new Date(lic.dataFim) > new Date()
+      (lic) => lic.dataFim && new Date(lic.dataFim) > new Date()
     ).length || 0;
+
+  console.log(clientesCount);
+  console.log(licencasCount);
+  console.log(licencasResponse);
 
   return {
     clientesCount,
