@@ -11,7 +11,6 @@ import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { Switch } from '@/components/ui/switch';
 import {
   Select,
   SelectContent,
@@ -33,7 +32,6 @@ const licencaFormSchema = z.object({
   dataInicio: z.date({ required_error: 'A Data de Início é obrigatória' }),
   dataFim: z.date({ required_error: 'A Data de Fim é obrigatória' }),
   numeroUtilizadores: z.number().min(1, { message: 'Mínimo de 1 utilizador' }),
-  ativo: z.boolean(),
   aplicacaoId: z.string({ required_error: 'A Aplicação é obrigatória' }),
   clienteId: z.string({ required_error: 'O Cliente é obrigatório' })
 });
@@ -50,9 +48,10 @@ const LicencaCreateForm = ({ modalClose }: { modalClose: () => void }) => {
     defaultValues: {
       nome: '',
       numeroUtilizadores: 1,
-      ativo: true,
-      aplicacaoId: '',
-      clienteId: ''
+      dataInicio: undefined,
+      dataFim: undefined,
+      aplicacaoId: undefined,
+      clienteId: undefined
     }
   });
 
@@ -231,26 +230,6 @@ const LicencaCreateForm = ({ modalClose }: { modalClose: () => void }) => {
                 />
               </div>
             </div>
-          </div>
-
-          <div className="col-span-1 md:col-span-6">
-            <FormField
-              control={form.control}
-              name="ativo"
-              render={({ field }) => (
-                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                  <div className="space-y-0.5">
-                    <FormLabel className="text-base">Ativo</FormLabel>
-                  </div>
-                  <FormControl>
-                    <Switch
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
           </div>
         </div>
 

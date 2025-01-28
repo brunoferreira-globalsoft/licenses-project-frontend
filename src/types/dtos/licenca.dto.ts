@@ -3,13 +3,13 @@ export interface CreateLicencaDTO {
   dataInicio?: Date;
   dataFim?: Date;
   numeroUtilizadores: number;
-  ativo: boolean;
   aplicacaoId: string;
   clienteId: string;
 }
 
 export interface UpdateLicencaDTO extends CreateLicencaDTO {
   id: string;
+  ativo: boolean;
 }
 
 export interface LicencaDTO {

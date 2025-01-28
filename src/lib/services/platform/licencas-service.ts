@@ -121,7 +121,14 @@ class LicencasClient extends BaseApiClient {
 
         return response;
       } catch (error) {
-        throw new LicencaError('Falha ao atualizar licença', undefined, error);
+        if (error instanceof BaseApiError && error.data) {
+          return {
+            info: error.data as GSResponse<string>,
+            status: error.statusCode || 400,
+            statusText: error.message
+          };
+        }
+        throw error;
       }
     });
   }
