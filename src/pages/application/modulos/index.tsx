@@ -3,7 +3,7 @@ import PageHead from '@/components/shared/page-head';
 import ModulosTable from '@/pages/application/modulos/components/modulos-table';
 import { DataTableSkeleton } from '@/components/shared/data-table-skeleton';
 import {
-  useGetModulos,
+  useGetModulosPaginated,
   usePrefetchAdjacentModulos
 } from '@/pages/application/modulos/queries/modulos-queries';
 import { Breadcrumbs } from '@/components/shared/breadcrumbs';
@@ -18,7 +18,12 @@ export default function ModulosPage() {
     aplicacaoIdParam ? [{ id: 'aplicacaoId', value: aplicacaoIdParam }] : []
   );
 
-  const { data, isLoading } = useGetModulos(page, pageSize, filters, null);
+  const { data, isLoading } = useGetModulosPaginated(
+    page,
+    pageSize,
+    filters,
+    null
+  );
   const { prefetchPreviousPage, prefetchNextPage } = usePrefetchAdjacentModulos(
     page,
     pageSize,

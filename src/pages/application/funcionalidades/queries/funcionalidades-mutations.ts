@@ -9,8 +9,15 @@ export const useDeleteFuncionalidade = () => {
     mutationFn: (id: string) =>
       FuncionalidadesService('funcionalidades').deleteFuncionalidade(id),
     onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['funcionalidades-paginated']
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['funcionalidades-paginated']
+      });
       queryClient.invalidateQueries({ queryKey: ['funcionalidades'] });
       queryClient.invalidateQueries({ queryKey: ['funcionalidades-count'] });
+      queryClient.invalidateQueries({ queryKey: ['funcionalidades-select'] });
     }
   });
 };
@@ -22,8 +29,15 @@ export const useCreateFuncionalidade = () => {
     mutationFn: (data: CreateFuncionalidadeDTO) =>
       FuncionalidadesService('funcionalidades').createFuncionalidade(data),
     onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['funcionalidades-paginated']
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['funcionalidades-paginated']
+      });
       queryClient.invalidateQueries({ queryKey: ['funcionalidades'] });
       queryClient.invalidateQueries({ queryKey: ['funcionalidades-count'] });
+      queryClient.invalidateQueries({ queryKey: ['funcionalidades-select'] });
     }
   });
 };
@@ -38,8 +52,15 @@ export const useUpdateFuncionalidade = () => {
         id
       }),
     onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['funcionalidades-paginated']
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['funcionalidades-paginated']
+      });
       queryClient.invalidateQueries({ queryKey: ['funcionalidades'] });
       queryClient.invalidateQueries({ queryKey: ['funcionalidades-count'] });
+      queryClient.invalidateQueries({ queryKey: ['funcionalidades-select'] });
     }
   });
 };

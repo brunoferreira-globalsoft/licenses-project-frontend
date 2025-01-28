@@ -2,14 +2,14 @@ import AplicacoesService from '@/lib/services/application/aplicacoes-service';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import AreasService from '@/lib/services/application/areas-service';
 
-export const useGetAplicacoes = (
+export const useGetAplicacoesPaginated = (
   pageNumber: number,
   pageLimit: number,
   filters: Array<{ id: string; value: string }> | null,
   sorting: string[] | null
 ) => {
   return useQuery({
-    queryKey: ['aplicacoes', pageNumber, pageLimit, filters, sorting],
+    queryKey: ['aplicacoes-paginated', pageNumber, pageLimit, filters, sorting],
     queryFn: () =>
       AplicacoesService('aplicacoes').getAplicacoesPaginated({
         pageNumber: pageNumber,
@@ -33,7 +33,7 @@ export const usePrefetchAdjacentAplicacoes = (
   const prefetchPreviousPage = async () => {
     if (page > 1) {
       await queryClient.prefetchQuery({
-        queryKey: ['aplicacoes', page - 1, pageSize, filters, null],
+        queryKey: ['aplicacoes-paginated', page - 1, pageSize, filters, null],
         queryFn: () =>
           AplicacoesService('aplicacoes').getAplicacoesPaginated({
             pageNumber: page - 1,
@@ -48,7 +48,7 @@ export const usePrefetchAdjacentAplicacoes = (
 
   const prefetchNextPage = async () => {
     await queryClient.prefetchQuery({
-      queryKey: ['aplicacoes', page + 1, pageSize, filters, null],
+      queryKey: ['aplicacoes-paginated', page + 1, pageSize, filters, null],
       queryFn: () =>
         AplicacoesService('aplicacoes').getAplicacoesPaginated({
           pageNumber: page + 1,
@@ -60,6 +60,16 @@ export const usePrefetchAdjacentAplicacoes = (
   };
 
   return { prefetchPreviousPage, prefetchNextPage };
+};
+
+export const useGetAplicacoes = () => {
+  return useQuery({
+    queryKey: ['aplicacoes'],
+    queryFn: () => AplicacoesService('aplicacoes').getAplicacoes(),
+    placeholderData: (previousData) => previousData,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 30 * 60 * 1000
+  });
 };
 
 export const useGetAreasSelect = () => {

@@ -3,7 +3,7 @@ import PageHead from '@/components/shared/page-head';
 import ClientesTable from '@/pages/platform/clientes/components/clientes-table';
 import { DataTableSkeleton } from '@/components/shared/data-table-skeleton';
 import {
-  useGetClientes,
+  useGetClientesPaginated,
   usePrefetchAdjacentClientes
 } from '@/pages/platform/clientes/queries/clientes-queries';
 import { Breadcrumbs } from '@/components/shared/breadcrumbs';
@@ -18,7 +18,12 @@ export default function ClientesPage() {
     clienteIdParam ? [{ id: 'clienteId', value: clienteIdParam }] : []
   );
 
-  const { data, isLoading } = useGetClientes(page, pageSize, filters, null);
+  const { data, isLoading } = useGetClientesPaginated(
+    page,
+    pageSize,
+    filters,
+    null
+  );
   const { prefetchPreviousPage, prefetchNextPage } =
     usePrefetchAdjacentClientes(page, pageSize, filters);
 

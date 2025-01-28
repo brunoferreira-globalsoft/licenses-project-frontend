@@ -9,6 +9,7 @@ export const useDeleteArea = () => {
   return useMutation({
     mutationFn: (id: string) => AreasService('areas').deleteArea(id),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['areas-paginated'] });
       queryClient.invalidateQueries({ queryKey: ['areas'] });
       queryClient.invalidateQueries({ queryKey: ['areas-count'] });
       queryClient.invalidateQueries({ queryKey: ['areas-select'] });
@@ -22,6 +23,7 @@ export const useCreateArea = () => {
   return useMutation({
     mutationFn: (data: CreateAreaDTO) => AreasService('areas').createArea(data),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['areas-paginated'] });
       queryClient.invalidateQueries({ queryKey: ['areas'] });
       queryClient.invalidateQueries({ queryKey: ['areas-count'] });
       queryClient.invalidateQueries({ queryKey: ['areas-select'] });
@@ -36,6 +38,7 @@ export const useUpdateArea = () => {
     mutationFn: ({ id, data }: { id: string; data: UpdateAreaDTO }) =>
       AreasService('areas').updateArea(id, data),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['areas-paginated'] });
       queryClient.invalidateQueries({ queryKey: ['areas'] });
       queryClient.invalidateQueries({ queryKey: ['areas-count'] });
       queryClient.invalidateQueries({ queryKey: ['areas-select'] });

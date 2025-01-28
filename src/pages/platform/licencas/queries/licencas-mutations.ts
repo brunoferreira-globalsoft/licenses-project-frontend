@@ -8,6 +8,7 @@ export const useDeleteLicenca = () => {
   return useMutation({
     mutationFn: (id: string) => LicencasService('licencas').deleteLicenca(id),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['licencas-paginated'] });
       queryClient.invalidateQueries({ queryKey: ['licencas'] });
       queryClient.invalidateQueries({ queryKey: ['licencas-count'] });
       queryClient.invalidateQueries({ queryKey: ['licencas-select'] });
@@ -22,6 +23,7 @@ export const useCreateLicenca = () => {
     mutationFn: (data: CreateLicencaDTO) =>
       LicencasService('licencas').createLicenca(data),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['licencas-paginated'] });
       queryClient.invalidateQueries({ queryKey: ['licencas'] });
       queryClient.invalidateQueries({ queryKey: ['licencas-count'] });
       queryClient.invalidateQueries({ queryKey: ['licencas-select'] });
@@ -36,6 +38,7 @@ export const useUpdateLicenca = () => {
     mutationFn: ({ id, data }: { id: string; data: UpdateLicencaDTO }) =>
       LicencasService('licencas').updateLicenca(id, { ...data, id }),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['licencas-paginated'] });
       queryClient.invalidateQueries({ queryKey: ['licencas'] });
       queryClient.invalidateQueries({ queryKey: ['licencas-count'] });
       queryClient.invalidateQueries({ queryKey: ['licencas-select'] });
@@ -56,7 +59,10 @@ export const useBlockLicenca = () => {
     }) =>
       LicencasService('licencas').blockLicenca(licencaId, { motivoBloqueio }),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['licencas-paginated'] });
       queryClient.invalidateQueries({ queryKey: ['licencas'] });
+      queryClient.invalidateQueries({ queryKey: ['licencas-count'] });
+      queryClient.invalidateQueries({ queryKey: ['licencas-select'] });
     }
   });
 };
@@ -68,7 +74,10 @@ export const useUnblockLicenca = () => {
     mutationFn: (licencaId: string) =>
       LicencasService('licencas').unblockLicenca(licencaId),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['licencas-paginated'] });
       queryClient.invalidateQueries({ queryKey: ['licencas'] });
+      queryClient.invalidateQueries({ queryKey: ['licencas-count'] });
+      queryClient.invalidateQueries({ queryKey: ['licencas-select'] });
     }
   });
 };
@@ -80,7 +89,10 @@ export const useCreateLicencaApiKey = () => {
     mutationFn: (licencaId: string) =>
       LicencasService('licencas').createLicencaApiKey(licencaId),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['licencas-paginated'] });
       queryClient.invalidateQueries({ queryKey: ['licencas'] });
+      queryClient.invalidateQueries({ queryKey: ['licencas-count'] });
+      queryClient.invalidateQueries({ queryKey: ['licencas-select'] });
     }
   });
 };

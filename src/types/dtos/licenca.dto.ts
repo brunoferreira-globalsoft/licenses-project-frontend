@@ -25,6 +25,9 @@ export interface LicencaDTO {
   motivoBloqueio?: string;
   aplicacao?: {
     nome: string;
+    area?: {
+      nome: string;
+    };
   };
   cliente?: {
     nome: string;

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import PageHead from '@/components/shared/page-head';
 import {
-  useGetAreas,
+  useGetAreasPaginated,
   usePrefetchAdjacentAreas
 } from '@/pages/application/areas/queries/areas-queries';
 import AreasTable from '@/pages/application/areas/components/areas-table';
@@ -16,7 +16,12 @@ export default function AreasPage() {
     []
   );
 
-  const { data, isLoading } = useGetAreas(page, pageSize, filters, null);
+  const { data, isLoading } = useGetAreasPaginated(
+    page,
+    pageSize,
+    filters,
+    null
+  );
   const { prefetchPreviousPage, prefetchNextPage } = usePrefetchAdjacentAreas(
     page,
     pageSize,

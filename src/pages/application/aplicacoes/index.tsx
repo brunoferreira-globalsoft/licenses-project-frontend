@@ -3,7 +3,7 @@ import PageHead from '@/components/shared/page-head';
 import AplicacoesTable from '@/pages/application/aplicacoes/components/aplicacoes-table';
 import { DataTableSkeleton } from '@/components/shared/data-table-skeleton';
 import {
-  useGetAplicacoes,
+  useGetAplicacoesPaginated,
   usePrefetchAdjacentAplicacoes
 } from '@/pages/application/aplicacoes/queries/aplicacoes-queries';
 import { Breadcrumbs } from '@/components/shared/breadcrumbs';
@@ -18,7 +18,12 @@ export default function AplicacoesPage() {
     areaIdParam ? [{ id: 'areaId', value: areaIdParam }] : []
   );
 
-  const { data, isLoading } = useGetAplicacoes(page, pageSize, filters, null);
+  const { data, isLoading } = useGetAplicacoesPaginated(
+    page,
+    pageSize,
+    filters,
+    null
+  );
   const { prefetchPreviousPage, prefetchNextPage } =
     usePrefetchAdjacentAplicacoes(page, pageSize, filters);
 

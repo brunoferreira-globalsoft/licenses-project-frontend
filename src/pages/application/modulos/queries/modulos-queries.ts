@@ -1,14 +1,14 @@
 import ModulosService from '@/lib/services/application/modulos-service';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 
-export const useGetModulos = (
+export const useGetModulosPaginated = (
   pageNumber: number,
   pageLimit: number,
   filters: Array<{ id: string; value: string }> | null,
   sorting: string[] | null
 ) => {
   return useQuery({
-    queryKey: ['modulos', pageNumber, pageLimit, filters, sorting],
+    queryKey: ['modulos-paginated', pageNumber, pageLimit, filters, sorting],
     queryFn: () =>
       ModulosService('modulos').getModulosPaginated({
         pageNumber: pageNumber,
@@ -32,7 +32,7 @@ export const usePrefetchAdjacentModulos = (
   const prefetchPreviousPage = async () => {
     if (page > 1) {
       await queryClient.prefetchQuery({
-        queryKey: ['modulos', page - 1, pageSize, filters, null],
+        queryKey: ['modulos-paginated', page - 1, pageSize, filters, null],
         queryFn: () =>
           ModulosService('modulos').getModulosPaginated({
             pageNumber: page - 1,
@@ -47,7 +47,7 @@ export const usePrefetchAdjacentModulos = (
 
   const prefetchNextPage = async () => {
     await queryClient.prefetchQuery({
-      queryKey: ['modulos', page + 1, pageSize, filters, null],
+      queryKey: ['modulos-paginated', page + 1, pageSize, filters, null],
       queryFn: () =>
         ModulosService('modulos').getModulosPaginated({
           pageNumber: page + 1,
@@ -59,6 +59,16 @@ export const usePrefetchAdjacentModulos = (
   };
 
   return { prefetchPreviousPage, prefetchNextPage };
+};
+
+export const useGetModulos = () => {
+  return useQuery({
+    queryKey: ['modulos'],
+    queryFn: () => ModulosService('modulos').getModulos(),
+    placeholderData: (previousData) => previousData,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 30 * 60 * 1000
+  });
 };
 
 export const useGetModulosCount = () => {

@@ -8,6 +8,7 @@ export const useDeleteModulo = () => {
   return useMutation({
     mutationFn: (id: string) => ModulosService('modulos').deleteModulo(id),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['modulos-paginated'] });
       queryClient.invalidateQueries({ queryKey: ['modulos'] });
       queryClient.invalidateQueries({ queryKey: ['modulos-count'] });
       queryClient.invalidateQueries({ queryKey: ['modulos-select'] });
@@ -22,6 +23,7 @@ export const useCreateModulo = () => {
     mutationFn: (data: CreateModuloDTO) =>
       ModulosService('modulos').createModulo(data),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['modulos-paginated'] });
       queryClient.invalidateQueries({ queryKey: ['modulos'] });
       queryClient.invalidateQueries({ queryKey: ['modulos-count'] });
       queryClient.invalidateQueries({ queryKey: ['modulos-select'] });
@@ -36,6 +38,7 @@ export const useUpdateModulo = () => {
     mutationFn: ({ id, data }: { id: string; data: UpdateModuloDTO }) =>
       ModulosService('modulos').updateModulo(id, { ...data, id }),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['modulos-paginated'] });
       queryClient.invalidateQueries({ queryKey: ['modulos'] });
       queryClient.invalidateQueries({ queryKey: ['modulos-count'] });
       queryClient.invalidateQueries({ queryKey: ['modulos-select'] });

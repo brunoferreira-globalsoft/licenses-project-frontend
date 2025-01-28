@@ -3,7 +3,7 @@ import PageHead from '@/components/shared/page-head';
 import { LicencasTable } from '@/pages/platform/licencas/components/licencas-table';
 import { DataTableSkeleton } from '@/components/shared/data-table-skeleton';
 import {
-  useGetLicencas,
+  useGetLicencasPaginated,
   usePrefetchAdjacentLicencas
 } from '@/pages/platform/licencas/queries/licencas-queries';
 import { Breadcrumbs } from '@/components/shared/breadcrumbs';
@@ -18,7 +18,12 @@ export default function LicencasPage() {
     licencaIdParam ? [{ id: 'licencaId', value: licencaIdParam }] : []
   );
 
-  const { data, isLoading } = useGetLicencas(page, pageSize, filters, null);
+  const { data, isLoading } = useGetLicencasPaginated(
+    page,
+    pageSize,
+    filters,
+    null
+  );
   const { prefetchPreviousPage, prefetchNextPage } =
     usePrefetchAdjacentLicencas(page, pageSize, filters);
 

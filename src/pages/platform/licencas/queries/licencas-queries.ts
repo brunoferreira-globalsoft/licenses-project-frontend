@@ -1,14 +1,14 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import LicencasService from '@/lib/services/platform/licencas-service';
 
-export const useGetLicencas = (
+export const useGetLicencasPaginated = (
   pageNumber: number,
   pageLimit: number,
   filters: Array<{ id: string; value: string }> | null,
   sorting: string[] | null
 ) => {
   return useQuery({
-    queryKey: ['licencas', pageNumber, pageLimit, filters, sorting],
+    queryKey: ['licencas-paginated', pageNumber, pageLimit, filters, sorting],
     queryFn: () =>
       LicencasService('licencas').getLicencasPaginated({
         pageNumber: pageNumber,
@@ -32,7 +32,7 @@ export const usePrefetchAdjacentLicencas = (
   const prefetchPreviousPage = async () => {
     if (page > 1) {
       await queryClient.prefetchQuery({
-        queryKey: ['licencas', page - 1, pageSize, filters, null],
+        queryKey: ['licencas-paginated', page - 1, pageSize, filters, null],
         queryFn: () =>
           LicencasService('licencas').getLicencasPaginated({
             pageNumber: page - 1,
@@ -47,7 +47,7 @@ export const usePrefetchAdjacentLicencas = (
 
   const prefetchNextPage = async () => {
     await queryClient.prefetchQuery({
-      queryKey: ['licencas', page + 1, pageSize, filters, null],
+      queryKey: ['licencas-paginated', page + 1, pageSize, filters, null],
       queryFn: () =>
         LicencasService('licencas').getLicencasPaginated({
           pageNumber: page + 1,
@@ -59,6 +59,16 @@ export const usePrefetchAdjacentLicencas = (
   };
 
   return { prefetchPreviousPage, prefetchNextPage };
+};
+
+export const useGetLicencas = () => {
+  return useQuery({
+    queryKey: ['licencas'],
+    queryFn: () => LicencasService('licencas').getLicencas(),
+    placeholderData: (previousData) => previousData,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 30 * 60 * 1000
+  });
 };
 
 export const useGetLicencaById = (id: string) => {

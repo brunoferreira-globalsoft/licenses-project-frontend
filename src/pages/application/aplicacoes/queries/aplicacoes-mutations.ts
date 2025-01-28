@@ -8,6 +8,7 @@ export const useDeleteAplicacao = () => {
     mutationFn: (id: string) =>
       AplicacoesService('aplicacoes').deleteAplicacao(id),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['aplicacoes-paginated'] });
       queryClient.invalidateQueries({ queryKey: ['aplicacoes'] });
       queryClient.invalidateQueries({ queryKey: ['aplicacoes-count'] });
       queryClient.invalidateQueries({ queryKey: ['aplicacoes-select'] });
@@ -22,6 +23,7 @@ export const useCreateAplicacao = () => {
     mutationFn: async (data: CreateAplicacaoDTO) =>
       AplicacoesService('aplicacoes').createAplicacao(data),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['aplicacoes-paginated'] });
       queryClient.invalidateQueries({ queryKey: ['aplicacoes'] });
       queryClient.invalidateQueries({ queryKey: ['aplicacoes-count'] });
       queryClient.invalidateQueries({ queryKey: ['aplicacoes-select'] });
@@ -36,6 +38,7 @@ export const useUpdateAplicacao = () => {
     mutationFn: ({ id, data }: { id: string; data: UpdateAplicacaoDTO }) =>
       AplicacoesService('aplicacoes').updateAplicacao(id, { ...data, id }),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['aplicacoes-paginated'] });
       queryClient.invalidateQueries({ queryKey: ['aplicacoes'] });
       queryClient.invalidateQueries({ queryKey: ['aplicacoes-count'] });
       queryClient.invalidateQueries({ queryKey: ['aplicacoes-select'] });

@@ -8,12 +8,12 @@ import {
   Legend,
   ResponsiveContainer
 } from 'recharts';
-import { useGetAplicacoes } from '@/pages/application/aplicacoes/queries/aplicacoes-queries';
+import { useGetAplicacoesPaginated } from '@/pages/application/aplicacoes/queries/aplicacoes-queries';
 import { format, parseISO, subDays } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
 export default function RecentAplicacoes() {
-  const { data: aplicacoesResponse, isLoading } = useGetAplicacoes(
+  const { data: aplicacoesResponse, isLoading } = useGetAplicacoesPaginated(
     1,
     100,
     null,

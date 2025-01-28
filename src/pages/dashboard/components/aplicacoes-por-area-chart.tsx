@@ -7,14 +7,14 @@ import {
   Tooltip,
   Legend
 } from 'recharts';
-import { useGetAplicacoes } from '@/pages/application/aplicacoes/queries/aplicacoes-queries';
+import { useGetAplicacoesPaginated } from '@/pages/application/aplicacoes/queries/aplicacoes-queries';
 
 export default function AplicacoesPorArea() {
   const {
     data: aplicacoesResponse,
     isLoading,
     error
-  } = useGetAplicacoes(1, 100, null, null);
+  } = useGetAplicacoesPaginated(1, 100, null, null);
   const aplicacoes = aplicacoesResponse?.info?.data || [];
 
   if (isLoading) {

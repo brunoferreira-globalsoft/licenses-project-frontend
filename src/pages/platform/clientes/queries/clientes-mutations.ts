@@ -8,6 +8,7 @@ export const useDeleteCliente = () => {
   return useMutation({
     mutationFn: (id: string) => ClientesService('clientes').deleteCliente(id),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['clientes-paginated'] });
       queryClient.invalidateQueries({ queryKey: ['clientes'] });
       queryClient.invalidateQueries({ queryKey: ['clientes-count'] });
       queryClient.invalidateQueries({ queryKey: ['clientes-select'] });
@@ -22,6 +23,7 @@ export const useCreateCliente = () => {
     mutationFn: (data: CreateClienteDTO) =>
       ClientesService('clientes').createCliente(data),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['clientes-paginated'] });
       queryClient.invalidateQueries({ queryKey: ['clientes'] });
       queryClient.invalidateQueries({ queryKey: ['clientes-count'] });
       queryClient.invalidateQueries({ queryKey: ['clientes-select'] });
@@ -36,6 +38,7 @@ export const useUpdateCliente = () => {
     mutationFn: ({ id, data }: { id: string; data: UpdateClienteDTO }) =>
       ClientesService('clientes').updateCliente(id, { ...data, id }),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['clientes-paginated'] });
       queryClient.invalidateQueries({ queryKey: ['clientes'] });
       queryClient.invalidateQueries({ queryKey: ['clientes-count'] });
       queryClient.invalidateQueries({ queryKey: ['clientes-select'] });

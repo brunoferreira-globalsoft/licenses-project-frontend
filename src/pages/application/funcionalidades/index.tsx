@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import FuncionalidadesTable from '@/pages/application/funcionalidades/components/funcionalidades-table';
 import { DataTableSkeleton } from '@/components/shared/data-table-skeleton';
 import {
-  useGetFuncionalidades,
+  useGetFuncionalidadesPaginated,
   usePrefetchAdjacentFuncionalidades
 } from '@/pages/application/funcionalidades/queries/funcionalidades-queries';
 import { Breadcrumbs } from '@/components/shared/breadcrumbs';
@@ -17,7 +17,7 @@ export default function FuncionalidadesPage() {
     moduloIdParam ? [{ id: 'moduloId', value: moduloIdParam }] : []
   );
 
-  const { data, isLoading } = useGetFuncionalidades(
+  const { data, isLoading } = useGetFuncionalidadesPaginated(
     page,
     pageSize,
     filters,

@@ -17,7 +17,7 @@ export interface AplicacaoDTO {
   versao: string;
   ativo: boolean;
   areaId: string;
-  area?: {
+  area: {
     nome: string;
   };
   createdOn: string;

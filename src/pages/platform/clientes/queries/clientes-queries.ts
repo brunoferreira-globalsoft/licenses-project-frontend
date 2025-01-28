@@ -1,14 +1,14 @@
 import ClientesService from '@/lib/services/platform/clientes-service';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 
-export const useGetClientes = (
+export const useGetClientesPaginated = (
   pageNumber: number,
   pageLimit: number,
   filters: Array<{ id: string; value: string }> | null,
   sorting: string[] | null
 ) => {
   return useQuery({
-    queryKey: ['clientes', pageNumber, pageLimit, filters, sorting],
+    queryKey: ['clientes-paginated', pageNumber, pageLimit, filters, sorting],
     queryFn: () =>
       ClientesService('clientes').getClientesPaginated({
         pageNumber: pageNumber,
@@ -32,7 +32,7 @@ export const usePrefetchAdjacentClientes = (
   const prefetchPreviousPage = async () => {
     if (page > 1) {
       await queryClient.prefetchQuery({
-        queryKey: ['clientes', page - 1, pageSize, filters, null],
+        queryKey: ['clientes-paginated', page - 1, pageSize, filters, null],
         queryFn: () =>
           ClientesService('clientes').getClientesPaginated({
             pageNumber: page - 1,
@@ -47,7 +47,7 @@ export const usePrefetchAdjacentClientes = (
 
   const prefetchNextPage = async () => {
     await queryClient.prefetchQuery({
-      queryKey: ['clientes', page + 1, pageSize, filters, null],
+      queryKey: ['clientes-paginated', page + 1, pageSize, filters, null],
       queryFn: () =>
         ClientesService('clientes').getClientesPaginated({
           pageNumber: page + 1,
@@ -59,6 +59,16 @@ export const usePrefetchAdjacentClientes = (
   };
 
   return { prefetchPreviousPage, prefetchNextPage };
+};
+
+export const useGetClientes = () => {
+  return useQuery({
+    queryKey: ['clientes'],
+    queryFn: () => ClientesService('clientes').getClientes(),
+    placeholderData: (previousData) => previousData,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 30 * 60 * 1000
+  });
 };
 
 export const useGetClientesSelect = () => {
