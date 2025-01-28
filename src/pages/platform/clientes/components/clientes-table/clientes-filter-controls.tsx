@@ -23,11 +23,9 @@ export function ClientesFilterControls({
   const [filterValues, setFilterValues] = useState<Record<string, string>>({});
 
   useEffect(() => {
-    // Get current filters from the table's state
     const currentFilters = table.getState().columnFilters;
     const newFilterValues: Record<string, string> = {};
 
-    // First, apply any existing table filters
     currentFilters.forEach((filter) => {
       if (filter.value) {
         newFilterValues[filter.id] = filter.value as string;
@@ -40,18 +38,19 @@ export function ClientesFilterControls({
   const handleFilterChange = (columnId: string, value: string) => {
     const newValue = value === 'all' ? '' : value;
 
-    // Update local state
     setFilterValues((prev) => ({
       ...prev,
       [columnId]: newValue
     }));
 
-    // Update table filter
     table.getColumn(columnId)?.setFilterValue(newValue);
   };
 
   const renderFilterInput = (column: ColumnDef<ClienteDTO, unknown>) => {
     if (!('accessorKey' in column) || !column.accessorKey) return null;
+
+    const commonInputStyles =
+      'w-full justify-start px-4 py-6 text-left font-normal shadow-inner';
 
     if (column.accessorKey === 'ativo') {
       const currentValue = filterValues[column.accessorKey] ?? '';
@@ -62,7 +61,7 @@ export function ClientesFilterControls({
             handleFilterChange(column.accessorKey!.toString(), value)
           }
         >
-          <SelectTrigger className="max-w-sm">
+          <SelectTrigger className={commonInputStyles}>
             <SelectValue placeholder="Selecione o estado" />
           </SelectTrigger>
           <SelectContent>
@@ -81,7 +80,7 @@ export function ClientesFilterControls({
         onChange={(event) =>
           handleFilterChange(column.accessorKey.toString(), event.target.value)
         }
-        className="max-w-sm"
+        className={commonInputStyles}
       />
     );
   };
@@ -90,12 +89,20 @@ export function ClientesFilterControls({
     <>
       {columns
         .filter((column) => {
-          const excludedColumns = ['select', 'actions', 'page', 'limit'];
           return (
             'accessorKey' in column &&
             column.accessorKey &&
-            !excludedColumns.includes(column.accessorKey.toString())
+            filterFields.some((field) => field.value === column.accessorKey)
           );
+        })
+        .sort((a, b) => {
+          const aField = filterFields.find(
+            (field) => 'accessorKey' in a && field.value === a.accessorKey
+          );
+          const bField = filterFields.find(
+            (field) => 'accessorKey' in b && field.value === b.accessorKey
+          );
+          return (aField?.order ?? Infinity) - (bField?.order ?? Infinity);
         })
         .map((column) => {
           if (!('accessorKey' in column) || !column.accessorKey) return null;
